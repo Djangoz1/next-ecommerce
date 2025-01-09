@@ -1,101 +1,140 @@
+import { Btn } from "@/components/ui/btn";
+import { Title } from "@/components/ui/typography/title";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <main className="">
+      <section className="relative">
         <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+          width={1800}
+          height={1800}
+          src="/model/2.jpg"
+          alt="model photo"
+          className="w-screen h-screen brightness-75 object-cover object-center "
         />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+        <div className="font-info text-center flex absolute bottom-20 flex-col gap-6 -translate-x-1/2 left-1/2">
+          <Title className="text-white">Nouveautés</Title>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          <div className="flex gap-5">
+            <Btn>Vêtements</Btn>
+            <Btn>Miniatures</Btn>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+      </section>
+
+      <section className="flex flex-col xl:gap-20 gap-5  xl:px-10 px-5 xl:py-40 py-20 items-center">
+        <Title className="uppercase xl:text-4xl text-lg">
+          La sélection de la maison
+        </Title>
+
+        <div className="grid xl:grid-cols-4 grid-cols-2 w-full xl:gap-10 gap-y-10 gap-2">
+          {[
+            {
+              title: "Sacs",
+              href: "/",
+              img: "/model/3.jpg",
+            },
+            {
+              title: "Chaussure Femme",
+              href: "/",
+              img: "/model/4.jpg",
+            },
+            {
+              title: "Sacs pour Homme",
+              href: "/",
+              img: "/model/5.jpg",
+            },
+            {
+              title: "Miniatures",
+              href: "/",
+              img: "/model/6.jpg",
+            },
+          ].map((el, i) => (
+            <div
+              key={`items-${i}`}
+              className="flex flex-col w-full items-center xl:gap-5 gap-2 xl:text-lg"
+            >
+              <Image
+                src={el.img}
+                alt={el.title}
+                width={800}
+                height={800}
+                className="w-full xl:h-[600px] h-[300px] hover:scale-90 object-cover object-center shadow-lg rounded-sm brightness-75 hover:brightness-100 transition-all duration-300"
+              />
+              <h6>{el.title}</h6>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="flex flex-col items-center px-5 relative ">
+        <Image
+          width={1000}
+          height={1000}
+          src="/model/7.jpg"
+          alt="model photo"
+          className="xl:w-5/6 w-full h-[60vh] object-cover object-center brightness-50 rounded-md shadow"
+        />
+        <div className="flex absolute flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 gap-5 items-center">
+          <Title className="text-white xl:text-4xl text-xl">
+            Model & Miniatures
+          </Title>
+          <Btn
+            className="text-xs xl:text-xl whitespace-nowrap"
+            variant="secondary"
+          >
+            Découvrir la collection
+          </Btn>
+        </div>
+      </section>
+
+      <section className="flex flex-col items-center xl:p-20 px-5 py-40 gap-10 xl:gap-20">
+        <Title className="uppercase text-sm font-black">À la une</Title>
+        <div className="flex xl:gap-40 gap-10 items-center xl:flex-row flex-col">
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src="/model/1.jpg"
+            alt="model photo"
+            className="xl:w-1/2 w-full rounded-md shadow brightness-90"
+            width={800}
+            height={800}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <div className="flex flex-col gap-10 text-center">
+            <h6 className="xl:text-4xl text-xl uppercase title ">
+              We will always have
+              <br />
+              london
+            </h6>
+
+            <p className="font-extralight xl:text-md text-sm">
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nam,
+              labore. Et earum officiis temporibus quis dolorum quas molestias
+              officia impedit libero! Veniam ipsam hic molestias quo molestiae
+              illum aspernatur voluptas.
+            </p>
+            <Btn className="mx-auto" variant="link">
+              Découvrir plus
+            </Btn>
+          </div>
+        </div>
+      </section>
+      <section className="flex flex-col items-center gap-10 xl:py-20 py-10">
+        <Title className="uppercase xl:text-sm text-center text-xs">
+          Inscrivez-vous pour suivre l'actualité d'Ormès
+        </Title>
+
+        <p className="font-extralight xl:text-3xl text-sm w-1/2 text-center">
+          Recevez des informations exclusives sur le lancement de la collection,
+          des communication personnalisée et les dernières actualités de la
+          Maison.
+        </p>
+
+        <Btn variant="link" className="text-black normal-case">
+          <Icon icon="mdi:plus" />
+          S'abonner
+        </Btn>
+      </section>
+    </main>
   );
 }
