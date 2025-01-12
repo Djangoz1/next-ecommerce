@@ -14,7 +14,7 @@ export const Box = ({
 } & React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div className={cn("flex flex-col w-full py-10 ", className)} {...props}>
-      <Title className="text-lg uppercase ">{title}</Title>
+      <Title className="xl:text-lg text-sm uppercase ">{title}</Title>
       {children}
     </div>
   );
