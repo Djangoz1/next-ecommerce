@@ -3,12 +3,13 @@ import { HoveredCard } from "@/components/ui/card/hover";
 import { Title } from "@/components/ui/typography/title";
 
 import Image from "next/image";
+import Link from "next/link";
 
 const items = [
   {
     id: "1",
     title: "Vêtements",
-    image: "/item/1.avif",
+    image: "/model/1.jpg",
     thumbnail: "/item/2.avif",
     price: 200,
     description:
@@ -17,8 +18,8 @@ const items = [
   {
     id: "2",
     title: "Kimono",
-    image: "/item/2.avif",
-    thumbnail: "/item/3.avif",
+    image: "/model/2.jpg",
+    thumbnail: "/model/3.jpg",
     price: 200,
     description:
       "Découvrez les nouveautés de la collection de prêt-à-porter pour femme et les dernières parures pour femme.",
@@ -26,8 +27,8 @@ const items = [
   {
     id: "3",
     title: "Vêtements",
-    image: "/item/3.avif",
-    thumbnail: "/item/4.avif",
+    image: "/model/3.jpg",
+    thumbnail: "/model/4.jpg",
     price: 200,
     description:
       "Découvrez les nouveautés de la collection de prêt-à-porter pour femme et les dernières parures pour femme.",
@@ -35,8 +36,8 @@ const items = [
   {
     id: "4",
     title: "Kimono",
-    image: "/item/4.avif",
-    thumbnail: "/item/3.avif",
+    image: "/model/4.jpg",
+    thumbnail: "/model/5.jpg",
     price: 200,
     description:
       "Découvrez les nouveautés de la collection de prêt-à-porter pour femme et les dernières parures pour femme.",
@@ -44,67 +45,46 @@ const items = [
 ];
 const StorePage = () => {
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex flex-col relative">
-        <Image
-          width={1200}
-          height={1200}
-          src="/model/2.jpg"
-          alt="model photo"
-          className="w-full h-[60vh] object-cover object-center brightness-75"
-        />
-        <div className="flex flex-col gap-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-center">
-          <Title className="text-lg uppercase">Nouveautés</Title>
-          <Title className="text-6xl uppercase my-2">Femme</Title>
-          <p className="text-xl font-light">
-            Découvrez les nouveautés de la collection de prêt-à-porter pour
-            femme et les dernières parures pour femme.
-          </p>
-        </div>
+    <div className="flex flex-col w-full divide-y">
+      <div className="flex flex-col relative pt-32 gap-4 items-center py-10 ">
+        <Title className="xl:text-6xl">Vêtements</Title>
+        <span className="text-xs uppercase font-light opacity-50">
+          {items.length} produits
+        </span>
       </div>
 
-      <div className="flex flex-col pb-10 w-full pl-5 pr-10">
-        <div className="flex justify-between py-5 items-center">
-          <div className="flex gap-2">
-            <a className="underline" href="#">
-              Collection
-            </a>
-            <span>/</span>
-            <a href="#">Nouveautés Femme</a>
-          </div>
-          <div className="flex gap-5">
-            <Dropdown
-              arr={[
-                {
-                  title: "Catégorie",
-                  value: "1",
-                },
-              ]}
-            ></Dropdown>
-            <Dropdown
-              arr={[
-                {
-                  title: "Ligne",
-                  value: "1",
-                },
-              ]}
-            ></Dropdown>
-            <Dropdown
-              arr={[
-                {
-                  title: "Filtres",
-                  value: "1",
-                },
-              ]}
-            ></Dropdown>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-4 w-full divide-x divide-y border">
-          {[...items, ...items].map((item, index) => (
-            <HoveredCard key={`item-${index}`} item={item} />
-          ))}
-        </div>
+      <div className="flex text-sm opacity-75  uppercase items-center overflow-x-auto">
+        <div className="flex px-5 border-r py-2">Filtres</div>
+        <Link href={"#"} className="px-5">
+          Vêtements
+        </Link>
+        <Link href={"#"} className="px-5">
+          Miniatures
+        </Link>
+        <Link href={"#"} className="px-5">
+          Peintures
+        </Link>
+      </div>
+      <div className="flex flex-col p-5 xl:grid xl:grid-cols-4  w-full gap-10">
+        {[...items, ...items].map((item, index) => (
+          <Link
+            href={`/shop/women/${item.id}`}
+            key={`item-${index}`}
+            className="w-full flex flex-col gap-2 transition-all hover:scale-105"
+          >
+            <Image
+              src={item.image}
+              alt={item.title}
+              width={1200}
+              height={1200}
+              className="w-full h-full"
+            />
+            <div className="flex justify-between items-center">
+              <span className="text-sm uppercase">{item.title}</span>
+              <span className="text-sm opacity-50">{item.price} €</span>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   );

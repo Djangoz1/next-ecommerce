@@ -40,8 +40,8 @@ export const Header = () => {
           type: "spring",
         }}
         className={cn(
-          "hidden  xl:flex items-center justify-between xl:px-10 px-5 py-5  w-full   left-0 fixed top-0  z-50 font-info",
-          url !== "/" ? "backdrop-blur" : ""
+          "hidden  xl:flex items-center justify-between xl:px-10 px-5 py-5  w-full   left-0 fixed top-0  z-50 font-info"
+
           // scrolled ? "bg-background" : "bg-transparent"
         )}
       >
@@ -69,12 +69,12 @@ export const Header = () => {
           </Link>
         </div>
       </motion.header>
-      <MobileHeader scroll={scrolled} />
+      <MobileHeader scroll={scrolled} url={url} />
     </>
   );
 };
 
-const MobileHeader = ({ scroll }: { scroll: boolean }) => {
+const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -97,25 +97,24 @@ const MobileHeader = ({ scroll }: { scroll: boolean }) => {
         <motion.div className="px-3 flex flex-col divide-y">
           <Button
             onClick={() => setIsOpen(false)}
-            children={"Boutique"}
             arr={[
               { url: "/shop/women/", children: "Les vêtements" },
               { url: "/shop/women/", children: "Les minitatures" },
               { url: "/shop/women/", children: "La peinture" },
             ]}
-          />
-          <Button
-            onClick={() => setIsOpen(false)}
-            url={"/journal"}
-            children={"Journal"}
-            arr={[]}
-          />
+          >
+            Boutique
+          </Button>
+          <Button onClick={() => setIsOpen(false)} url={"/journal"} arr={[]}>
+            Journal
+          </Button>
           <Button
             onClick={() => setIsOpen(false)}
             url={"/maison-ormes/"}
-            children={"Maison Ormès"}
             arr={[]}
-          />
+          >
+            Maison Ormès
+          </Button>
         </motion.div>
         <div className="flex px-3 flex-col gap-5 uppercase opacity-50 font-bold text-sm py-5 mt-20">
           <Link className="" href={"/shop/women/"}>
@@ -148,7 +147,7 @@ const MobileHeader = ({ scroll }: { scroll: boolean }) => {
           position: "fixed",
           top: "0",
           left: 0,
-          color: !scroll && !isOpen ? "white" : "black",
+          color: !scroll && !isOpen && url == "/" ? "white" : "black",
         }}
         className={cn(
           "xl:hidden z-50  p-2  flex items-center w-screen  justify-between",
@@ -156,16 +155,14 @@ const MobileHeader = ({ scroll }: { scroll: boolean }) => {
         )}
       >
         <div className="flex gap-10 items-center">
-          <>
-            <button onClick={() => setIsOpen(!isOpen)}>
-              <Icon
-                icon={isOpen ? "system-uicons:cross" : "line-md:menu"}
-                className=""
-                width={"20"}
-                height={"20"}
-              />
-            </button>
-          </>
+          <button onClick={() => setIsOpen(!isOpen)}>
+            <Icon
+              icon={isOpen ? "system-uicons:cross" : "line-md:menu"}
+              className=""
+              width={"20"}
+              height={"20"}
+            />
+          </button>
         </div>
 
         <motion.h1 className="title  text-2xl uppercase tracking-[0.2em]  ">
@@ -195,15 +192,19 @@ const Button = ({
   arr?: { url: string; children: ReactNode }[];
   children: ReactNode;
   url?: string;
-  onClick?: () => void;
+  onClick: () => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   return (
     <div
       onClick={() => {
-        !arr?.length && onClick?.();
-        url && router.push(url);
+        if (!arr?.length) {
+          onClick();
+        }
+        if (url) {
+          router.push(url);
+        }
         setIsOpen(!isOpen);
       }}
       className="cursor-pointer flex flex-col py-5 w-full uppercase"
@@ -212,9 +213,7 @@ const Button = ({
         <Title className="text-xl">{children}</Title>
         {arr?.length ? (
           <Icon icon={isOpen ? "mdi-light:plus" : "mdi-light:minus"} />
-        ) : (
-          <></>
-        )}
+        ) : null}
       </div>
 
       {isOpen && arr?.length ? (
@@ -224,7 +223,7 @@ const Button = ({
               key={`button-sidebar-${i}`}
               className="uppercase font-medium"
               onClick={() => {
-                onClick?.();
+                onClick();
                 setIsOpen(!isOpen);
               }}
               href={item.url}
@@ -233,9 +232,7 @@ const Button = ({
             </Link>
           ))}
         </div>
-      ) : (
-        <></>
-      )}
+      ) : null}
     </div>
   );
 };
