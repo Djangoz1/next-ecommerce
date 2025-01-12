@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="">
+    <main className="w-screen max-w-screen">
       <section className="relative">
         <Image
           width={1800}
@@ -18,7 +18,7 @@ export default function Home() {
           <Title className="text-white">Nouveautés</Title>
 
           <div className="flex gap-5">
-            <Btn>Vêtements</Btn>
+            <Btn href={"/shop/women"}>Vêtements</Btn>
             <Btn>Miniatures</Btn>
           </div>
         </div>
@@ -61,7 +61,7 @@ export default function Home() {
                 alt={el.title}
                 width={800}
                 height={800}
-                className="w-full xl:h-[600px] h-[300px] hover:scale-90 object-cover object-center shadow-lg rounded-sm brightness-75 hover:brightness-100 transition-all duration-300"
+                className="w-full xl:h-[600px] h-[300px] hover:scale-90 object-cover object-center shadow-xl rounded brightness-75 hover:brightness-100 transition-all duration-300"
               />
               <h6>{el.title}</h6>
             </div>
@@ -81,10 +81,7 @@ export default function Home() {
           <Title className="text-white xl:text-4xl text-xl">
             Model & Miniatures
           </Title>
-          <Btn
-            className="text-xs xl:text-xl whitespace-nowrap"
-            variant="secondary"
-          >
+          <Btn className="text-xs  whitespace-nowrap" variant="secondary">
             Découvrir la collection
           </Btn>
         </div>
@@ -124,7 +121,7 @@ export default function Home() {
           Inscrivez-vous pour suivre l'actualité d'Ormès
         </Title>
 
-        <p className="font-extralight xl:text-3xl text-sm w-1/2 text-center">
+        <p className="font-extralight xl:text-3xl text-sm w-1/2 text-center ">
           Recevez des informations exclusives sur le lancement de la collection,
           des communication personnalisée et les dernières actualités de la
           Maison.

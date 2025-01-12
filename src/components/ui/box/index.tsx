@@ -9,11 +9,14 @@ export const Box = ({
   ...props
 }: {
   children: React.ReactNode;
-  title: string;
+  title: any;
   className?: string;
 } & React.HTMLAttributes<HTMLDivElement>) => {
   return (
-    <div className={cn("flex flex-col w-full", className)} {...props}>
+    <div
+      className={cn("flex flex-col w-full py-10 px-5", className)}
+      {...props}
+    >
       <Title className="text-lg uppercase ">{title}</Title>
       {children}
     </div>

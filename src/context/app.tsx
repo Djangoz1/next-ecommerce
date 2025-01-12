@@ -11,7 +11,7 @@ export const AppContext = createContext({});
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <AppContext.Provider value={{}}>
-      <div className="max-w-screen">
+      <div className="w-screen max-w-screen">
         <Header />
         <QueryClientProvider client={queryClient}>
           {children}

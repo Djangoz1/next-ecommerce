@@ -2,11 +2,24 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AppProvider } from "@/context/app";
 
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Alegreya_SC, Dosis } from "next/font/google";
 import { cn } from "@/utils/cn";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+});
+
+const alegryaSc = Alegreya_SC({
+  variable: "--font-alegrya-sc",
+  subsets: ["latin"],
+  weight: ["400", "500", "700", "800", "900"],
+});
+
+const dosis = Dosis({
+  variable: "--font-dosis",
+  subsets: ["latin"],
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
@@ -40,9 +53,11 @@ export default function RootLayout({
       </head> */}
       <body
         className={cn(
-          ` bg-background dark text-foreground relative flex flex-col w-screen overflow-x-hidden`,
+          ` bg-background font-info dark text-foreground relative flex flex-col w-screen max-w-screen overflow-x-hidden`,
           geistSans.variable,
-          geistMono.variable
+          geistMono.variable,
+          alegryaSc.variable,
+          dosis.variable
         )}
       >
         <AppProvider>{children}</AppProvider>
