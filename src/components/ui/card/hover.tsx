@@ -8,19 +8,16 @@ import { useState } from "react";
 import { Title } from "../typography/title";
 import { Btn } from "../btn";
 
-const items = [
-  {
-    id: "1",
-    title: "Vêtements",
-    image: "/item/1.avif",
-    thumbnail: "/item/2.avif",
-    price: 200,
-    description:
-      "Découvrez les nouveautés de la collection de prêt-à-porter pour femme et les dernières parures pour femme.",
-  },
-];
+type Items = {
+  id: string;
+  title: string;
+  image: string;
+  thumbnail: string;
+  price: number;
+  description: string;
+};
 
-export const HoveredCard = ({ item }: { item: (typeof items)[0] }) => {
+export const HoveredCard = ({ item }: { item: Items }) => {
   const [hovered, setHovered] = useState(false);
 
   return (

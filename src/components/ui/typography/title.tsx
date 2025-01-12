@@ -8,12 +8,7 @@ export const Title = ({
   className?: string;
 }) => {
   return (
-    <h6
-      className={cn(
-        "text-4xl tracking-wider font-info font-semibold",
-        className
-      )}
-    >
+    <h6 className={cn("text-4xl tracking-wider title font-medium", className)}>
       {children}
     </h6>
   );

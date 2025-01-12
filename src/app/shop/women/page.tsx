@@ -1,7 +1,6 @@
+import { Dropdown } from "@/components/ui/btn/dropdown";
 import { HoveredCard } from "@/components/ui/card/hover";
 import { Title } from "@/components/ui/typography/title";
-import { cn } from "@/utils/cn";
-import { Icon } from "@iconify/react/dist/iconify.js";
 
 import Image from "next/image";
 
@@ -43,7 +42,7 @@ const items = [
       "Découvrez les nouveautés de la collection de prêt-à-porter pour femme et les dernières parures pour femme.",
   },
 ];
-export default () => {
+const StorePage = () => {
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col relative">
@@ -65,7 +64,7 @@ export default () => {
       </div>
 
       <div className="flex flex-col pb-10 w-full pl-5 pr-10">
-        <div className="flex justify-between py-5">
+        <div className="flex justify-between py-5 items-center">
           <div className="flex gap-2">
             <a className="underline" href="#">
               Collection
@@ -74,14 +73,35 @@ export default () => {
             <a href="#">Nouveautés Femme</a>
           </div>
           <div className="flex gap-5">
-            <Dropdown children="Catégorie" arr={[]} />
-            <Dropdown children="Ligne" arr={[]} />
-            <Dropdown children="Filtres" arr={[]} />
+            <Dropdown
+              arr={[
+                {
+                  title: "Catégorie",
+                  value: "1",
+                },
+              ]}
+            ></Dropdown>
+            <Dropdown
+              arr={[
+                {
+                  title: "Ligne",
+                  value: "1",
+                },
+              ]}
+            ></Dropdown>
+            <Dropdown
+              arr={[
+                {
+                  title: "Filtres",
+                  value: "1",
+                },
+              ]}
+            ></Dropdown>
           </div>
         </div>
 
         <div className="grid grid-cols-4 w-full divide-x divide-y border">
-          {[...items, ...items].map((item, index, arr) => (
+          {[...items, ...items].map((item, index) => (
             <HoveredCard key={`item-${index}`} item={item} />
           ))}
         </div>
@@ -90,17 +110,4 @@ export default () => {
   );
 };
 
-const Dropdown = ({
-  children,
-  arr,
-}: {
-  children: React.ReactNode;
-  arr: { title: string; id: string }[];
-}) => {
-  return (
-    <div className="flex gap-1 items-center ">
-      <span className="underline font-light uppercase text-sm">{children}</span>
-      <Icon icon="mdi:chevron-down" />
-    </div>
-  );
-};
+export default StorePage;

@@ -85,7 +85,7 @@ const Col = ({
 }) => {
   return (
     <div className="flex flex-col gap-10 text-sm whitespace-nowrap">
-      <Title className="text-lg opacity-50">{children}</Title>
+      <h6 className="text-lg font-info font-bold opacity-50">{children}</h6>
       <div className="flex flex-col gap-4">
         {arr.map((item, i) => (
           <Link

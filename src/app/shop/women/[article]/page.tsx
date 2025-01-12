@@ -60,7 +60,7 @@ const Page = () => {
         </div>
       </div>
       <div className="flex gap-10 py-20">
-        <div className="px-5 flex flex-col divide-y w-full">
+        <div className="px-5 flex flex-col  w-full">
           <BoxCascade title="Matériaux et entretien" className="">
             <p className="w-1/2">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Et

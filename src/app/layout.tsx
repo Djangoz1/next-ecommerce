@@ -39,21 +39,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-          rel="stylesheet"
-        />
-      </head> */}
       <body
         className={cn(
-          ` bg-background font-info dark text-foreground relative flex flex-col w-screen max-w-screen overflow-x-hidden`,
+          ` bg-background font-info dark text-foreground w-full p-0 m-0 relative flex flex-col `,
           geistSans.variable,
           geistMono.variable,
           alegryaSc.variable,

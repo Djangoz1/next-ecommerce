@@ -16,28 +16,24 @@ export const BoxCascade = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Box
-      className="gap-10 cursor-pointer"
+      className="gap-10 cursor-pointer border-b border-black/40 relative "
       onClick={() => setIsOpen(!isOpen)}
-      title={
-        (
-          <span className="flex items-center justify-between w-full">
-            {title}{" "}
-            <Icon
-              className={cn(
-                "transition-all duration-300",
-                isOpen ? "rotate-180" : ""
-              )}
-              icon={"line-md:chevron-up"}
-            />
-          </span>
-        ) as unknown as any
-      }
+      title={title}
     >
       {isOpen ? (
         <div className={cn("w-full", className)}>{children}</div>
       ) : (
         <></>
       )}
+      <span className=" absolute top-10 right-5">
+        <Icon
+          className={cn(
+            "transition-all duration-300",
+            isOpen ? "rotate-180" : ""
+          )}
+          icon={"line-md:chevron-up"}
+        />
+      </span>
     </Box>
   );
 };

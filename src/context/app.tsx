@@ -11,13 +11,15 @@ export const AppContext = createContext({});
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <AppContext.Provider value={{}}>
-      <div className="w-screen max-w-screen">
-        <Header />
+      <div className="w-full max-w-full  absolute h-screen flex flex-col  ">
         <QueryClientProvider client={queryClient}>
-          {children}
+          <main className="w-full  flex flex-col overflow overflow-x-hidden ">
+            {children}
+          </main>
+          <Footer />
         </QueryClientProvider>
-        <Footer />
       </div>
+      <Header />
     </AppContext.Provider>
   );
 };

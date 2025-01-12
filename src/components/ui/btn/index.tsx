@@ -6,7 +6,7 @@ const variants = {
   primary: "bg-black text-white",
   secondary:
     "bg-black/10 border-2 backdrop-blur-xl text-white border-white hover:bg-black/30",
-  link: "shadow-none   hover:text-blue-700 border-none underline",
+  link: "shadow-none   hover:text-blue-700 border-none underline font-medium",
 };
 
 type BtnProps = {
