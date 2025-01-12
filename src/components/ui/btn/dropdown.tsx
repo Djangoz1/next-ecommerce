@@ -1,13 +1,20 @@
 "use client";
 
+import { cn } from "@/utils/cn";
+
 export const Dropdown = ({
   arr,
+  className = "",
 }: {
   arr: { title: string; value?: string }[];
+  className?: string;
 }) => {
   return (
     <select
-      className="w-fit font-info px-2 py-3 border rounded-sm   pr-10 bg-transparent border-gray-400"
+      className={cn(
+        "w-fit font-info px-2 py-3 border rounded-sm   pr-10 bg-transparent border-gray-400",
+        className
+      )}
       name="Testyons"
       id=""
     >

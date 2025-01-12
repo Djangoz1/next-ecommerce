@@ -1,4 +1,5 @@
 import { BoxCascade } from "@/components/ui/box/box-cascade";
+import { Tabs } from "@/components/ui/box/tabs";
 import { Btn } from "@/components/ui/btn";
 import { Dropdown } from "@/components/ui/btn/dropdown";
 import { Title } from "@/components/ui/typography/title";
@@ -15,10 +16,157 @@ const item = {
   taille: "M",
 };
 
+const images = [
+  "/model/1.jpg",
+  "/model/2.jpg",
+  "/model/3.jpg",
+  "/model/4.jpg",
+  "/model/5.jpg",
+];
+
 const Page = () => {
   return (
-    <main className="flex flex-col w-screen">
-      <div className="flex w-screen h-screen relative">
+    <div className="flex  w-full relative">
+      <div className="relative flex w-full ">
+        <div className="flex w-1/2 flex-col">
+          {images.map((image, i) => (
+            <Image
+              className="w-full"
+              key={`image-item-${i}`}
+              src={image}
+              width={1800}
+              height={1800}
+              alt={item.title + " image " + i}
+            />
+          ))}
+        </div>
+        <div className="fixed right-0 top-0 w-1/2">
+          <div className="flex flex-col gap-5 py-40  mx-auto items-center w-[500px]">
+            <Title className="text-4xl">{item.title}</Title>
+
+            <p className="uppercase font-light">
+              Robe longue en coton crinkle lacée dans le dos
+            </p>
+
+            <span className="font-black">€ {item.price}</span>
+            <div className="flex w-full items-center gap-10 whitespace-nowrap mb-5">
+              <Dropdown
+                className="w-full"
+                arr={[
+                  { title: "Taille" },
+                  { title: "M", value: "M" },
+                  { title: "L", value: "L" },
+                  { title: "XL", value: "XL" },
+                  { title: "XXL", value: "XXL" },
+                ]}
+              />
+
+              <button className="opacity-75 font-light">
+                Guide des tailles
+              </button>
+            </div>
+            <Btn
+              variant="primary"
+              className="w-full text-center justify-center"
+            >
+              Ajouter à votre panier
+            </Btn>
+            <Tabs
+              className="w-full mt-10"
+              arr={[
+                {
+                  title: "Détails",
+                  children: (
+                    <>
+                      Robe longue.
+                      <ul className="list-disc list-inside">
+                        <li>Coloris vert</li>
+                        <li>Coupe cintrée</li>
+                        <li>Laçage dans le dos</li>
+                        <li>Manches longues</li>
+                        <li>Fabriquée en France</li>
+                      </ul>
+                    </>
+                  ),
+                },
+                {
+                  title: "Coupe",
+                  children: (
+                    <>
+                      Conseils taille :
+                      <ul className="list-disc list-inside">
+                        <li>
+                          Cette pièce taille normalement, prenez votre taille
+                          habituelle.
+                        </li>
+                        <li>
+                          Henriette mesure 170 cm, elle porte une taille 36.
+                        </li>
+                      </ul>
+                      Dimensions :
+                      <ul className="list-disc list-inside">
+                        <li>Longueur totale : 113 cm pour une taille 36</li>
+                        <li>Comptez 1 cm en plus par taille supplémentaire.</li>
+                      </ul>
+                    </>
+                  ),
+                },
+                {
+                  title: "Compo & Care",
+                  children: (
+                    <>
+                      Composition:
+                      <ul className="list-disc list-inside">
+                        <li>
+                          Matière principale : 67% coton (67% coton biologique),
+                          32% polyamide, 1% élasthanne
+                        </li>
+                      </ul>
+                      Entretien de votre pièce Ormés :
+                      <ul className="list-disc list-inside">
+                        <li>Lavage à 30°C max avec coloris similaires.</li>
+                        <li>Eau de javel interdite</li>
+                        <li>Séchage en tambour interdit</li>
+                        <li>Repassage à fer doux sur l'envers</li>
+                        <li>Nettoyage à sec autorisé</li>
+                      </ul>
+                    </>
+                  ),
+                },
+                {
+                  title: "Engagements",
+                  children: (
+                    <>
+                      Initiatives:
+                      <ul className="list-disc list-inside">
+                        <li>Fabrication en France (Ile de France)</li>
+                        <li>Transport routier</li>
+                        <li>
+                          67% de coton contenu dans la matière principale de
+                          cette pièce est biologique.
+                        </li>
+                      </ul>
+                      Traçabilité matières :
+                      <ul className="list-disc list-inside">
+                        <li>
+                          Filature : polyamide en Chine, élasthanne en Turquie,
+                          coton en Turquie
+                        </li>
+                        <li>Tricotage : Turquie</li>
+                        <li>Teinture : Turquie</li>
+                        <li>Finition : Turquie</li>
+                        <li>Assemblage : France (Ile De France)</li>
+                      </ul>
+                    </>
+                  ),
+                },
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* <div className="flex w-screen h-screen relative">
         <Image
           alt="a"
           src="/item/2-1.avif"
@@ -38,25 +186,8 @@ const Page = () => {
           <Title className="text-2xl">{item.title}</Title>
 
           <span className="text-2xl my-10 font-black">€ {item.price}</span>
-          <div className="flex items-center gap-10 px-5 mb-5">
-            <Dropdown
-              arr={[
-                { title: "Taille" },
-                { title: "M", value: "M" },
-                { title: "L", value: "L" },
-                { title: "XL", value: "XL" },
-                { title: "XXL", value: "XXL" },
-              ]}
-            />
-
-            <Btn variant="link" className="text-black">
-              <Icon icon="la:ruler-horizontal" />
-              Guide des tailles
-            </Btn>
-          </div>
-          <Btn variant="primary" className="w-full text-center justify-center">
-            Ajouter à votre panier
-          </Btn>
+         
+         
         </div>
       </div>
       <div className="flex gap-10 py-20">
@@ -130,9 +261,128 @@ const Page = () => {
             <a className="underline font-bold">Imprimer</a>
           </div>
         </div>
-      </div>
-    </main>
+      </div> */}
+    </div>
   );
 };
+// const Page = () => {
+//   return (
+//     <div className="flex flex-col w-screen">
+//       <div className="flex w-screen h-screen relative">
+//         <Image
+//           alt="a"
+//           src="/item/2-1.avif"
+//           className="w-1/2 h-full object-cover object-center"
+//           width={1800}
+//           height={1800}
+//         />
+//         <Image
+//           src="/item/2.avif"
+//           width={1800}
+//           height={1800}
+//           alt=""
+//           className="w-1/2 h-full object-cover object-center"
+//         />
+
+//         <div className="flex flex-col  w-fit items-center bg-white/60 backdrop-blur rounded-md shadow pt-10 p-5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+//           <Title className="text-2xl">{item.title}</Title>
+
+//           <span className="text-2xl my-10 font-black">€ {item.price}</span>
+//           <div className="flex items-center gap-10 px-5 mb-5">
+//             <Dropdown
+//               arr={[
+//                 { title: "Taille" },
+//                 { title: "M", value: "M" },
+//                 { title: "L", value: "L" },
+//                 { title: "XL", value: "XL" },
+//                 { title: "XXL", value: "XXL" },
+//               ]}
+//             />
+
+//             <Btn variant="link" className="text-black">
+//               <Icon icon="la:ruler-horizontal" />
+//               Guide des tailles
+//             </Btn>
+//           </div>
+//           <Btn variant="primary" className="w-full text-center justify-center">
+//             Ajouter à votre panier
+//           </Btn>
+//         </div>
+//       </div>
+//       <div className="flex gap-10 py-20">
+//         <div className="px-5 flex flex-col  w-full">
+//           <BoxCascade title="Matériaux et entretien" className="">
+//             <p className="w-1/2">
+//               Lorem ipsum dolor sit amet consectetur adipisicing elit. Et
+//               accusamus magnam natus aperiam veritatis enim quasi iure
+//               consectetur officiis reprehenderit dicta repudiandae, distinctio
+//               saepe. Perferendis unde omnis consequuntur veniam ullam?
+//             </p>
+//           </BoxCascade>
+//           <BoxCascade title="Expédition, retours et échanges">
+//             <p className="w-1/2">
+//               Lorem ipsum dolor sit amet consectetur adipisicing elit. Et
+//               accusamus magnam natus aperiam veritatis enim quasi iure
+//               consectetur officiis reprehenderit dicta repudiandae, distinctio
+//               saepe. Perferendis unde omnis consequuntur veniam ullam?
+//             </p>
+//           </BoxCascade>
+//           <BoxCascade title="Paiements">
+//             <p className="w-1/2">
+//               Lorem ipsum dolor sit amet consectetur adipisicing elit. Et
+//               accusamus magnam natus aperiam veritatis enim quasi iure
+//               consectetur officiis reprehenderit dicta repudiandae, distinctio
+//               saepe. Perferendis unde omnis consequuntur veniam ullam?
+//             </p>
+//           </BoxCascade>
+//         </div>
+
+//         <div className="flex flex-col px-5 py-3 w-[700px] border mr-20 items-center bg-white shadow rounded-md gap-10">
+//           <Image
+//             src={"/item/2.avif"}
+//             alt=""
+//             width={1800}
+//             height={1800}
+//             className="w-[200px] h-[200px] object-cover object-center"
+//           />
+//           <div className="flex flex-col gap-1 items-center">
+//             <Icon
+//               width={40}
+//               height={40}
+//               className="text-foreground opacity-90"
+//               icon="material-symbols-light:globe"
+//             />
+//             <span className="font-bold text-sm underline capitalize">
+//               Notre engagement
+//             </span>
+//           </div>
+
+//           <div className="flex flex-col gap-5 w-full">
+//             <Title className="text-xl">Détails du produit</Title>
+
+//             <p className="font-light">Modèle {item.model}</p>
+
+//             <p className="font-light">
+//               Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum
+//               quibusdam mollitia veritatis voluptas necessitatibus molestiae
+//               saepe, numquam ullam non in doloribus perferendis eaque odit illo
+//               quas tempore? Eius, autem sunt.
+//             </p>
+
+//             <ul className="list-disc list-inside">
+//               {Array.from({ length: 10 }).map((_, i) => (
+//                 <li className="font-light text-sm" key={i}>
+//                   Cuir
+//                 </li>
+//               ))}
+//             </ul>
+
+//             <a className="underline font-bold">Imprimer</a>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
 export default Page;

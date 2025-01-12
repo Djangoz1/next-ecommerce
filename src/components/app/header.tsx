@@ -41,8 +41,6 @@ export const Header = () => {
         }}
         className={cn(
           "hidden  xl:flex items-center justify-between xl:px-10 px-5 py-5  w-full   left-0 fixed top-0  z-50 font-info"
-
-          // scrolled ? "bg-background" : "bg-transparent"
         )}
       >
         <div className=" text-sm flex items-center uppercase font-light tracking-wider gap-20 xl:opacity-100 opacity-0 pointer-events-none">

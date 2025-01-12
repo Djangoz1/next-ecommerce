@@ -1,7 +1,4 @@
-import { Dropdown } from "@/components/ui/btn/dropdown";
-import { HoveredCard } from "@/components/ui/card/hover";
 import { Title } from "@/components/ui/typography/title";
-
 import Image from "next/image";
 import Link from "next/link";
 
