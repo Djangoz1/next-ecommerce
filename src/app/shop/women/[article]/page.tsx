@@ -85,7 +85,7 @@ const Device = () => {
               arr={[
                 {
                   title: "Détails",
-                  children: (
+                  component: (
                     <>
                       Robe longue.
                       <ul className="list-disc list-inside">
@@ -100,7 +100,7 @@ const Device = () => {
                 },
                 {
                   title: "Coupe",
-                  children: (
+                  component: (
                     <>
                       Conseils taille :
                       <ul className="list-disc list-inside">
@@ -122,7 +122,7 @@ const Device = () => {
                 },
                 {
                   title: "Compo & Care",
-                  children: (
+                  component: (
                     <>
                       Composition:
                       <ul className="list-disc list-inside">
@@ -144,7 +144,7 @@ const Device = () => {
                 },
                 {
                   title: "Engagements",
-                  children: (
+                  component: (
                     <>
                       Initiatives:
                       <ul className="list-disc list-inside">
@@ -205,89 +205,68 @@ const Mobile = () => {
         <button className="opacity-75 font-light">Guide des tailles</button>
 
         <div className="flex flex-col w-full border-t">
-          <BoxCascade
-            title="Détails"
-            children={
-              <>
-                Robe longue.
-                <ul className="list-disc list-inside">
-                  <li>Coloris vert</li>
-                  <li>Coupe cintrée</li>
-                  <li>Laçage dans le dos</li>
-                  <li>Manches longues</li>
-                  <li>Fabriquée en France</li>
-                </ul>
-              </>
-            }
-          />
+          <BoxCascade title="Détails">
+            Robe longue.
+            <ul className="list-disc list-inside">
+              <li>Coloris vert</li>
+              <li>Coupe cintrée</li>
+              <li>Laçage dans le dos</li>
+              <li>Manches longues</li>
+              <li>Fabriquée en France</li>
+            </ul>
+          </BoxCascade>
 
-          <BoxCascade
-            title="Coupe"
-            children={
-              <>
-                Conseils taille :
-                <ul className="list-disc list-inside">
-                  <li>
-                    Cette pièce taille normalement, prenez votre taille
-                    habituelle.
-                  </li>
-                  <li>Henriette mesure 170 cm, elle porte une taille 36.</li>
-                </ul>
-                Dimensions :
-                <ul className="list-disc list-inside">
-                  <li>Longueur totale : 113 cm pour une taille 36</li>
-                  <li>Comptez 1 cm en plus par taille supplémentaire.</li>
-                </ul>
-              </>
-            }
-          />
-          <BoxCascade
-            title="Compo & Care"
-            children={
-              <>
-                Conseils taille :
-                <ul className="list-disc list-inside">
-                  <li>
-                    Cette pièce taille normalement, prenez votre taille
-                    habituelle.
-                  </li>
-                  <li>Henriette mesure 170 cm, elle porte une taille 36.</li>
-                </ul>
-                Dimensions :
-                <ul className="list-disc list-inside">
-                  <li>Longueur totale : 113 cm pour une taille 36</li>
-                  <li>Comptez 1 cm en plus par taille supplémentaire.</li>
-                </ul>
-              </>
-            }
-          />
-          <BoxCascade
-            title="Engagements"
-            children={
-              <>
-                Initiatives:
-                <ul className="list-disc list-inside">
-                  <li>Fabrication en France (Ile de France)</li>
-                  <li>Transport routier</li>
-                  <li>
-                    67% de coton contenu dans la matière principale de cette
-                    pièce est biologique.
-                  </li>
-                </ul>
-                Traçabilité matières :
-                <ul className="list-disc list-inside">
-                  <li>
-                    Filature : polyamide en Chine, élasthanne en Turquie, coton
-                    en Turquie
-                  </li>
-                  <li>Tricotage : Turquie</li>
-                  <li>Teinture : Turquie</li>
-                  <li>Finition : Turquie</li>
-                  <li>Assemblage : France (Ile De France)</li>
-                </ul>
-              </>
-            }
-          />
+          <BoxCascade title="Coupe">
+            Conseils taille :
+            <ul className="list-disc list-inside">
+              <li>
+                Cette pièce taille normalement, prenez votre taille habituelle.
+              </li>
+              <li>Henriette mesure 170 cm, elle porte une taille 36.</li>
+            </ul>
+            Dimensions :
+            <ul className="list-disc list-inside">
+              <li>Longueur totale : 113 cm pour une taille 36</li>
+              <li>Comptez 1 cm en plus par taille supplémentaire.</li>
+            </ul>
+          </BoxCascade>
+
+          <BoxCascade title="Compo & Care">
+            Conseils taille :
+            <ul className="list-disc list-inside">
+              <li>
+                Cette pièce taille normalement, prenez votre taille habituelle.
+              </li>
+              <li>Henriette mesure 170 cm, elle porte une taille 36.</li>
+            </ul>
+            Dimensions :
+            <ul className="list-disc list-inside">
+              <li>Longueur totale : 113 cm pour une taille 36</li>
+              <li>Comptez 1 cm en plus par taille supplémentaire.</li>
+            </ul>
+          </BoxCascade>
+          <BoxCascade title="Engagements">
+            Initiatives:
+            <ul className="list-disc list-inside">
+              <li>Fabrication en France (Ile de France)</li>
+              <li>Transport routier</li>
+              <li>
+                67% de coton contenu dans la matière principale de cette pièce
+                est biologique.
+              </li>
+            </ul>
+            Traçabilité matières :
+            <ul className="list-disc list-inside">
+              <li>
+                Filature : polyamide en Chine, élasthanne en Turquie, coton en
+                Turquie
+              </li>
+              <li>Tricotage : Turquie</li>
+              <li>Teinture : Turquie</li>
+              <li>Finition : Turquie</li>
+              <li>Assemblage : France (Ile De France)</li>
+            </ul>
+          </BoxCascade>
         </div>
       </div>
     </div>

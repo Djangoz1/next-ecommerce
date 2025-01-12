@@ -43,7 +43,7 @@ export const Header = () => {
           "hidden  xl:flex items-center justify-between xl:px-10 px-5 py-5  w-full   left-0 fixed top-0  z-50 font-info"
         )}
       >
-        <div className=" text-sm flex items-center uppercase font-light tracking-wider gap-20 xl:opacity-100 opacity-0 pointer-events-none">
+        <div className=" text-sm flex items-center uppercase font-light tracking-wider gap-20 xl:opacity-100 opacity-0 ">
           <Link href={"/shop/women"} className="hover:underline">
             Boutique
           </Link>
@@ -88,7 +88,7 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
           type: "spring",
         }}
         className={cn(
-          "fixed top-0 left-0 bg-background text-black right-0 bottom-0 backdrop-blur z-50  w-full h-screen flex flex-col py-20",
+          "fixed xl:hidden  top-0 left-0 bg-background text-black right-0 bottom-0 backdrop-blur z-50  w-full h-screen flex flex-col py-20",
           isOpen ? "pointer-events-auto" : "pointer-events-none"
         )}
       >

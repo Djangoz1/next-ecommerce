@@ -6,7 +6,7 @@ export const Tabs = ({
   arr,
   className = "",
 }: {
-  arr: { children: ReactNode; title: string }[];
+  arr: { component: ReactNode; title: string }[];
   className?: string;
 }) => {
   const [active, setActive] = useState(0);
@@ -27,7 +27,7 @@ export const Tabs = ({
         ))}
       </div>
 
-      <div className="w-full">{arr[active].children}</div>
+      <div className="w-full">{arr[active].component}</div>
     </div>
   );
 };

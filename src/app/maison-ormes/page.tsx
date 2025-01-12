@@ -1,4 +1,5 @@
 import { BoxCascade } from "@/components/ui/box/box-cascade";
+import { Btn } from "@/components/ui/btn";
 import { Text } from "@/components/ui/typography/text";
 import { Title } from "@/components/ui/typography/title";
 import Image from "next/image";
@@ -6,16 +7,22 @@ import React from "react";
 
 const PageOrmes = () => {
   return (
-    <main className="flex flex-col py-40 items-center">
-      <Section title="L'histoire d'Ormés">
+    <div className="flex flex-col py-40 items-center">
+      <Section title="La Maison Ormés">
         <Text className="text-center">
-          Créée en 1921, avec l’ouverture d’une boutique dans une ruelle de
-          Florence, la Maison Gucci est depuis lors devenue un symbole de
-          renommée mondiale, incarnant l’artisanat italien, la créativité
-          visionnaire et le design innovant. Reflétant et définissant les
-          décennies qui l’ont façonnée, l’histoire de la Maison a influencé la
-          mode et la culture de manière impérissable tout au long des vingtième
-          et vingt-et-unième siècles.
+          ORMÉS est une maison de création et de savoir-faire.
+          <br />
+          <br />
+          Fondée par Sandra Djangoné, ORMÉS incarne sa vision du vestiaire idéal
+          : un vestiaire qui magnifie le quotidien à travers des pièces à la
+          fois intemporelles et profondément uniques.
+          <br />
+          <br />
+          Confectionnées à la demande ou en petites séries, les créations ORMÉS
+          sont réalisées à partir de matières naturelles d' exception et
+          façonnées par des artisans de renom exclusivement en Europe. Chaque
+          pièce, bien plus qu ’ un vêtement, est un concentré de savoir-faire,
+          portant en elle une âme qui dépasse les saisons et les tendances.
         </Text>
 
         <div className="flex flex-col w-full ">
@@ -63,14 +70,38 @@ const PageOrmes = () => {
           Locchi Firenze
         </figcaption>
       </figure>
-      <Section title="La chronologie d'Ormés">
+      <Section title="La créatrice">
         <Text className="text-center">
-          L’histoire de la Maison, qui s’étend sur plus d’un siècle, met en
-          évidence une vision en constante évolution. Chaque décennie est
-          marquée par une succession de jalons historiques qui caractérisent
-          l’évolution de la marque, se métamorphosant d’un petit atelier de
-          bagagerie en un leader mondial de la mode de luxe.
+          La Maison ORMÉS a été fondée par Sandra Djangoné, issue d' une famille
+          d' artisans, de passionnés d' art et de vintage.
+          <br />
+          Cet univers familial a développé chez elle un goût prononcé pour l'
+          artisanat, l'élégance et le savoir-faire d' exception qui permettent
+          de créer des pièces intemporelles élégantes et durables avec minutie ,
+          ce qui donne l'Aura de la Maison ORMÉS .
+          <br />
+          <br />
+          L'histoire commence lorsqu ' elle débute sa formation dans la mode
+          chez Chanel où elle a pu s 'imprégner des codes du monde merveilleux
+          du luxe, celui de l'intransigeance, de la minutie et du savoir-faire.
+          Baignant dans cet univers, la fondatrice rêvait de créer sa maison,
+          une mode durable avec une âme composées de pièces fortes aux lignes
+          épurées, élégantes et modernes.
+          <br />
+          <br />
+          La fondatrice crée des pièces intemporelles avec un mélange de style
+          vintage, moderne et épuré qui peuvent être chéries toute une vie,
+          transmises de génération en génération, réinterprétées pour exprimer
+          l'individualité de celui qui les porte.
         </Text>
+        <p className="text-center">
+          <cite>
+            « Les femmes qui m ’ entourent m ’inspirent par leur caractère, leur
+            style et la façon dont elles pourraient porter ces vêtements. »
+          </cite>
+          <br />
+          Sandra Djangoné
+        </p>
 
         <figure className="flex flex-col items-center gap-3 w-full ">
           <Image
@@ -86,7 +117,62 @@ const PageOrmes = () => {
           </figcaption>
         </figure>
       </Section>
-    </main>
+
+      <Section title="Manifeste">
+        <Text className="text-center">
+          Je pense qu 'il y a trop de vêtements et de matières synthétiques qui
+          polluent notre planète.
+          <br />
+          <br />
+          Le modèle de la mode, qui rend chaque saison obsolète, est défaillant.
+          <br />
+          <br />
+          Je pense qu 'il n ' est pas nécessaire d' avoir toujours plus de
+          vêtements, mais plutôt quelques pièces d' une qualité exceptionnelle,
+          intemporelles, qui offrent chaque jour le plaisir de les porter et d’
+          embellir notre quotidien.
+          <br />
+          <br />
+          Les vêtements ont une âme, ils méritent d'être chéris toute une vie et
+          de traverser les générations.
+        </Text>
+      </Section>
+      <Section title="Engagements">
+        <div className="flex flex-col gap-2 items-center">
+          <h6 className="uppercase text-xl">UNE MODE RESPONSABLE</h6>
+
+          <Text className="text-center">
+            ORMÉS s ’ engage à utiliser exclusivement des ingrédients 100 %
+            naturels, issus de sources durables et respectueuses de l’
+            environnement. Chaque matière première est soigneusement
+            sélectionnée pour sa pureté et son origine responsable, garantissant
+            des vêtements authentiques et respectueux de la biodiversité.
+          </Text>
+        </div>
+        <div className="flex flex-col gap-2 items-center">
+          <h6 className="uppercase text-xl">Des matières naturelles</h6>
+
+          <Text className="text-center">
+            Chaque pièce est conçue pour durer dans le temps, en utilisant
+            exclusivement des matières naturelles d’ exception, toutes
+            certifiées par des labels écologiques rigoureux.
+          </Text>
+        </div>
+        <div className="flex flex-col gap-2 items-center">
+          <h6 className="uppercase text-xl">
+            Une fabrication raisonnée européenne
+          </h6>
+
+          <Text className="text-center">
+            La production, 100 % européenne, repose sur un modèle à la demande
+            ou en petites séries. Cela permet une fabrication raisonnée, limitée
+            à l' essentiel et soucieuse de l'impact environnemental.
+          </Text>
+        </div>
+      </Section>
+
+      <Btn variant="link">En savoir plus sur la fabrication à la demande</Btn>
+    </div>
   );
 };
 
