@@ -7,7 +7,7 @@ import React from "react";
 
 const PageOrmes = () => {
   return (
-    <div className="flex flex-col py-40 items-center">
+    <div className="flex flex-col xl:py-40 py-20 xl:px-0 px-5 items-center gap-10 xl:gap-20">
       <Section title="La Maison Ormés">
         <Text className="text-center">
           ORMÉS est une maison de création et de savoir-faire.
@@ -57,7 +57,7 @@ const PageOrmes = () => {
         </div>
       </Section>
 
-      <figure className="flex flex-col items-center gap-3 w-full my-20">
+      <figure className="flex flex-col items-center gap-3 w-full ">
         <Image
           width={1800}
           height={1800}
@@ -184,7 +184,7 @@ const Section = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className="flex flex-col items-center gap-20 xl:w-2/3 w-full py-20">
+    <div className="flex flex-col items-center xl:gap-20 gap-5 xl:w-2/3 w-full xl:py-20 py-10">
       <Title className="uppercase text-center text-4xl">{title}</Title>
       {children}
     </div>

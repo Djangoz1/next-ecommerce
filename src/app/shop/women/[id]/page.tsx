@@ -1,19 +1,36 @@
+"use client";
 import { BoxCascade } from "@/components/ui/box/box-cascade";
 import { Tabs } from "@/components/ui/box/tabs";
 import { Btn } from "@/components/ui/btn";
 import { Dropdown } from "@/components/ui/btn/dropdown";
 import { Title } from "@/components/ui/typography/title";
+import { useApi } from "@/hooks/useApi";
 
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import React from "react";
+import { Item } from "../page";
+import { cn } from "@/utils/cn";
 
-const item = {
-  id: "1",
-  title: "Kimono Model First",
-  model: "795430 AAEFI 9110",
-  price: "135",
-  miniature: false,
-  taille: "M",
+type BaseMetadata = {
+  title: string;
+  content: string[];
+};
+
+export type ItemMetadata = {
+  care: BaseMetadata;
+  compo: BaseMetadata;
+  details: BaseMetadata;
+  traceability: BaseMetadata;
+  engagements: BaseMetadata;
+  model: {
+    dimension: number;
+    tall: number;
+    centimeters_by_size: number;
+    regular: boolean;
+    size: number;
+    name: string;
+  };
 };
 
 const images = [
@@ -24,40 +41,70 @@ const images = [
   "/model/5.jpg",
 ];
 
-const Page = () => {
+const Page = ({ ctx }: { params: { id: string }; ctx: any }) => {
+  const params = useParams();
+  console.log({ params, ctx });
+  const { data } = useApi({
+    path: `/items/${params.id}`,
+    method: "GET",
+  });
+  console.log({ data });
+  if (!data) return null;
   return (
     <>
-      <Device />
-      <Mobile />
+      <Device item={data} />
+      <Mobile item={data} />
     </>
   );
 };
 
-const Device = () => {
+const Device = ({
+  item,
+}: {
+  item: Item & {
+    gallery: { image: string; id: string }[];
+    metadata: ItemMetadata;
+  };
+}) => {
   return (
     <div className="hidden xl:flex   w-full relative">
       <div className="relative flex w-full ">
         <div className="flex w-1/2 flex-col">
-          {images.map((image, i) => (
+          {[{ image: item.main_image }, ...item.gallery].map((image, i) => (
             <Image
               className="w-full"
               key={`image-item-${i}`}
-              src={image}
+              src={image.image}
               width={1800}
               height={1800}
-              alt={item.title + " image " + i}
+              alt={item.name + " image " + i}
             />
           ))}
         </div>
         <div className="fixed right-0 top-0 w-1/2">
           <div className="flex flex-col gap-5 py-40  mx-auto items-center w-[500px]">
-            <Title className="text-4xl">{item.title}</Title>
+            <Title className="text-4xl">{item.name}</Title>
 
-            <p className="uppercase font-light">
-              Robe longue en coton crinkle lacée dans le dos
-            </p>
-
-            <span className="font-black">€ {item.price}</span>
+            <p className="uppercase font-light">{item.abstract_description}</p>
+            <div className="flex items-center gap-2">
+              {item.discount ? (
+                <span className="font-black">
+                  €{" "}
+                  {(
+                    Number(item.price) -
+                    Number(item.price) / item.discount
+                  ).toFixed(2)}
+                </span>
+              ) : null}
+              <span
+                className={cn(
+                  "font-black",
+                  item.discount ? "line-through opacity-50" : ""
+                )}
+              >
+                € {item.price}
+              </span>
+            </div>
             <div className="flex w-full items-center gap-10 whitespace-nowrap mb-5">
               <Dropdown
                 className="w-full"
@@ -87,13 +134,11 @@ const Device = () => {
                   title: "Détails",
                   component: (
                     <>
-                      Robe longue.
+                      {item.metadata.details.title}
                       <ul className="list-disc list-inside">
-                        <li>Coloris vert</li>
-                        <li>Coupe cintrée</li>
-                        <li>Laçage dans le dos</li>
-                        <li>Manches longues</li>
-                        <li>Fabriquée en France</li>
+                        {item.metadata.details.content.map((item, i) => (
+                          <li key={`detail-metadata--${i}`}>{item}</li>
+                        ))}
                       </ul>
                     </>
                   ),
@@ -105,17 +150,28 @@ const Device = () => {
                       Conseils taille :
                       <ul className="list-disc list-inside">
                         <li>
-                          Cette pièce taille normalement, prenez votre taille
-                          habituelle.
+                          {item.metadata.model.regular
+                            ? "Cette pièce taille normalement, prenez votre taille habituelle."
+                            : "Cette pièce taille petite, prenez votre taille habituelle moins 1."}
                         </li>
                         <li>
-                          Henriette mesure 170 cm, elle porte une taille 36.
+                          <b>{item.metadata.model.name}</b> mesure{" "}
+                          <b>{item.metadata.model.tall}</b> cm, elle porte une
+                          taille <b>{item.metadata.model.size}.</b>
                         </li>
                       </ul>
                       Dimensions :
                       <ul className="list-disc list-inside">
-                        <li>Longueur totale : 113 cm pour une taille 36</li>
-                        <li>Comptez 1 cm en plus par taille supplémentaire.</li>
+                        <li>
+                          Longueur totale :{" "}
+                          <b>{item.metadata.model.dimension}</b> cm pour une
+                          taille <b>{item.metadata.model.size}</b>
+                        </li>
+                        <li>
+                          Comptez{" "}
+                          <b>{item.metadata.model.centimeters_by_size}</b> cm en
+                          plus par taille supplémentaire.
+                        </li>
                       </ul>
                     </>
                   ),
@@ -124,20 +180,17 @@ const Device = () => {
                   title: "Compo & Care",
                   component: (
                     <>
-                      Composition:
+                      Composition matière principale :
                       <ul className="list-disc list-inside">
-                        <li>
-                          Matière principale : 67% coton (67% coton biologique),
-                          32% polyamide, 1% élasthanne
-                        </li>
+                        {item.metadata.compo.content.map((item, i) => (
+                          <li key={`compo-metadata--${i}`}>{item}</li>
+                        ))}
                       </ul>
                       Entretien de votre pièce Ormés :
                       <ul className="list-disc list-inside">
-                        <li>Lavage à 30°C max avec coloris similaires.</li>
-                        <li>Eau de javel interdite</li>
-                        <li>Séchage en tambour interdit</li>
-                        <li>Repassage à fer doux sur l'envers</li>
-                        <li>Nettoyage à sec autorisé</li>
+                        {item.metadata.care.content.map((item, i) => (
+                          <li key={`care-metadata--${i}`}>{item}</li>
+                        ))}
                       </ul>
                     </>
                   ),
@@ -146,25 +199,17 @@ const Device = () => {
                   title: "Engagements",
                   component: (
                     <>
-                      Initiatives:
+                      Initiatives :
                       <ul className="list-disc list-inside">
-                        <li>Fabrication en France (Ile de France)</li>
-                        <li>Transport routier</li>
-                        <li>
-                          67% de coton contenu dans la matière principale de
-                          cette pièce est biologique.
-                        </li>
+                        {item.metadata.engagements.content.map((item, i) => (
+                          <li key={`engagements-metadata--${i}`}>{item}</li>
+                        ))}
                       </ul>
                       Traçabilité matières :
                       <ul className="list-disc list-inside">
-                        <li>
-                          Filature : polyamide en Chine, élasthanne en Turquie,
-                          coton en Turquie
-                        </li>
-                        <li>Tricotage : Turquie</li>
-                        <li>Teinture : Turquie</li>
-                        <li>Finition : Turquie</li>
-                        <li>Assemblage : France (Ile De France)</li>
+                        {item.metadata.traceability.content.map((item, i) => (
+                          <li key={`traceability-metadata--${i}`}>{item}</li>
+                        ))}
                       </ul>
                     </>
                   ),
@@ -178,7 +223,7 @@ const Device = () => {
   );
 };
 
-const Mobile = () => {
+const Mobile = ({ item }: { item: Item }) => {
   return (
     <div className=" flex xl:hidden  flex-col w-full relative">
       <div className="flex w-screen overflow-x-scroll">
@@ -189,13 +234,13 @@ const Mobile = () => {
             src={image}
             width={1800}
             height={1800}
-            alt={item.title + " image " + i}
+            alt={item.name + " image " + i}
           />
         ))}
       </div>
       <div className="flex flex-col w-full px-5 py-3 gap-5">
         <div className="flex w-full justify-between items-center">
-          <Title className="text-xl">{item.title}</Title>
+          <Title className="text-xl">{item.abstract_description}</Title>
 
           <span className="font-black">€ {item.price}</span>
         </div>
