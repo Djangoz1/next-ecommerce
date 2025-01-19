@@ -29,7 +29,9 @@ export const useApi = ({
           // body: params ? JSON.stringify(params) : undefined,
         }
       );
-      return await res.json();
+      let data = await res.json();
+
+      return data.result;
     },
   });
 };

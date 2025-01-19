@@ -14,10 +14,16 @@ export const Input = ({
   classNameBox?: string;
 }) => {
   const { register, setValue, watch } = useFormContext();
+  React.useEffect(() => {
+    if (!watch(props.id as string) && props.defaultValue) {
+      setValue(props.id as string, props.defaultValue);
+    }
+  }, [props.id]);
 
   return (
     <div className={cn("relative w-full", classNameBox)}>
       <input
+        key={`input-${props.id}`}
         {...props}
         className={cn(
           "w-full px-3 py-2 border-2 rounded border-black/60 shadow bg-background  h-fit",
@@ -31,9 +37,12 @@ export const Input = ({
         value={watch(props.id as string)}
       />
       {title ? (
-        <span className="text-sm px-2 font-light bg-background absolute top-0 left-1 -translate-y-1/2">
+        <label
+          htmlFor={props.id as string}
+          className="text-sm px-2 font-light bg-background absolute top-0 left-1 -translate-y-1/2"
+        >
           {title}
-        </span>
+        </label>
       ) : null}
     </div>
   );

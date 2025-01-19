@@ -16,7 +16,7 @@ import { SelectBtn } from "../form/select-btn";
 import { ItemMetadata } from "@/app/shop/women/[id]/page";
 
 export const AdminItem = ({ isActive }: { isActive: string }) => {
-  const { watch } = useFormContext();
+  const { watch, setValue } = useFormContext();
   const client = useQueryClient();
 
   const { data: item } = useApi({
@@ -32,8 +32,6 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
       | undefined;
   };
   console.log({ item });
-
-  if (!item) return null;
 
   return (
     <>
@@ -51,13 +49,14 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
               { label: "Les peintures", value: "paint" },
             ]}
             id={`type-${isActive}`}
-            defaultValue={item?.type}
+            defaultValue={item?.type || "dress"}
           />
           <Input
             title="Nom du produit"
             placeholder={"Robe Mila"}
             key={`input-name-${isActive}`}
             id={`name-${isActive}`}
+            required
             type="text"
             defaultValue={item?.name}
           />
@@ -66,6 +65,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
             key={`input-abstract_description-${isActive}`}
             title="Description courte"
             id={`abstract_description-${isActive}`}
+            required
             defaultValue={item?.abstract_description}
           />
           <Textarea
@@ -74,6 +74,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
             placeholder={
               "Robe longue côtelée cache coeur pour les soirées d'été"
             }
+            required
             key={`textarea-description-${isActive}`}
             id={`description-${isActive}`}
             defaultValue={item?.description}
@@ -97,7 +98,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
             type="number"
             title="Solde en %"
             placeholder="10%"
-            defaultValue={item?.discount || 0}
+            defaultValue={item?.discount}
             min={0}
             max={100}
           />
@@ -115,13 +116,14 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
         <Box title="Détails" description="Décrivez les détails du produit">
           <Input
             title="Type du produit"
-            id={`desc-details-${isActive}`}
-            defaultValue={item?.metadata.details.title}
+            id={`details_title-${isActive}`}
+            defaultValue={item?.metadata?.details?.title}
             placeholder={"Robe longue"}
+            required
           />
           <MultipleInput
             title={"Liste de détails"}
-            defaultValue={item?.metadata.details.content}
+            defaultValue={item?.metadata?.details?.content}
             placeholder={"Cuir côtelée"}
             id={`details-${isActive}`}
           />
@@ -194,11 +196,11 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                         });
                       }}
                       variant={
-                        el.image === item.main_image ? "default" : "primary"
+                        el.image === item?.main_image ? "default" : "primary"
                       }
                       className={cn(
                         "px-1 py-1 ",
-                        el.image === item.main_image
+                        el.image === item?.main_image
                           ? ""
                           : "opacity-50 hover:opacity-100"
                       )}
@@ -209,8 +211,17 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                 </div>
               ))}
 
-            <div className="w-[150px] relative border bg-white  h-[150px] rounded-md shadow flex items-center justify-center ">
-              <Icon icon={"mdi:plus"} className="text-4xl" />
+            <div className="w-[150px] relative border bg-background border-black/50  h-[150px] rounded-md shadow flex items-center justify-center cursor-pointer">
+              <div className="flex flex-col gap-3 items-center text-center">
+                <Icon icon={"line-md:image"} className="text-4xl" />
+                <span className="font-light text-xs">
+                  <span className="italic">
+                    Ajouter une image <br />
+                  </span>
+                  (800x1500)
+                </span>
+              </div>
+
               <input
                 type="file"
                 className="absolute w-full h-full opacity-0"
@@ -250,6 +261,10 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                           }
                         );
                       }
+
+                      if (!watch(`main_image-${isActive}`)) {
+                        setValue(`main_image-${isActive}`, data.url);
+                      }
                     }
 
                     await client.invalidateQueries({
@@ -265,8 +280,8 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
 
           <Input
             placeholder={"Le manequin mesure 170cm et porte une taille 36"}
-            id={`item-size-model-${isActive}`}
-            defaultValue={item?.metadata.model.size}
+            id={`tall-${isActive}`}
+            defaultValue={item?.metadata?.model?.size}
             title="Taille du mannequin"
             type="number"
             required
@@ -274,26 +289,36 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
           />
           <Input
             placeholder={"Henriette"}
-            id={`item-name-model-${isActive}`}
-            defaultValue={item?.metadata.model.name}
+            id={`model_name-${isActive}`}
+            defaultValue={item?.metadata?.model?.name}
             title="Nom du mannequin"
             required
           />
           <Input
-            title="Taille de la pièce"
+            title="Dimension de la pièce"
             placeholder={"La pièce fait 113cm pour une taille 36"}
             type="number"
-            id={`item-dimension-${isActive}`}
-            defaultValue={item?.metadata.model.dimension}
+            id={`dimension-${isActive}`}
+            defaultValue={item?.metadata?.model?.dimension}
             required
             min={1}
           />
           <Input
             placeholder={"1cm par taille supplémentaire"}
-            id={`item-centimeters_by_size-${isActive}`}
-            defaultValue={item?.metadata.model.centimeters_by_size || "1"}
+            id={`centimeters_by_size-${isActive}`}
+            defaultValue={item?.metadata?.model?.centimeters_by_size || "1"}
             type="number"
             title="Centimètre par taille"
+            required
+            min={1}
+          />
+
+          <Input
+            title="Taille de la pièce"
+            placeholder="Taille 36"
+            id={`size-${isActive}`}
+            defaultValue={item?.metadata?.model?.size}
+            type="number"
             required
             min={1}
           />
@@ -309,8 +334,8 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                 value: false,
               },
             ]}
-            id={"size"}
-            defaultValue={item.metadata.model.regular}
+            id={`regular-${isActive}`}
+            defaultValue={item?.metadata?.model?.regular || true}
           />
         </Box>
 
@@ -320,24 +345,35 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
         >
           <MultipleInput
             title="Composition"
-            defaultValue={item?.metadata.compo.content}
+            defaultValue={item?.metadata?.compo?.content}
             placeholder={"52% viscose"}
-            id={`component-${isActive}`}
+            id={`compo-${isActive}`}
           />
           <MultipleInput
             placeholder={"Ne pas laver à la machine"}
             title="Entretien"
-            defaultValue={item?.metadata.care.content}
+            defaultValue={item?.metadata?.care?.content}
             id={`care-${isActive}`}
           />
         </Box>
 
-        <div className="flex gap-5 px-20 justify-end">
-          <Btn variant="default">Supprimer</Btn>
-          <Btn type="submit" variant="primary">
-            Enregistrer
-          </Btn>
-        </div>
+        <Box
+          title={"Engagements & Traçabilité"}
+          description="Décrivez les engagements du produit"
+        >
+          <MultipleInput
+            placeholder={"Transport routier"}
+            title="Engagements"
+            defaultValue={item?.metadata?.engagements?.content}
+            id={`engagements-${isActive}`}
+          />
+          <MultipleInput
+            placeholder={"100% Made in France"}
+            title="Traçabilité"
+            defaultValue={item?.metadata?.traceability?.content}
+            id={`traceability-${isActive}`}
+          />
+        </Box>
       </div>
     </>
   );
@@ -355,8 +391,8 @@ const Box = ({
   className?: string;
 }) => {
   return (
-    <div className="flex justify-between  gap-10 w-full p-20">
-      <div className="flex flex-col w-1/4">
+    <div className="flex justify-between  xl:flex-row flex-col p-5 py-20  gap-10  w-full xl:p-20">
+      <div className="flex flex-col xl:w-1/4">
         <Title className="whitespace-nowrap text-xl">{title}</Title>
 
         <p className="font-light">{description}</p>

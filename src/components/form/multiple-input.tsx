@@ -63,7 +63,7 @@ export const MultipleInput = ({
         <div
           key={`multiple-input-${id}-${i}`}
           className={cn(
-            "flex items-center w-full justify-between px-10 hover:bg-black/20  ",
+            "flex items-center w-full justify-between  pl-3 hover:bg-black/20  ",
             i % 2 === 0 ? "bg-black/5" : "bg-black/10"
           )}
         >

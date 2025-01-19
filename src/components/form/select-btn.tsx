@@ -24,7 +24,7 @@ export const SelectBtn = ({
   return (
     <div
       className={cn(
-        "flex w-fit p-1 gap-2 border border-black/50 rounded-full",
+        "flex w-fit  gap-2 border border-black/50 rounded-full",
         className
       )}
     >

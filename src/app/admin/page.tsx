@@ -8,13 +8,15 @@ import { useApi } from "@/hooks/useApi";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { Item } from "../shop/women/page";
+import { useQueryClient } from "@tanstack/react-query";
 
 const PageAdmin = () => {
   const itemId = Number(useSearchParams().get("item_id"));
   const create = useSearchParams().get("create");
+
   return (
     <FormProvider
       onSubmit={async (e: any) => {
@@ -29,6 +31,18 @@ const PageAdmin = () => {
           main_image: e[`main_image-${itemId || "new"}`],
           price: e[`price-${itemId || "new"}`],
           discount: e[`discount-${itemId || "new"}`],
+          care: e[`care-${itemId || "new"}`],
+          compo: e[`compo-${itemId || "new"}`],
+          details: e[`details-${itemId || "new"}`],
+          details_title: e[`details_title-${itemId || "new"}`],
+          traceability: e[`traceability-${itemId || "new"}`],
+          engagements: e[`engagements-${itemId || "new"}`],
+          model_name: e[`model_name-${itemId || "new"}`],
+          regular: e[`regular-${itemId || "new"}`],
+          size: e[`size-${itemId || "new"}`],
+          tall: e[`tall-${itemId || "new"}`],
+          dimension: e[`dimension-${itemId || "new"}`],
+          centimeters_by_size: e[`centimeters_by_size-${itemId || "new"}`],
         };
         console.log({ params });
 
@@ -62,21 +76,21 @@ const Page = () => {
     path: "/items",
     method: "GET",
   }) as { data: Item[] | undefined; isLoading: boolean; error: any };
-
-  console.log({ data, rest });
+  const router = useRouter();
+  const client = useQueryClient();
 
   if (!data) return null;
   return (
     <>
       <div
         key={`form-${isActive}`}
-        className="flex flex-wrap w-full  border-y p-20 gap-4"
+        className="flex xl:flex-wrap overflow-x-auto  overflow-y-hidden w-full  border-y xl:px-20 xl:gap-4"
       >
         {data?.map((item, i) => (
           <Link
             href={isActive === item.id ? `/admin` : `/admin?item_id=${item.id}`}
             key={`item-${i}`}
-            className="w-[100px]"
+            className="xl:h-[300px] h-[150px] w-fit"
           >
             <Image
               src={item.main_image}
@@ -84,8 +98,10 @@ const Page = () => {
               width={800}
               height={800}
               className={cn(
-                "w-full shadow-2xl rounded",
-                isActive === item.id ? "opacity-100" : "opacity-50"
+                "h-full xl:max-w-[300px] max-w-[150px] object-cover shadow-2xl rounded",
+                isActive === item.id
+                  ? "opacity-100"
+                  : "opacity-50 hover:opacity-80"
               )}
             />
           </Link>
@@ -97,11 +113,40 @@ const Page = () => {
         ) : isCreate ? (
           <AdminItem isActive={"new"} />
         ) : (
-          <div className="w-full items-center flex-col flex gap-5 justify-center h-full py-40">
+          <div className="w-full items-center flex-col flex gap-5 justify-center h-full py-40 text-center">
             <Title>Aucun produit sélectionné</Title>
             <Btn href={`/admin?create=true`}>Créer un produit</Btn>
           </div>
         )}
+        <div className="fixed bottom-10 right-10 flex gap-5  justify-end">
+          {!isCreate ? (
+            <Btn
+              onClick={async () => {
+                const res = await fetch(
+                  `${process.env.NEXT_PUBLIC_API_URL}/items/${isActive}`,
+                  {
+                    method: "DELETE",
+                  }
+                );
+                console.log({ res });
+
+                await client.invalidateQueries({
+                  queryKey: ["api", `/items/${isActive}`],
+                });
+                await client.invalidateQueries({
+                  queryKey: ["api", `/items`],
+                });
+                router.push("/admin");
+              }}
+              variant="default"
+            >
+              Supprimer
+            </Btn>
+          ) : null}
+          <Btn type="submit" variant="primary">
+            Enregistrer
+          </Btn>
+        </div>
       </div>
     </>
   );
