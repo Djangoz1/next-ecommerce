@@ -9,7 +9,7 @@ export const useApi = ({
 }: {
   enabled?: boolean;
   path: `/${string}`;
-  params?: any;
+  params?: Record<string, string | number | boolean | string[]>;
   method: "GET" | "POST" | "PUT" | "DELETE";
 }) => {
   return useQuery({
@@ -17,7 +17,7 @@ export const useApi = ({
     queryKey: ["api", path],
     queryFn: async () => {
       const queryString = params
-        ? "?" + new URLSearchParams(params).toString()
+        ? "?" + new URLSearchParams(params as Record<string, string>).toString()
         : "";
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}${path}${queryString}`,
@@ -29,7 +29,7 @@ export const useApi = ({
           // body: params ? JSON.stringify(params) : undefined,
         }
       );
-      let data = await res.json();
+      const data = await res.json();
 
       return data.result;
     },

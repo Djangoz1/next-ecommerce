@@ -6,6 +6,8 @@ import { cn } from "@/utils/cn";
 import { motion } from "framer-motion";
 import { usePathname, useRouter } from "next/navigation";
 import { Title } from "../ui/typography/title";
+
+import { BtnBagAction } from "../features/btn-bag-action";
 export const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -92,7 +94,7 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
           isOpen ? "pointer-events-auto" : "pointer-events-none"
         )}
       >
-        <motion.div className="px-3 flex flex-col divide-y">
+        <motion.div className="flex flex-col divide-y">
           <Button
             onClick={() => setIsOpen(false)}
             arr={[
@@ -156,7 +158,6 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
           <button onClick={() => setIsOpen(!isOpen)}>
             <Icon
               icon={isOpen ? "system-uicons:cross" : "line-md:menu"}
-              className=""
               width={"20"}
               height={"20"}
             />
@@ -168,13 +169,7 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
         </motion.h1>
 
         <div className="flex">
-          <Link href={"/store"}>
-            <Icon
-              icon="material-symbols-light:shopping-bag-outline"
-              width="30"
-              height="30"
-            />
-          </Link>
+          <BtnBagAction />
         </div>
       </motion.header>
     </>
@@ -190,7 +185,7 @@ const Button = ({
   arr?: { url: string; children: ReactNode }[];
   children: ReactNode;
   url?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -198,30 +193,30 @@ const Button = ({
     <div
       onClick={() => {
         if (!arr?.length) {
-          onClick();
+          onClick?.();
         }
         if (url) {
           router.push(url);
         }
         setIsOpen(!isOpen);
       }}
-      className="cursor-pointer flex flex-col py-5 w-full uppercase"
+      className="cursor-pointer flex flex-col p-5 px-3 w-full uppercase"
     >
       <div className="flex justify-between w-full items-center">
-        <Title className="text-xl">{children}</Title>
+        <Title className="text-lg">{children}</Title>
         {arr?.length ? (
-          <Icon icon={isOpen ? "mdi-light:plus" : "mdi-light:minus"} />
+          <Icon icon={!isOpen ? "mdi-light:plus" : "mdi-light:minus"} />
         ) : null}
       </div>
 
       {isOpen && arr?.length ? (
-        <div className="flex flex-col gap-10 pt-5 text-xs">
+        <div className="flex flex-col gap-5 text-[#ADADAD] pt-5 text-xs">
           {arr.map((item, i) => (
             <Link
               key={`button-sidebar-${i}`}
               className="uppercase font-medium"
               onClick={() => {
-                onClick();
+                onClick?.();
                 setIsOpen(!isOpen);
               }}
               href={item.url}
@@ -234,3 +229,5 @@ const Button = ({
     </div>
   );
 };
+
+export { Button as ButtonHeader };

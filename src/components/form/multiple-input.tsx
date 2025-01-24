@@ -25,7 +25,7 @@ export const MultipleInput = ({
     if (defaultValue && !watch(id)) {
       setValue(id, defaultValue);
     }
-  }, [id, defaultValue]);
+  }, [id, defaultValue, setValue, watch]);
   return (
     <div
       className={cn(

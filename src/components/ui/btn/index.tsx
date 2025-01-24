@@ -1,3 +1,4 @@
+"use client";
 import { cn } from "@/utils/cn";
 import Link from "next/link";
 
@@ -15,6 +16,9 @@ const variants = {
 type BtnProps = {
   variant?: keyof typeof variants;
   href?: string;
+  onClick?: (
+    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
+  ) => void;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 export const Btn = ({
   children,
@@ -26,6 +30,7 @@ export const Btn = ({
   return props.href ? (
     <Link
       href={props.href}
+      onClick={(e) => props?.onClick?.(e)}
       className={cn(
         "p-4 border flex gap-2 items-center w-fit border-black/50 rounded-md shadow tracking-wider uppercase font-info font-semibold text-sm  transition-all hover:scale-105",
         variants[variant],

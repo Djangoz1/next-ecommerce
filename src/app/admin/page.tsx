@@ -12,6 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { Item } from "../shop/women/page";
 import { useQueryClient } from "@tanstack/react-query";
+import { Suspense } from "react";
 
 const PageAdmin = () => {
   const itemId = Number(useSearchParams().get("item_id"));
@@ -19,7 +20,7 @@ const PageAdmin = () => {
 
   return (
     <FormProvider
-      onSubmit={async (e: any) => {
+      onSubmit={async (e) => {
         console.log({ cououc: e });
 
         const params = {
@@ -72,10 +73,10 @@ const PageAdmin = () => {
 const Page = () => {
   const isActive = Number(useSearchParams().get("item_id"));
   const isCreate = useSearchParams().get("create");
-  const { data, ...rest } = useApi({
+  const { data } = useApi({
     path: "/items",
     method: "GET",
-  }) as { data: Item[] | undefined; isLoading: boolean; error: any };
+  }) as { data: Item[] | undefined };
   const router = useRouter();
   const client = useQueryClient();
 
@@ -118,38 +119,48 @@ const Page = () => {
             <Btn href={`/admin?create=true`}>Créer un produit</Btn>
           </div>
         )}
-        <div className="fixed bottom-10 right-10 flex gap-5  justify-end">
-          {!isCreate ? (
-            <Btn
-              onClick={async () => {
-                const res = await fetch(
-                  `${process.env.NEXT_PUBLIC_API_URL}/items/${isActive}`,
-                  {
-                    method: "DELETE",
-                  }
-                );
-                console.log({ res });
+        {isActive || isCreate ? (
+          <div className="fixed bottom-10 right-10 flex gap-5  justify-end">
+            {!isCreate ? (
+              <Btn
+                onClick={async () => {
+                  const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_API_URL}/items/${isActive}`,
+                    {
+                      method: "DELETE",
+                    }
+                  );
+                  console.log({ res });
 
-                await client.invalidateQueries({
-                  queryKey: ["api", `/items/${isActive}`],
-                });
-                await client.invalidateQueries({
-                  queryKey: ["api", `/items`],
-                });
-                router.push("/admin");
-              }}
-              variant="default"
-            >
-              Supprimer
+                  await client.invalidateQueries({
+                    queryKey: ["api", `/items/${isActive}`],
+                  });
+                  await client.invalidateQueries({
+                    queryKey: ["api", `/items`],
+                  });
+                  router.push("/admin");
+                }}
+                variant="default"
+              >
+                Supprimer
+              </Btn>
+            ) : null}
+            <Btn type="submit" variant="primary">
+              Enregistrer
             </Btn>
-          ) : null}
-          <Btn type="submit" variant="primary">
-            Enregistrer
-          </Btn>
-        </div>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </>
   );
 };
 
-export default PageAdmin;
+const PageAdminWrapper = () => (
+  <Suspense fallback={<div>Loading ...</div>}>
+    <PageAdmin />
+  </Suspense>
+);
+
+export default PageAdminWrapper;

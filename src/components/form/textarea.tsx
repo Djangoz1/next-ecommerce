@@ -16,7 +16,7 @@ export const Textarea = ({
     if (!watch(id as string) && props.defaultValue) {
       setValue(id as string, props.defaultValue);
     }
-  }, [id]);
+  }, [id, props.defaultValue, setValue, watch]);
 
   return (
     <div className={cn("relative w-full", classNameBox)}>

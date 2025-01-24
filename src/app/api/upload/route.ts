@@ -12,10 +12,10 @@ export async function POST(request: NextRequest) {
     console.log({ file });
     const url = `/uploads/${file.originalname}`;
 
-    const result = await pool.query(
-      "INSERT INTO item_images (image) VALUES ($1) RETURNING id",
-      [url]
-    );
+    const result = await pool
+      .from("gallery")
+      .insert({ image_id: url })
+      .select();
     return NextResponse.json({ message: "OK", result }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ message: "Error", error }, { status: 500 });
@@ -24,9 +24,9 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const images = await pool.query("SELECT * FROM item_images");
+    const images = await pool.from("gallery").select();
     return NextResponse.json(
-      { message: "OK", result: images.rows },
+      { message: "OK", result: images.data },
       { status: 200 }
     );
   } catch (error) {

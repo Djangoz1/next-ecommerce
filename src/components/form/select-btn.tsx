@@ -11,16 +11,16 @@ export const SelectBtn = ({
   className = "",
 }: {
   className?: string;
-  arr: { label: string; value: any }[];
+  arr: { label: string; value: string | number | boolean }[];
   id: string;
-  defaultValue: any;
+  defaultValue?: string | number | boolean;
 }) => {
   const { watch, setValue } = useFormContext();
   useEffect(() => {
     if (watch(id) === undefined && defaultValue !== undefined) {
       setValue(id, defaultValue);
     }
-  }, [id, defaultValue]);
+  }, [id, defaultValue, setValue, watch]);
   return (
     <div
       className={cn(

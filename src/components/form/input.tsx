@@ -1,7 +1,6 @@
-// Input component extends from shadcnui - https://ui.shadcn.com/docs/components/input
 "use client";
 import { cn } from "@/utils/cn";
-import { span } from "framer-motion/client";
+
 import * as React from "react";
 
 import { useFormContext } from "react-hook-form";
@@ -12,13 +11,14 @@ export const Input = ({
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & {
   classNameBox?: string;
+  onChange?: (value: string) => void;
 }) => {
   const { register, setValue, watch } = useFormContext();
   React.useEffect(() => {
-    if (!watch(props.id as string) && props.defaultValue) {
+    if (!watch(props.id as string) && props?.defaultValue) {
       setValue(props.id as string, props.defaultValue);
     }
-  }, [props.id]);
+  }, [props.id, props?.defaultValue, setValue, watch]);
 
   return (
     <div className={cn("relative w-full", classNameBox)}>
@@ -26,13 +26,13 @@ export const Input = ({
         key={`input-${props.id}`}
         {...props}
         className={cn(
-          "w-full px-3 py-2 border-2 rounded border-black/60 shadow bg-background  h-fit",
+          "w-full px-3 py-2 border rounded xl:text-sm text-xs shadow bg-background  h-fit",
           props?.className || ""
         )}
         {...register(props.id as string)}
         onChange={(e) => {
           setValue(props.id as string, e.target.value);
-          props.onChange?.(e.target.value as any);
+          props.onChange?.(e.target.value);
         }}
         value={watch(props.id as string)}
       />

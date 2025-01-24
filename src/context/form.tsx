@@ -1,12 +1,7 @@
 "use client";
-import React, { FormEvent, ReactNode } from "react";
+import React, { ReactNode } from "react";
 
-import {
-  FieldValues,
-  FormProvider as ReactFormProvider,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
+import { FormProvider as ReactFormProvider, useForm } from "react-hook-form";
 
 export function FormProvider({
   children,
@@ -17,11 +12,13 @@ export function FormProvider({
 }: {
   formRef?: React.RefObject<HTMLFormElement>;
   className?: string;
-  onSubmit: (e: SubmitHandler<FieldValues>) => any;
+  onSubmit: (e: Record<string, string | number | boolean | string[]>) => void;
   children: ReactNode;
-  onChange?: (e: FormEvent<HTMLFormElement>) => any;
+  onChange?: (e: Record<string, string | number | boolean | string[]>) => void;
 }) {
-  const handleSubmit = (e: SubmitHandler<FieldValues>) => {
+  const handleSubmit = (
+    e: Record<string, string | number | boolean | string[]>
+  ) => {
     console.log("Form submitted", e);
 
     onSubmit(e);
@@ -35,9 +32,9 @@ export function FormProvider({
           ref={formRef}
           className={className}
           onChange={() => {
-            if (onChange) onChange(methods.getValues() as any);
+            if (onChange) onChange(methods.getValues());
           }}
-          onSubmit={methods.handleSubmit(handleSubmit as any)}
+          onSubmit={methods.handleSubmit(handleSubmit)}
         >
           {children}
         </form>

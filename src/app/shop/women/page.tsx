@@ -5,6 +5,7 @@ import { cn } from "@/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 export type Item = {
   abstract_description: string;
@@ -18,7 +19,7 @@ export type Item = {
   type: "dress" | "miniature" | "painting";
 };
 
-const StorePage = () => {
+const StorePage = ({}) => {
   const searchParams = useSearchParams();
 
   const type = searchParams.get("t") || "dress";
@@ -101,4 +102,10 @@ const StorePage = () => {
   );
 };
 
-export default StorePage;
+const StorePageWrapper = () => (
+  <Suspense fallback={<div>Loading ...</div>}>
+    <StorePage />
+  </Suspense>
+);
+
+export default StorePageWrapper;

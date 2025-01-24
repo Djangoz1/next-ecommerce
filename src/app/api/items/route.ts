@@ -51,7 +51,6 @@ export async function POST(request: NextRequest) {
       tall,
     } = body;
 
-    const query = `INSERT INTO items (name, type, stock, description, abstract_description, main_image, discount, price) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`;
     const values = [
       name,
       type,
@@ -63,9 +62,9 @@ export async function POST(request: NextRequest) {
       price,
     ];
 
-    const result = await pool.query(query, values);
+    const result = await pool.from("items").insert(values).select();
 
-    const itemId = result.rows[0].id;
+    const itemId = result.data?.[0].id;
 
     const [_care, _compo, _details, _traceability, _engagements, _model] =
       await Promise.all([
@@ -74,7 +73,6 @@ export async function POST(request: NextRequest) {
           {
             content: care,
             title: null,
-            type: "care",
           },
           "care"
         ),
@@ -83,7 +81,6 @@ export async function POST(request: NextRequest) {
           {
             content: compo,
             title: null,
-            type: "compo",
           },
           "compo"
         ),
@@ -92,7 +89,6 @@ export async function POST(request: NextRequest) {
           {
             content: details,
             title: details_title,
-            type: "details",
           },
           "details"
         ),
@@ -101,7 +97,6 @@ export async function POST(request: NextRequest) {
           {
             content: traceability,
             title: null,
-            type: "traceability",
           },
           "traceability"
         ),
@@ -110,7 +105,6 @@ export async function POST(request: NextRequest) {
           {
             content: engagements,
             title: null,
-            type: "engagements",
           },
           "engagements"
         ),
@@ -132,7 +126,7 @@ export async function POST(request: NextRequest) {
       {
         message: "OK",
         result: {
-          item: result.rows[0],
+          item: result.data?.[0],
           metadata: [
             _care,
             _compo,

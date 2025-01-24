@@ -4,11 +4,13 @@ import {
   getItemMetadataByIdQuery,
   updateMetadataQuery,
 } from "@/api/items";
+import { ItemMetadata } from "@/types/items";
 import { pool } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, { params }: any) {
-  const id = params.id;
+export async function GET(request: NextRequest) {
+  const id = request.nextUrl.pathname.split("/").pop();
+
   try {
     const [item, gallery, metadata] = await Promise.all([
       getItemByIdQuery(Number(id)),
@@ -32,8 +34,9 @@ export async function GET(request: NextRequest, { params }: any) {
   }
 }
 
-export async function PUT(request: NextRequest, { params }: any) {
-  const id = params.id;
+export async function PUT(request: NextRequest) {
+  const id = request.nextUrl.pathname.split("/").pop();
+
   const body = await request.json();
   try {
     const item = await getItemByIdQuery(Number(id));
@@ -84,7 +87,7 @@ export async function PUT(request: NextRequest, { params }: any) {
         throw new Error("Invalid type");
       }
 
-      let params = {
+      const params = {
         name: name === undefined ? item.name : name,
         description: description === undefined ? item.description : description,
         price: price === undefined ? item.price : price,
@@ -97,11 +100,6 @@ export async function PUT(request: NextRequest, { params }: any) {
             : abstract_description,
         type: type === undefined ? item.type : type,
       };
-      const query = `
-      UPDATE items
-      SET name = $1, description = $2, price = $3, stock = $4, main_image = $5, discount = $6, abstract_description = $7, type = $8
-      WHERE id = $9
-    `;
 
       const values = [
         params.name,
@@ -114,10 +112,10 @@ export async function PUT(request: NextRequest, { params }: any) {
         params.type,
         id,
       ];
-      result = await pool.query(query, values);
+      result = await pool.from("items").update(values).eq("id", id).select();
     }
 
-    let metadataUpdate = [];
+    const metadataUpdate = [];
 
     if (body.care) {
       metadataUpdate.push("care");
@@ -143,7 +141,7 @@ export async function PUT(request: NextRequest, { params }: any) {
     ) {
       metadataUpdate.push("model");
     }
-    let metadataResult = [];
+    const metadataResult = [];
 
     console.log({ metadataUpdate });
     if (metadataUpdate.length) {
@@ -153,45 +151,45 @@ export async function PUT(request: NextRequest, { params }: any) {
           {
             care: {
               content: care,
-              item_id: id,
+
               title: null,
-              type: "care",
             },
             compo: {
               content: compo,
-              item_id: id,
+
               title: null,
-              type: "compo",
             },
             details: {
               content: details,
-              item_id: id,
+
               title: details_title,
-              type: "details",
             },
             traceability: {
               content: traceability,
-              item_id: id,
+
               title: null,
-              type: "traceability",
             },
             engagements: {
               content: engagements,
-              item_id: id,
+
               title: null,
-              type: "engagements",
             },
             model: {
               name: model_name,
-              item_id: id,
               regular: regular,
               size: Number(size),
               tall: Number(tall),
               dimension: Number(dimension),
               centimeters_by_size: Number(centimeters_by_size),
             },
-          }[type],
-          type as any
+          }[type as keyof ItemMetadata],
+          type as
+            | "details"
+            | "compo"
+            | "care"
+            | "traceability"
+            | "engagements"
+            | "model"
         );
         metadataResult.push(result);
       }
@@ -206,13 +204,17 @@ export async function PUT(request: NextRequest, { params }: any) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: any) {
-  const id = params.id;
+export async function DELETE(request: NextRequest) {
+  const id = request.nextUrl.pathname.split("/").pop();
+
   try {
-    let query = `DELETE FROM item_details WHERE item_id = $1`;
-    let result = await pool.query(query, [id]);
-    query = `DELETE FROM items WHERE id = $1`;
-    result = await pool.query(query, [id]);
+    let result = await pool
+      .from("item_details")
+      .delete()
+      .eq("item_id", id)
+      .select();
+
+    result = await pool.from("items").delete().eq("id", id).select();
     return NextResponse.json({ message: "OK", result }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "Error", error }, { status: 500 });

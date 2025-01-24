@@ -11,6 +11,8 @@ import { useParams } from "next/navigation";
 import React from "react";
 import { Item } from "../page";
 import { cn } from "@/utils/cn";
+import { BtnBuyingAction } from "@/components/features/btn-buying-action";
+import { span } from "framer-motion/client";
 
 type BaseMetadata = {
   title: string;
@@ -41,9 +43,9 @@ const images = [
   "/model/5.jpg",
 ];
 
-const Page = ({ ctx }: { params: { id: string }; ctx: any }) => {
+const Page = () => {
   const params = useParams();
-  console.log({ params, ctx });
+
   const { data } = useApi({
     path: `/items/${params.id}`,
     method: "GET",
@@ -239,14 +241,29 @@ const Mobile = ({ item }: { item: Item }) => {
         ))}
       </div>
       <div className="flex flex-col w-full px-5 py-3 gap-5">
-        <div className="flex w-full justify-between items-center">
+        <div className="flex w-full justify-between items-center gap-2">
           <Title className="text-xl">{item.abstract_description}</Title>
 
-          <span className="font-black">€ {item.price}</span>
+          <div className="flex whitespace-nowrap items-center gap-2 font-black text-xs">
+            {item.discount ? (
+              <>
+                <span className="font-medium line-through opacity-50">
+                  {item.price} €
+                </span>
+                <span className="font-black">
+                  {(
+                    Number(item.price) -
+                    Number(item.price) / item.discount
+                  ).toFixed(2)}{" "}
+                  €
+                </span>
+              </>
+            ) : (
+              <span className="">{item.price} €</span>
+            )}
+          </div>
         </div>
-        <Btn variant="primary" className="w-full text-center justify-center">
-          Ajouter au panier
-        </Btn>
+        <BtnBuyingAction item={item} />
         <button className="opacity-75 font-light">Guide des tailles</button>
 
         <div className="flex flex-col w-full border-t">

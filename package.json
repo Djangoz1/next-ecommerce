@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "init": "psql -U juliendjangone -d ormes -f scripts/init.sql"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^5.5.0",
+    "@supabase/supabase-js": "^2.47.16",
     "@tanstack/react-query": "^5.63.0",
     "darkmode-js": "^1.5.7",
     "dotenv": "^16.4.7",
@@ -18,6 +21,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
+    "stripe": "^17.5.0",
     "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
