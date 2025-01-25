@@ -101,18 +101,22 @@ export async function PUT(request: NextRequest) {
         type: type === undefined ? item.type : type,
       };
 
-      const values = [
-        params.name,
-        params.description,
-        params.price,
-        params.stock,
-        params.main_image,
-        params.discount,
-        params.abstract_description,
-        params.type,
-        id,
-      ];
-      result = await pool.from("items").update(values).eq("id", id).select();
+      const values = {
+        name: params.name,
+        description: params.description,
+        price: params.price,
+        stock: params.stock,
+        main_image: params.main_image,
+        discount: params.discount,
+        abstract_description: params.abstract_description,
+        type: params.type,
+      };
+
+      result = await pool
+        .from("items")
+        .update(values)
+        .eq("id", Number(id))
+        .select();
     }
 
     const metadataUpdate = [];
@@ -200,6 +204,7 @@ export async function PUT(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
+    console.log("Error /api/items/[id]/PUT", error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }

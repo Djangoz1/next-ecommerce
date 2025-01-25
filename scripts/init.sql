@@ -1,7 +1,6 @@
 -- init.sql
 DROP TABLE IF EXISTS gallery CASCADE;
 DROP TABLE IF EXISTS item_details CASCADE;
-DROP TABLE IF EXISTS item_images CASCADE;
 DROP TABLE IF EXISTS buying CASCADE;
 DROP TABLE IF EXISTS items CASCADE;
 DROP TABLE IF EXISTS item_model CASCADE;
@@ -81,19 +80,13 @@ CREATE TABLE item_model(
 );
 
 
--- Créer la table des images des items
-CREATE TABLE item_images (
-id SERIAL PRIMARY KEY,
-image VARCHAR(255) NOT NULL
-);
 
 
 CREATE TABLE gallery(
 id SERIAL PRIMARY KEY,
 item_id INT NOT NULL,
-image_id INT NOT NULL,
-FOREIGN KEY (item_id) REFERENCES items(id),
-FOREIGN KEY (image_id) REFERENCES item_images(id) ON DELETE CASCADE
+image VARCHAR(255) NOT NULL,
+FOREIGN KEY (item_id) REFERENCES items(id)
 );
 
 

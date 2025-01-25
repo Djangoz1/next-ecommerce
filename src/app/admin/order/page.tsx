@@ -5,27 +5,14 @@ import { Loader } from "@/components/ui/box/loader";
 import { Btn } from "@/components/ui/btn";
 import { FormProvider } from "@/context/form";
 import { useApi } from "@/hooks/useApi";
-import { Buying, Customer, Item } from "@/types/items";
+import { BuyingApi } from "@/types/items";
 import { useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
 
 const Page = () => {
   const status = useSearchParams().get("status");
 
-  const { data, isFetched } = useApi<
-    Array<{
-      items: Array<
-        Buying & {
-          items: Item & {
-            quantity: number;
-          };
-        }
-      >;
-      customers: Customer;
-      stripe_id: string;
-      price: number;
-    }>
-  >({
+  const { data, isFetched } = useApi<BuyingApi[]>({
     path: `/buy/order`,
     method: "GET",
     queryKey: status || undefined,

@@ -1,4 +1,8 @@
-import { getAllBuyingQuery, getBuyingByStatusQuery } from "@/api/buy";
+import {
+  getAllBuyingQuery,
+  getBuyingByEmailAndZipcodeQuery,
+  getBuyingByStatusQuery,
+} from "@/api/buy";
 import { Buying, Customer, Item } from "@/types/items";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -7,11 +11,19 @@ export async function GET(request: NextRequest) {
     | Buying["status"]
     | undefined;
 
+  const email = request.nextUrl.searchParams.get("email") as string | undefined;
+  const zipcode = request.nextUrl.searchParams.get("zipcode") as
+    | string
+    | undefined;
+
   try {
     let res;
 
     if (status) {
       res = await getBuyingByStatusQuery(status);
+    } else if (email && zipcode) {
+      res = await getBuyingByEmailAndZipcodeQuery(email, zipcode);
+      console.log({ items: res });
     } else {
       res = await getAllBuyingQuery();
     }
@@ -80,7 +92,7 @@ export async function GET(request: NextRequest) {
     );
 
     return NextResponse.json(
-      { message: "OK", result: Object.values(formattedRes) },
+      { message: "OK", result: Object.values(formattedRes) || [] },
       { status: 200 }
     );
   } catch (error) {

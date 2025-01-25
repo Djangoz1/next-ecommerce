@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
 
     const items = await getBuyingByStripeIdQuery(stripeId);
     items.forEach(async (item) => {
-      const res = await updateBuyingQuery({
-        data: {
+      await updateBuyingQuery({
+        ...{
           ...item,
           status: "paid",
           buying_at: new Date().toISOString(),

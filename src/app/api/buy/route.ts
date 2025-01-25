@@ -92,6 +92,10 @@ export async function GET(request: NextRequest) {
       })
     );
 
+    if (!arr.length) {
+      throw new Error("No items found");
+    }
+
     return NextResponse.json(
       {
         message: "OK",

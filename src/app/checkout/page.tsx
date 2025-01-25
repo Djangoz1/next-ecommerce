@@ -1,6 +1,7 @@
 "use client";
 
 import { Input } from "@/components/form/input";
+import { Loader } from "@/components/ui/box/loader";
 import { Btn } from "@/components/ui/btn";
 import { Title } from "@/components/ui/typography/title";
 import { FormProvider } from "@/context/form";
@@ -15,20 +16,22 @@ import { useFormContext } from "react-hook-form";
 
 const Page = () => {
   const searchParams = useSearchParams();
-  const { data } = useApi({
+  const { data, isFetched } = useApi<{
+    items: (Item & { size: string })[];
+    total: number;
+  }>({
     path: "/buy/checkout",
     method: "GET",
     params: {
       id: searchParams.get("id") as string,
     },
-  }) as { data: { items: (Item & { size: string })[]; total: number } };
+  });
   const { watch } = useFormContext();
   console.log({ data, searchParams });
 
-  if (!data) return null;
-  const total = data?.total / 100;
+  const total = (data?.total || 0) / 100;
 
-  return (
+  return data ? (
     <div className="gap-10 flex flex-col py-20 ">
       <div className="bg-[#F6EFE4] flex justify-between items-center w-full px-3 py-5 border-y">
         <span className="font-light text-foreground">Total de la commande</span>
@@ -112,11 +115,15 @@ const Page = () => {
         </div>
         <div className="flex justify-between items-center">
           <Title className="text-xl">Expédition</Title>
-          <p className="opacity-80 font-light text-s">0 €</p>
+          <p className="opacity-80 font-light text-s">
+            {total > 250 ? 0 : 25} €
+          </p>
         </div>
         <div className="flex justify-between items-center">
           <Title className="text-xl">Total</Title>
-          <p className="opacity-80 font-light text-s">{total} €</p>
+          <p className="opacity-80 font-light text-s">
+            {total > 250 ? total : total + 25} €
+          </p>
         </div>
 
         <Btn
@@ -154,6 +161,10 @@ const Page = () => {
         </Btn>
       </div>
     </div>
+  ) : isFetched ? (
+    <div>Aucune commande trouvée</div>
+  ) : (
+    <Loader />
   );
 };
 

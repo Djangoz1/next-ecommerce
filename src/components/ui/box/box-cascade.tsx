@@ -16,7 +16,7 @@ export const BoxCascade = ({
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Box
-      className="gap-10 cursor-pointer border-b border-black/40 relative "
+      className="gap-10 cursor-pointer  border-black/40 relative px-5"
       onClick={() => setIsOpen(!isOpen)}
       title={title}
     >

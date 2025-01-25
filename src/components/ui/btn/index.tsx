@@ -41,7 +41,7 @@ export const Btn = ({
       href={props.href}
       onClick={(e) => props?.onClick?.(e)}
       className={cn(
-        "border flex gap-2 items-center w-fit border-black/50 rounded-md shadow tracking-wider uppercase font-info font-semibold text-sm  transition-all hover:scale-105",
+        "border flex gap-2 justify-center items-center w-fit border-black/50 rounded-md shadow tracking-wider uppercase font-info font-semibold text-sm  transition-all hover:scale-105",
         variants[variant],
         sizes[size],
         className
@@ -53,7 +53,7 @@ export const Btn = ({
     <button
       type={type}
       className={cn(
-        "[&:disabled]:opacity-40 [&:disabled]:cursor-not-allowed border flex gap-2 items-center w-fit border-black/50 rounded-md shadow tracking-wider uppercase font-info font-semibold text-sm  transition-all hover:scale-105",
+        "[&:disabled]:opacity-40 justify-center [&:disabled]:cursor-not-allowed border flex gap-2 items-center w-fit border-black/50 rounded-md shadow tracking-wider uppercase font-info font-semibold text-sm  transition-all hover:scale-105",
         variants[variant],
         sizes[size],
         className

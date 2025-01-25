@@ -2,22 +2,41 @@ import { pool } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const file = body.file;
+  const formData = await request.formData();
+  const file = formData.get("file") as File;
+  const itemId = formData.get("itemId") as string;
   try {
     if (!file) {
       throw new Error("File is required");
     }
 
-    console.log({ file });
-    const url = `/uploads/${file.originalname}`;
+    const name = `${itemId}-${file.name}-${Date.now()}`;
+    const { data, error } = await pool.storage
+      .from("images")
+      .upload(name, file);
 
-    const result = await pool
-      .from("gallery")
-      .insert({ image_id: url })
-      .select();
-    return NextResponse.json({ message: "OK", result }, { status: 201 });
+    if (error) {
+      throw error;
+    }
+
+    const { data: url } = await pool.storage
+      .from("images")
+      .getPublicUrl(data.path);
+
+    if (itemId) {
+      let res = await pool.from("gallery").insert({
+        item_id: itemId,
+        image: url.publicUrl,
+      });
+      console.log({ res });
+    }
+
+    return NextResponse.json(
+      { message: "OK", result: { data, url: url.publicUrl } },
+      { status: 201 }
+    );
   } catch (error) {
+    console.log("Error /api/upload/POST", error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }
@@ -30,6 +49,7 @@ export async function GET() {
       { status: 200 }
     );
   } catch (error) {
+    console.log("Error /api/upload/GET", error);
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }

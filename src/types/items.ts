@@ -44,6 +44,20 @@ export type Buying = {
   customer_id: number | null;
 };
 
+export type BuyingApi = {
+  items: Array<
+    Buying & {
+      items: Item & {
+        quantity: number;
+      };
+    }
+  >;
+  customers: Customer;
+  stripe_id: string;
+  price: number;
+  status: Buying["status"];
+};
+
 export type Customer = {
   id: number;
   email: string;

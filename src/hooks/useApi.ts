@@ -31,6 +31,9 @@ export const useApi = <T>({
           // body: params ? JSON.stringify(params) : undefined,
         }
       );
+      if (!res.ok) {
+        throw new Error("Error fetching items");
+      }
       const data = await res.json();
 
       return data.result as T;

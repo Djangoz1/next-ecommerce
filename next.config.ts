@@ -19,6 +19,13 @@ const nextConfig: NextConfig = {
         port: "3001",
         pathname: "/**",
       },
+      // https://pqlckmmlrgajldynkysw.supabase.co/
+      {
+        protocol: "https",
+        hostname: "pqlckmmlrgajldynkysw.supabase.co",
+
+        pathname: "/**",
+      },
     ],
   },
 };

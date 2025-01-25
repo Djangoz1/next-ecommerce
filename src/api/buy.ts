@@ -27,6 +27,42 @@ export const getBuyingByStatusQuery = async (status: Buying["status"]) => {
   }
 };
 
+export const getBuyingByEmailAndZipcodeQuery = async (
+  email: string,
+  zipcode: string
+) => {
+  try {
+    const customer = await pool
+      .from("customers")
+      .select("*")
+      .eq("email", email)
+      .eq("zipcode", zipcode)
+      .single();
+
+    if (!customer.data) {
+      throw new Error("Customer not found");
+    }
+
+    console.log({ customer });
+    const res = await pool
+      .from("buying")
+      .select(`*, items(*)`)
+      .eq("customer_id", customer.data.id);
+
+    console.log({ resBuy: res });
+    return (res.data || []).map((item) => ({
+      ...item,
+      customers: customer.data,
+    })) as (Buying & {
+      items: Item;
+      customers: Customer;
+    })[];
+  } catch (error) {
+    console.error("Error fetching items by email and zipcode", error);
+    throw error;
+  }
+};
+
 export const getAllBuyingQuery = async () => {
   try {
     const res = await pool.from("buying").select(`*, items(*), customers(*)`);

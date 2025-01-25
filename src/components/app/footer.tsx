@@ -25,7 +25,7 @@ export const Footer = () => {
         <ButtonHeader
           arr={[
             {
-              url: "#",
+              url: "/tracking",
               children: <>Suivre ma commande</>,
             },
             {

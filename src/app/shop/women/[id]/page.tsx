@@ -12,6 +12,12 @@ import React from "react";
 import { Item } from "../page";
 import { cn } from "@/utils/cn";
 import { BtnBuyingAction } from "@/components/features/btn-buying-action";
+import { BoxError } from "@/components/ui/box/box-error";
+import { Loader } from "@/components/ui/box/loader";
+import { DetailsDelivery } from "@/components/features/details-delivery";
+import { DetailsSize } from "@/components/features/details-size";
+import { DetailsCompoAndCare } from "@/components/features/details-compo-and-care";
+import { DetailsEngagement } from "@/components/features/details-engagement";
 
 type BaseMetadata = {
   title: string;
@@ -45,12 +51,18 @@ const images = [
 const Page = () => {
   const params = useParams();
 
-  const { data } = useApi({
+  const { data, isFetched } = useApi<
+    Item & {
+      gallery: { image: string; id: string }[];
+      metadata: ItemMetadata;
+    }
+  >({
     path: `/items/${params.id}`,
     method: "GET",
   });
   console.log({ data });
-  if (!data) return null;
+  if (!isFetched) return <Loader />;
+  if (!data) return <BoxError />;
   return (
     <>
       <Device item={data} />
@@ -129,7 +141,7 @@ const Device = ({
               Ajouter à votre panier
             </Btn>
             <Tabs
-              className="w-full mt-10"
+              className="w-full mt-10 "
               arr={[
                 {
                   title: "Détails",
@@ -146,74 +158,19 @@ const Device = ({
                 },
                 {
                   title: "Coupe",
-                  component: (
-                    <>
-                      Conseils taille :
-                      <ul className="list-disc list-inside">
-                        <li>
-                          {item.metadata.model.regular
-                            ? "Cette pièce taille normalement, prenez votre taille habituelle."
-                            : "Cette pièce taille petite, prenez votre taille habituelle moins 1."}
-                        </li>
-                        <li>
-                          <b>{item.metadata.model.name}</b> mesure{" "}
-                          <b>{item.metadata.model.tall}</b> cm, elle porte une
-                          taille <b>{item.metadata.model.size}.</b>
-                        </li>
-                      </ul>
-                      Dimensions :
-                      <ul className="list-disc list-inside">
-                        <li>
-                          Longueur totale :{" "}
-                          <b>{item.metadata.model.dimension}</b> cm pour une
-                          taille <b>{item.metadata.model.size}</b>
-                        </li>
-                        <li>
-                          Comptez{" "}
-                          <b>{item.metadata.model.centimeters_by_size}</b> cm en
-                          plus par taille supplémentaire.
-                        </li>
-                      </ul>
-                    </>
-                  ),
+                  component: <DetailsSize item={item} />,
                 },
                 {
                   title: "Compo & Care",
-                  component: (
-                    <>
-                      Composition matière principale :
-                      <ul className="list-disc list-inside">
-                        {item.metadata.compo.content.map((item, i) => (
-                          <li key={`compo-metadata--${i}`}>{item}</li>
-                        ))}
-                      </ul>
-                      Entretien de votre pièce Ormés :
-                      <ul className="list-disc list-inside">
-                        {item.metadata.care.content.map((item, i) => (
-                          <li key={`care-metadata--${i}`}>{item}</li>
-                        ))}
-                      </ul>
-                    </>
-                  ),
+                  component: <DetailsCompoAndCare item={item} />,
                 },
                 {
                   title: "Engagements",
-                  component: (
-                    <>
-                      Initiatives :
-                      <ul className="list-disc list-inside">
-                        {item.metadata.engagements.content.map((item, i) => (
-                          <li key={`engagements-metadata--${i}`}>{item}</li>
-                        ))}
-                      </ul>
-                      Traçabilité matières :
-                      <ul className="list-disc list-inside">
-                        {item.metadata.traceability.content.map((item, i) => (
-                          <li key={`traceability-metadata--${i}`}>{item}</li>
-                        ))}
-                      </ul>
-                    </>
-                  ),
+                  component: <DetailsEngagement item={item} />,
+                },
+                {
+                  title: "Livraison",
+                  component: <DetailsDelivery item={item} />,
                 },
               ]}
             />
@@ -224,7 +181,14 @@ const Device = ({
   );
 };
 
-const Mobile = ({ item }: { item: Item }) => {
+const Mobile = ({
+  item,
+}: {
+  item: Item & {
+    gallery: { image: string; id: string }[];
+    metadata: ItemMetadata;
+  };
+}) => {
   return (
     <div className=" flex xl:hidden  flex-col w-full relative">
       <div className="flex w-screen overflow-x-scroll">
@@ -239,8 +203,8 @@ const Mobile = ({ item }: { item: Item }) => {
           />
         ))}
       </div>
-      <div className="flex flex-col w-full px-5 py-3 gap-5">
-        <div className="flex w-full justify-between items-center gap-2">
+      <div className="flex flex-col w-full  py-3 gap-5">
+        <div className="flex w-full justify-between items-center gap-2 px-5">
           <Title className="text-xl">{item.abstract_description}</Title>
 
           <div className="flex whitespace-nowrap items-center gap-2 font-black text-xs">
@@ -262,71 +226,35 @@ const Mobile = ({ item }: { item: Item }) => {
             )}
           </div>
         </div>
-        <BtnBuyingAction item={item} />
-        <button className="opacity-75 font-light">Guide des tailles</button>
+        <div className="px-5 flex flex-col items-center gap-5">
+          <BtnBuyingAction item={item} />
+          <button className="opacity-75 font-light">Guide des tailles</button>
+        </div>
 
-        <div className="flex flex-col w-full border-t">
+        <div className="flex flex-col w-full border-t divide-y">
           <BoxCascade title="Détails">
-            Robe longue.
-            <ul className="list-disc list-inside">
-              <li>Coloris vert</li>
-              <li>Coupe cintrée</li>
-              <li>Laçage dans le dos</li>
-              <li>Manches longues</li>
-              <li>Fabriquée en France</li>
-            </ul>
+            <>
+              {item.metadata.details.title}
+              <ul className="list-disc list-inside">
+                {item.metadata.details.content.map((item, i) => (
+                  <li key={`detail-metadata--${i}`}>{item}</li>
+                ))}
+              </ul>
+            </>
           </BoxCascade>
 
           <BoxCascade title="Coupe">
-            Conseils taille :
-            <ul className="list-disc list-inside">
-              <li>
-                Cette pièce taille normalement, prenez votre taille habituelle.
-              </li>
-              <li>Henriette mesure 170 cm, elle porte une taille 36.</li>
-            </ul>
-            Dimensions :
-            <ul className="list-disc list-inside">
-              <li>Longueur totale : 113 cm pour une taille 36</li>
-              <li>Comptez 1 cm en plus par taille supplémentaire.</li>
-            </ul>
+            <DetailsSize item={item} />
           </BoxCascade>
 
           <BoxCascade title="Compo & Care">
-            Conseils taille :
-            <ul className="list-disc list-inside">
-              <li>
-                Cette pièce taille normalement, prenez votre taille habituelle.
-              </li>
-              <li>Henriette mesure 170 cm, elle porte une taille 36.</li>
-            </ul>
-            Dimensions :
-            <ul className="list-disc list-inside">
-              <li>Longueur totale : 113 cm pour une taille 36</li>
-              <li>Comptez 1 cm en plus par taille supplémentaire.</li>
-            </ul>
+            <DetailsCompoAndCare item={item} />,
           </BoxCascade>
           <BoxCascade title="Engagements">
-            Initiatives:
-            <ul className="list-disc list-inside">
-              <li>Fabrication en France (Ile de France)</li>
-              <li>Transport routier</li>
-              <li>
-                67% de coton contenu dans la matière principale de cette pièce
-                est biologique.
-              </li>
-            </ul>
-            Traçabilité matières :
-            <ul className="list-disc list-inside">
-              <li>
-                Filature : polyamide en Chine, élasthanne en Turquie, coton en
-                Turquie
-              </li>
-              <li>Tricotage : Turquie</li>
-              <li>Teinture : Turquie</li>
-              <li>Finition : Turquie</li>
-              <li>Assemblage : France (Ile De France)</li>
-            </ul>
+            <DetailsEngagement item={item} />
+          </BoxCascade>
+          <BoxCascade title="Livraison">
+            <DetailsDelivery item={item} />
           </BoxCascade>
         </div>
       </div>

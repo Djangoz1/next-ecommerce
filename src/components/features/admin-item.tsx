@@ -176,6 +176,14 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                     </Btn>
                     <Btn
                       onClick={async () => {
+                        if (!item) throw new Error("Item not found");
+                        const { gallery, metadata, ...data } = item;
+                        const body = {
+                          ...data,
+                          main_image: el.image,
+                        };
+
+                        console.log({ body });
                         const res = await fetch(
                           `${process.env.NEXT_PUBLIC_API_URL}/items/${isActive}`,
                           {
@@ -183,10 +191,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                             headers: {
                               "Content-Type": "application/json",
                             },
-                            body: JSON.stringify({
-                              ...item,
-                              main_image: el.image,
-                            }),
+                            body: JSON.stringify(body),
                           }
                         );
 
@@ -235,6 +240,9 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                     for (const file of e.target?.files || []) {
                       const formData = new FormData();
                       formData.append("file", file);
+                      if (isActive !== "new") {
+                        formData.append("itemId", isActive);
+                      }
                       console.log({ test: formData });
                       const res = await fetch(
                         `${process.env.NEXT_PUBLIC_API_URL}/upload`,
@@ -246,21 +254,6 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                       const data = await res.json();
 
                       console.log({ data });
-                      if (isActive !== "new") {
-                        await fetch(
-                          `${process.env.NEXT_PUBLIC_API_URL}/items/image`,
-                          {
-                            method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                              image: data.id,
-                              id: isActive,
-                            }),
-                          }
-                        );
-                      }
 
                       if (!watch(`main_image-${isActive}`)) {
                         setValue(`main_image-${isActive}`, data.url);
