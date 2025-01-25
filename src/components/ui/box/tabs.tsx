@@ -18,8 +18,8 @@ export const Tabs = ({
             key={index}
             onClick={() => setActive(index)}
             className={cn(
-              "cursor-pointer hover:opacity-100",
-              active === index ? "underline" : "opacity-50"
+              "px-3  py-2 cursor-pointer hover:opacity-100",
+              active === index ? "border-b-2 border-black" : "opacity-50"
             )}
           >
             {item.title}

@@ -37,9 +37,10 @@ export type Buying = {
   stripe_id: string;
   size: string;
   message: string | null;
-  status: "basket" | "pending" | "paid" | "cancelled";
+  status: "pending" | "paid" | "shipped" | "delivered" | "cancelled";
   created_at: string;
   buying_at: string | null;
+  tracking: string | null;
   customer_id: number | null;
 };
 

@@ -116,7 +116,12 @@ const Page = () => {
         ) : (
           <div className="w-full items-center flex-col flex gap-5 justify-center h-full py-40 text-center">
             <Title>Aucun produit sélectionné</Title>
-            <Btn href={`/admin?create=true`}>Créer un produit</Btn>
+            <div className="flex gap-3">
+              <Btn variant="primary" href={`/admin?create=true`}>
+                Créer un produit
+              </Btn>
+              <Btn href={`/admin/order`}>Voir les commandes</Btn>
+            </div>
           </div>
         )}
         {isActive || isCreate ? (

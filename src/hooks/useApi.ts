@@ -1,12 +1,14 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 
-export const useApi = ({
+export const useApi = <T>({
   path,
   params,
   method = "GET",
   enabled = true,
+  queryKey,
 }: {
+  queryKey?: string;
   enabled?: boolean;
   path: `/${string}`;
   params?: Record<string, string | number | boolean | string[]>;
@@ -14,7 +16,7 @@ export const useApi = ({
 }) => {
   return useQuery({
     enabled,
-    queryKey: ["api", path],
+    queryKey: ["api", path, queryKey],
     queryFn: async () => {
       const queryString = params
         ? "?" + new URLSearchParams(params as Record<string, string>).toString()
@@ -31,7 +33,7 @@ export const useApi = ({
       );
       const data = await res.json();
 
-      return data.result;
+      return data.result as T;
     },
   });
 };

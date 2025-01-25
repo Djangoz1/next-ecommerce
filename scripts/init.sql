@@ -51,6 +51,7 @@ size VARCHAR(3) NOT NULL,
 message TEXT,
 status buying_status NOT NULL,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+tracking VARCHAR(255),
 buying_at TIMESTAMP,
 FOREIGN KEY (item_id) REFERENCES items(id),
 FOREIGN KEY (customer_id) REFERENCES customers(id)

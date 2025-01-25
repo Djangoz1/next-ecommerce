@@ -19,7 +19,7 @@ export const Footer = () => {
             Maison.
           </p>
           <FormProvider onSubmit={() => {}}>
-            <Input placeholder="Addresse email" name="email" id="email" />
+            <Input defaultValue={""} placeholder="Addresse email" id="email" />
           </FormProvider>
         </div>
         <ButtonHeader

@@ -1,12 +1,16 @@
 "use client";
+import { clearPendingItems } from "@/components/features/btn-buying-action";
+import { BoxError } from "@/components/ui/box/box-error";
+import { Loader } from "@/components/ui/box/loader";
 import { Title } from "@/components/ui/typography/title";
 import { useApi } from "@/hooks/useApi";
 import { Buying, Customer, Item } from "@/types/items";
 import { cn } from "@/utils/cn";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import React, { ReactNode, Suspense, useMemo } from "react";
+import React, { ReactNode, Suspense, useEffect, useMemo } from "react";
 
 const BoxIcon = ({
   icon,
@@ -26,7 +30,7 @@ const BoxIcon = ({
         isActive ? "opacity-100" : "opacity-50"
       )}
     >
-      <Title className="text-lg">{title}</Title>
+      <Title className="text-sm">{title}</Title>
       <div className="flex items-center justify-center w-16 h-16 bg-white rounded-full shadow border">
         <Icon className="text-2xl" icon={icon} />
       </div>
@@ -46,11 +50,14 @@ const BoxIcon = ({
 
 const Page = () => {
   const stripe_id = useSearchParams().get("id");
-  const { data } = useApi({
+  const { data, isError } = useApi<{
+    items: (Item & { details: Buying })[];
+    customer: Customer;
+  }>({
     path: "/buy",
     method: "GET",
     params: { stripe_id: stripe_id || "" },
-  }) as { data: { items: (Item & { details: Buying })[]; customer: Customer } };
+  });
 
   const status = useMemo(() => {
     if (!data) return null;
@@ -65,6 +72,10 @@ const Page = () => {
     }
     return status;
   }, [data]);
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    clearPendingItems(queryClient);
+  }, []);
   if (!data) return null;
   const castArr = data?.items.reduce((acc: Item[][], item) => {
     const existingGroup = acc.find((group) => group[0]?.id === item.id);
@@ -75,9 +86,17 @@ const Page = () => {
     }
     return [...acc, [item]];
   }, []);
-  console.log({ castArr, data });
-  return (
+  console.log({ castArr, data, isError });
+  return data ? (
     <div className="py-20">
+      <div className="flex flex-col text-center items-center justify-center pb-20 w-full">
+        <Icon icon="mingcute:check-fill" className="text-4xl text-green-500" />
+        <Title className="text-2xl">Commande réussie</Title>
+        <p className="text-sm font-light">
+          Votre commande a été passée avec succès. Vous recevrez un email de
+          confirmation dans les prochaines minutes.
+        </p>
+      </div>
       <div className="flex border-y w-full justify-evenly bg-white">
         <BoxIcon
           isActive={status === "paid"}
@@ -140,6 +159,10 @@ const Page = () => {
         </p>
       </div>
     </div>
+  ) : !isError ? (
+    <Loader />
+  ) : (
+    <BoxError />
   );
 };
 

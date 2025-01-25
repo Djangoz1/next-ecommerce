@@ -2,6 +2,7 @@ import {
   createBuyingQuery,
   getBuyingByIdQuery,
   getBuyingByStripeIdQuery,
+  updateBuyingQuery,
 } from "@/api/buy";
 import { createCustomer, getCustomerByIdQuery } from "@/api/customer";
 import { getItemByIdQuery } from "@/api/items";
@@ -62,8 +63,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-
-
     return NextResponse.json(
       { message: "OK", result: results },
       { status: 201 }
@@ -116,5 +115,29 @@ export async function GET(request: NextRequest) {
       },
       { status: 500 }
     );
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  const tracking = request.nextUrl.searchParams.get("tracking") as string;
+  const stripe_id = request.nextUrl.searchParams.get("stripe_id") as string;
+
+  try {
+    if (!tracking) throw new Error("Tracking not found");
+    const items = await getBuyingByStripeIdQuery(stripe_id);
+
+    for (let index = 0; index < items.length; index++) {
+      await updateBuyingQuery({
+        ...items[index],
+        status: "shipped",
+        tracking,
+      });
+    }
+    return NextResponse.json(
+      { message: "OK", result: { success: true } },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 }

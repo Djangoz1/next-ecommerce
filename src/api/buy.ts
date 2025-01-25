@@ -1,4 +1,4 @@
-import { Buying, Item } from "@/types/items";
+import { Buying, Customer, Item } from "@/types/items";
 import { pool } from "@/utils/db";
 
 export const getAllItemsQuery = async (client_id: string) => {
@@ -8,6 +8,29 @@ export const getAllItemsQuery = async (client_id: string) => {
       .select("*")
       .eq("client_id", client_id);
     return res.data as Buying[];
+  } catch (error) {
+    console.error("Error fetching items", error);
+    throw error;
+  }
+};
+
+export const getBuyingByStatusQuery = async (status: Buying["status"]) => {
+  try {
+    const res = await pool
+      .from("buying")
+      .select(`*, items(*), customers(*)`)
+      .eq("status", status);
+    return res.data as (Buying & { items: Item; customers: Customer })[];
+  } catch (error) {
+    console.error("Error fetching items", error);
+    throw error;
+  }
+};
+
+export const getAllBuyingQuery = async () => {
+  try {
+    const res = await pool.from("buying").select(`*, items(*), customers(*)`);
+    return res.data as (Buying & { items: Item; customers: Customer })[];
   } catch (error) {
     console.error("Error fetching items", error);
     throw error;
@@ -36,11 +59,7 @@ export const getBuyingByStripeIdQuery = async (id: string) => {
   }
 };
 
-export const updateBuyingQuery = async ({
-  data: { id, ...data },
-}: {
-  data: Buying;
-}) => {
+export const updateBuyingQuery = async ({ id, ...data }: Buying) => {
   try {
     const result = await pool
       .from("buying")

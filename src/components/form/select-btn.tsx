@@ -3,17 +3,20 @@ import React, { useEffect } from "react";
 import { Btn } from "../ui/btn";
 import { useFormContext } from "react-hook-form";
 import { cn } from "@/utils/cn";
+import { useRouter } from "next/navigation";
 
 export const SelectBtn = ({
   arr,
   id,
   defaultValue,
   className = "",
+  onUrl = false,
 }: {
   className?: string;
   arr: { label: string; value: string | number | boolean }[];
   id: string;
   defaultValue?: string | number | boolean;
+  onUrl?: boolean;
 }) => {
   const { watch, setValue } = useFormContext();
   useEffect(() => {
@@ -21,6 +24,7 @@ export const SelectBtn = ({
       setValue(id, defaultValue);
     }
   }, [id, defaultValue, setValue, watch]);
+  const router = useRouter();
   return (
     <div
       className={cn(
@@ -32,6 +36,9 @@ export const SelectBtn = ({
         <Btn
           onClick={() => {
             setValue(id, item.value);
+            if (onUrl) {
+              router.push(item.value as string);
+            }
           }}
           variant={
             (watch(id) !== undefined && watch(id) === item.value) ||

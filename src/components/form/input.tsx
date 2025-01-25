@@ -8,10 +8,12 @@ import { useFormContext } from "react-hook-form";
 export const Input = ({
   title,
   classNameBox = "",
+  variant = "primary",
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & {
   classNameBox?: string;
   onChange?: (value: string) => void;
+  variant?: "primary" | "secondary";
 }) => {
   const { register, setValue, watch } = useFormContext();
   React.useEffect(() => {
@@ -27,7 +29,11 @@ export const Input = ({
         {...props}
         className={cn(
           "w-full px-3 py-2 border rounded xl:text-sm text-xs shadow bg-background  h-fit",
-          props?.className || ""
+          props?.className || "",
+          {
+            primary: "bg-background",
+            secondary: "bg-white",
+          }[variant]
         )}
         {...register(props.id as string)}
         onChange={(e) => {
@@ -39,7 +45,13 @@ export const Input = ({
       {title ? (
         <label
           htmlFor={props.id as string}
-          className="text-sm px-2 font-light bg-background absolute top-0 left-1 -translate-y-1/2"
+          className={cn(
+            "text-sm px-2 font-light  absolute top-0 left-1 -translate-y-1/2",
+            {
+              primary: "bg-background",
+              secondary: "bg-white",
+            }[variant]
+          )}
         >
           {title}
         </label>

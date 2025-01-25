@@ -12,7 +12,6 @@ import React from "react";
 import { Item } from "../page";
 import { cn } from "@/utils/cn";
 import { BtnBuyingAction } from "@/components/features/btn-buying-action";
-import { span } from "framer-motion/client";
 
 type BaseMetadata = {
   title: string;

@@ -5,7 +5,16 @@ import { Item } from "@/types/items";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
+
+export const clearPendingItems = (queryClient: QueryClient) => {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("pending-items");
+    queryClient.invalidateQueries({
+      queryKey: ["pending-items"],
+    });
+  }
+};
 
 export const BtnBuyingAction = ({ item }: { item: Item }) => {
   const [isOpen, setIsOpen] = useState(false);

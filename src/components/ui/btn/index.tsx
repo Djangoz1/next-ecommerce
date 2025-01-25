@@ -13,8 +13,16 @@ const variants = {
   link: "shadow-none   hover:text-blue-700 border-none underline font-medium",
 };
 
+const sizes = {
+  xs: "px-3 py-1 text-xs",
+  sm: "px-3 py-2 text-sm",
+  md: "px-4 py-3 text-base",
+  lg: "px-3 py-2 text-lg",
+};
+
 type BtnProps = {
   variant?: keyof typeof variants;
+  size?: keyof typeof sizes;
   href?: string;
   onClick?: (
     e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
@@ -24,6 +32,7 @@ export const Btn = ({
   children,
   className = "",
   variant = "default",
+  size = "md",
   type = "button",
   ...props
 }: BtnProps) => {
@@ -32,8 +41,9 @@ export const Btn = ({
       href={props.href}
       onClick={(e) => props?.onClick?.(e)}
       className={cn(
-        "p-4 border flex gap-2 items-center w-fit border-black/50 rounded-md shadow tracking-wider uppercase font-info font-semibold text-sm  transition-all hover:scale-105",
+        "border flex gap-2 items-center w-fit border-black/50 rounded-md shadow tracking-wider uppercase font-info font-semibold text-sm  transition-all hover:scale-105",
         variants[variant],
+        sizes[size],
         className
       )}
     >
@@ -43,8 +53,9 @@ export const Btn = ({
     <button
       type={type}
       className={cn(
-        "p-4 [&:disabled]:opacity-40 [&:disabled]:cursor-not-allowed border flex gap-2 items-center w-fit border-black/50 rounded-md shadow tracking-wider uppercase font-info font-semibold text-sm  transition-all hover:scale-105",
+        "[&:disabled]:opacity-40 [&:disabled]:cursor-not-allowed border flex gap-2 items-center w-fit border-black/50 rounded-md shadow tracking-wider uppercase font-info font-semibold text-sm  transition-all hover:scale-105",
         variants[variant],
+        sizes[size],
         className
       )}
       {...props}
