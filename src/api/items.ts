@@ -36,6 +36,21 @@ export const getItemByIdQuery = async (id: number) => {
   }
 };
 
+export const updateItemQuery = async (item: Partial<Item>) => {
+  try {
+    const res = await pool
+      .from("items")
+      .update(item)
+      .eq("id", item.id)
+      .select()
+      .single();
+    return res.data as Item;
+  } catch (error) {
+    console.error("Error updating item", error);
+    throw error;
+  }
+};
+
 export const getItemMetadataByIdQuery = async (id: number) => {
   try {
     const [metadata, model] = await Promise.all([

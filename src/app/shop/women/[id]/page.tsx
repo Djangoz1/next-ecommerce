@@ -18,6 +18,7 @@ import { DetailsDelivery } from "@/components/features/details-delivery";
 import { DetailsSize } from "@/components/features/details-size";
 import { DetailsCompoAndCare } from "@/components/features/details-compo-and-care";
 import { DetailsEngagement } from "@/components/features/details-engagement";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 type BaseMetadata = {
   title: string;
@@ -229,6 +230,16 @@ const Mobile = ({
         <div className="px-5 flex flex-col items-center gap-5">
           <BtnBuyingAction item={item} />
           <button className="opacity-75 font-light">Guide des tailles</button>
+
+          {item.stock === 0 ? (
+            <div className="bg-white shadow p-2 py-5 rounded-md border text-red-500 flex  items-center gap-2">
+              <Icon icon="mdi:alert-circle" width="30" height="30" />
+              <p className="text-xs font-light">
+                Cet article est en rupture de stock et n'est disponible qu'en
+                précommande
+              </p>
+            </div>
+          ) : null}
         </div>
 
         <div className="flex flex-col w-full border-t divide-y">

@@ -9,29 +9,32 @@ import { Btn } from "../ui/btn";
 import { Textarea } from "../form/textarea";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useApi } from "@/hooks/useApi";
-import { Item } from "@/app/shop/women/page";
+
 import { useQueryClient } from "@tanstack/react-query";
 import { MultipleInput } from "../form/multiple-input";
 import { SelectBtn } from "../form/select-btn";
-import { ItemMetadata } from "@/app/shop/women/[id]/page";
+
+import { Loader } from "../ui/box/loader";
+import { Item, ItemMetadata } from "@/types/items";
 
 export const AdminItem = ({ isActive }: { isActive: string }) => {
   const { watch, setValue } = useFormContext();
   const client = useQueryClient();
 
-  const { data: item } = useApi({
+  const { data: item, isFetched } = useApi<
+    Item & {
+      gallery: { image: string; id: string }[];
+      metadata: ItemMetadata;
+    }
+  >({
     path: `/items/${isActive}`,
     method: "GET",
     enabled: isActive !== "new",
-  }) as {
-    data:
-      | (Item & {
-          gallery: { image: string; id: string }[];
-          metadata: ItemMetadata;
-        })
-      | undefined;
-  };
+  });
   console.log({ item });
+  if (isActive !== "new" && !item && !isFetched) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -117,7 +120,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
           <Input
             title="Type du produit"
             id={`details_title-${isActive}`}
-            defaultValue={item?.metadata?.details?.title}
+            defaultValue={item?.metadata?.details?.title || ""}
             placeholder={"Robe longue"}
             required
           />

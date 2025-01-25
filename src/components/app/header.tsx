@@ -98,9 +98,9 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
           <Button
             onClick={() => setIsOpen(false)}
             arr={[
-              { url: "/shop/women/", children: "Les vêtements" },
-              { url: "/shop/women/", children: "Les minitatures" },
-              { url: "/shop/women/", children: "La peinture" },
+              { url: "/shop/women?t=dress", children: "Les vêtements" },
+              { url: "/shop/women?t=miniature", children: "Les minitatures" },
+              { url: "/shop/women?t=painting", children: "La peinture" },
             ]}
           >
             Boutique

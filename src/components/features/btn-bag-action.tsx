@@ -127,31 +127,11 @@ const Div = ({
                 <Btn
                   variant={"primary"}
                   onClick={async () => {
-                    // const result = await fetch("/api/buy", {
-                    //   method: "POST",
-                    //   headers: {
-                    //     "Content-Type": "application/json",
-                    //   },
-                    //   body: JSON.stringify({
-                    //     items: pendingItems,
-                    //     client_id: uniqueId,
-                    //   }),
-                    // });
-
-                    // console.log({ atted: result });
-                    // let data = await result.json();
-                    // console.log({ before: data });
-                    // if (result.ok) {
                     const stripe_id = await handleCheckout(pendingItems);
-                    console.log({ stripe_id });
-                    router.push(`/checkout?id=${stripe_id}`);
-                    return;
 
-                    localStorage.removeItem("pending-items");
-                    queryClient.invalidateQueries({
-                      queryKey: ["pending-items"],
-                    });
-                    // }
+                    router.push(`/checkout?id=${stripe_id}`);
+                    setIsOpen(false);
+                    return;
                   }}
                   className="w-full text-center justify-center"
                 >

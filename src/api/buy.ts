@@ -1,4 +1,4 @@
-import { Buying, Customer, Item } from "@/types/items";
+import { Buying, BuyingApi, Customer, Item } from "@/types/items";
 import { pool } from "@/utils/db";
 
 export const getAllItemsQuery = async (client_id: string) => {
@@ -85,10 +85,12 @@ export const getBuyingByIdQuery = async (id: number) => {
 
 export const getBuyingByStripeIdQuery = async (id: string) => {
   try {
-    const res = await pool.from("buying").select("*").eq("stripe_id", id);
-    console.log("all", await pool.from("buying").select("*"));
-    console.log({ res });
-    return res.data as Buying[];
+    const res = await pool
+      .from("buying")
+      .select("*, items(*)")
+      .eq("stripe_id", id);
+
+    return res.data as (Buying & { items: Item })[];
   } catch (error) {
     console.error("Error fetching items", error);
     throw error;
