@@ -1,3 +1,4 @@
+"use server";
 import { BoxCascade } from "@/components/ui/box/box-cascade";
 import { Title } from "@/components/ui/typography/title";
 import { CONTACT } from "@/constants/inc";
@@ -5,7 +6,7 @@ import React from "react";
 
 const PageOrderPaymentGiftCard = () => {
   return (
-    <div className="py-20">
+    <div className="">
       <Title className="text-center px-5">Commande & paiement</Title>
       <div className="flex flex-col divide-y divide-dashed w-full">
         <BoxCascade title="Ma commande est-elle validée ?">

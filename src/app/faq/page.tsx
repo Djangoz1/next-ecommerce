@@ -1,3 +1,4 @@
+"use server";
 import { Title } from "@/components/ui/typography/title";
 
 import { Icon } from "@iconify/react/dist/iconify.js";

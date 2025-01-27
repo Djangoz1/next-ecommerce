@@ -1,10 +1,11 @@
+"use server";
 import { BoxCascade } from "@/components/ui/box/box-cascade";
 import { Title } from "@/components/ui/typography/title";
 import React from "react";
 
 const PageProductAdviceAndCare = () => {
   return (
-    <div className="py-20">
+    <div className="">
       <Title className="text-center px-5">
         Produits, Conseils & Entretiens
       </Title>

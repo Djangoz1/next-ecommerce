@@ -1,10 +1,11 @@
+"use server";
 import { BoxCascade } from "@/components/ui/box/box-cascade";
 import { Title } from "@/components/ui/typography/title";
 import React from "react";
 
 const PageMyAccountPromoCodes = () => {
   return (
-    <div className="py-20">
+    <div className="">
       <Title className="text-center px-5">Mon compte & codes promos</Title>
       <div className="flex flex-col divide-y divide-dashed w-full">
         <BoxCascade title="Tout savoir sur le code de 10% bienvenue">
