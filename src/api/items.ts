@@ -156,6 +156,12 @@ export const createMetadataQuery = async <T extends keyof ItemMetadata>(
     if (!item_id) {
       throw new Error("Item id is required");
     }
+    if (!type) {
+      throw new Error("Type is required");
+    }
+    if (!metadata) {
+      throw new Error(`Metadata is required for ${type}`);
+    }
     if (type === "model") {
       const modelMetadata = metadata as ItemMetadata["model"];
       if (

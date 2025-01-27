@@ -41,7 +41,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          ` bg-background font-info dark text-foreground w-full p-0 m-0 relative flex flex-col `,
+          ` bg-background font-info text-foreground w-screen p-0 m-0 relative flex flex-col `,
           geistSans.variable,
           geistMono.variable,
           alegryaSc.variable,

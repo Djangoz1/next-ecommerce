@@ -89,6 +89,7 @@ export const getBuyingByStripeIdQuery = async (id: string) => {
       .from("buying")
       .select("*, items(*)")
       .eq("stripe_id", id);
+    if (res.error) throw new Error(res.error.message);
 
     return res.data as (Buying & { items: Item })[];
   } catch (error) {
@@ -105,6 +106,8 @@ export const updateBuyingQuery = async ({ id, ...data }: Buying) => {
       .eq("id", id)
       .select()
       .single();
+    if (result.error) throw new Error(result.error.message);
+
     return result.data as Buying;
   } catch (error) {
     console.error("Error updating metadata", error);

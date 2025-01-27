@@ -10,6 +10,7 @@ import { Badge } from "../ui/btn/badge";
 import { Tabs } from "../ui/box/tabs";
 import { FormProvider } from "@/context/form";
 import { Input } from "../form/input";
+import { useAsyncApi } from "@/hooks/useAsyncApi";
 
 export const OrderDetails = ({
   data,
@@ -22,7 +23,12 @@ export const OrderDetails = ({
   };
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log({ orderDetails: data, isOpen });
+  const { mutateAsync } = useAsyncApi({
+    path: `/buy`,
+    method: "PUT",
+    invalidateQueries: [["api", `/buy/order`]],
+  });
+
   return (
     <div
       className={cn(
@@ -59,16 +65,16 @@ export const OrderDetails = ({
                       <FormProvider
                         className="flex flex-col gap-5"
                         onSubmit={async (e) => {
-                          const res = await fetch(
-                            `${process.env.NEXT_PUBLIC_API_URL}/buy?tracking=${e.tracking}&stripe_id=${data.stripe_id}`,
-                            {
-                              method: "PUT",
-                            }
-                          );
-
-                          const result = await res.json();
-
-                          console.log({ resultApi: result });
+                          await mutateAsync({
+                            params: {
+                              tracking: e.tracking,
+                              stripe_id: data.stripe_id,
+                            },
+                            toast: {
+                              title: "Suivi ajouté",
+                              description: "Votre client sera notifié par mail",
+                            },
+                          });
                         }}
                       >
                         {data.items[0].tracking ? (

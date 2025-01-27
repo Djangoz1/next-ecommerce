@@ -50,7 +50,7 @@ const BoxIcon = ({
 
 const Page = () => {
   const stripe_id = useSearchParams().get("id");
-  const { data, isError } = useApi<{
+  const { data, isFetched, isLoading } = useApi<{
     items: (Item & { details: Buying })[];
     customer: Customer;
   }>({
@@ -86,7 +86,7 @@ const Page = () => {
     }
     return [...acc, [item]];
   }, []);
-  console.log({ castArr, data, isError });
+  console.log({ castArr, data });
   return data ? (
     <div className="py-20">
       <div className="flex flex-col text-center items-center justify-center pb-20 w-full">
@@ -159,7 +159,7 @@ const Page = () => {
         </p>
       </div>
     </div>
-  ) : !isError ? (
+  ) : !isFetched || isLoading ? (
     <Loader />
   ) : (
     <BoxError />

@@ -3,6 +3,7 @@
 import { Input } from "@/components/form/input";
 import { Loader } from "@/components/ui/box/loader";
 import { Btn } from "@/components/ui/btn";
+import { Switch } from "@/components/ui/btn/switch";
 import { Title } from "@/components/ui/typography/title";
 import { FormProvider } from "@/context/form";
 import { useApi } from "@/hooks/useApi";
@@ -90,6 +91,17 @@ const Page = () => {
           Carte de crédit
         </Btn>
       </div>
+      <div className="flex flex-col border-t px-3 py-10 gap-10">
+        <div className="flex flex-col ">
+          <Title className="text-2xl">Newsletter</Title>
+
+          <p className="opacity-80 font-light text-s">
+            Restez informé de nos nouveautés, promotions et évènements de la
+            Maison Ormés.
+          </p>
+          <Switch id="newsletter" className="mt-5" />
+        </div>
+      </div>
       <div className="flex flex-col border-t py-10 gap-10 px-3">
         <div className="flex flex-col">
           <Title className="text-2xl">Résumé de la commande</Title>
@@ -130,6 +142,16 @@ const Page = () => {
           variant="primary"
           className="w-full text-center"
           onClick={async () => {
+            console.log("newsletter", watch("newsletter"));
+            if (watch("newsletter")) {
+              fetch(`${process.env.NEXT_PUBLIC_API_URL}/newsletter`, {
+                method: "POST",
+                body: JSON.stringify({
+                  email: watch("email"),
+                }),
+              });
+            }
+
             const form = {
               email: watch("email"),
               country: watch("country"),

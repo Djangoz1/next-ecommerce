@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS buying CASCADE;
 DROP TABLE IF EXISTS items CASCADE;
 DROP TABLE IF EXISTS item_model CASCADE;
 DROP TABLE IF EXISTS customers CASCADE;
-
+DROP TABLE IF EXISTS newsletter CASCADE;
 
 DROP TYPE IF EXISTS detail_type CASCADE;
 DROP TYPE IF EXISTS item_type CASCADE;
@@ -13,6 +13,14 @@ DROP TYPE IF EXISTS buying_status CASCADE;
 CREATE TYPE detail_type AS ENUM ('details',  'compo', 'care', 'traceability', 'engagements');
 CREATE TYPE item_type AS ENUM ('dress', 'miniature', 'paint');
 CREATE TYPE buying_status AS ENUM ( 'pending', 'paid', 'delivered', 'shipped', 'cancelled');
+
+
+CREATE TABLE newsletter(
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Créer la table des items
 CREATE TABLE items (
 id SERIAL PRIMARY KEY,

@@ -7,9 +7,9 @@ import React from "react";
 
 const PageOrmes = () => {
   return (
-    <div className="flex flex-col xl:py-40 py-20 xl:px-0 px-5 items-center gap-10 xl:gap-20">
+    <div className="flex flex-col xl:py-40 py-20 items-center gap-10 xl:gap-20">
       <Section title="La Maison Ormés">
-        <Text className="text-center">
+        <Text>
           ORMÉS est une maison de création et de savoir-faire.
           <br />
           <br />
@@ -24,40 +24,39 @@ const PageOrmes = () => {
           pièce, bien plus qu ’ un vêtement, est un concentré de savoir-faire,
           portant en elle une âme qui dépasse les saisons et les tendances.
         </Text>
-
-        <div className="flex flex-col w-full ">
-          <BoxCascade title={"Qui est à l'origine d'Ormés ?"}>
-            <Text>
-              Le fondateur de la Maison, Guccio Gucci, est né à Florence le 26
-              mars 1881. Il s’installe à Londres au cours de sa jeunesse. En
-              1897, il commence à travailler en tant que bagagiste à l’hôtel
-              Savoy. Découvrant au plus près l’environnement particulièrement
-              fermé de la haute société internationale, et notamment les valises
-              avec lesquelles ses membres voyageaient, il rentre en Italie en
-              1902 avec le rêve qu’un jour, des bagages porteraient son nom. En
-              1921, il ouvre sa première boutique sur la via della Vigna Nuova à
-              Florence, spécialisée dans les bagages de style anglais.
-            </Text>
-          </BoxCascade>
-          <BoxCascade
-            className="[&_b]:underline"
-            title="Qu'est-ce qui fait la réputation d'Ormés ?"
-          >
-            <Text>
-              Gucci incarne le summum de l’excellence de l’artisanat italien et
-              ses créations sont sans égal en matière de qualité et de soin
-              apporté aux détails. Maison aujourd’hui centenaire, Gucci continue
-              de redéfinir le luxe tout en mettant à l’honneur la créativité et
-              l’innovation à travers ses collections de prêt-à-porter, de
-              maroquinerie, de chaussures, de <b>sacs</b>, de <b>joaillerie</b>,
-              de <b>montres</b> et d’
-              <b>articles de décoration</b>, parmi tant d’autres.
-            </Text>
-          </BoxCascade>
-        </div>
       </Section>
+      <div className="flex flex-col w-full divide-dashed border-y">
+        <BoxCascade title={"Qui est à l'origine d'Ormés ?"}>
+          <Text>
+            Le fondateur de la Maison, Guccio Gucci, est né à Florence le 26
+            mars 1881. Il s’installe à Londres au cours de sa jeunesse. En 1897,
+            il commence à travailler en tant que bagagiste à l’hôtel Savoy.
+            Découvrant au plus près l’environnement particulièrement fermé de la
+            haute société internationale, et notamment les valises avec
+            lesquelles ses membres voyageaient, il rentre en Italie en 1902 avec
+            le rêve qu’un jour, des bagages porteraient son nom. En 1921, il
+            ouvre sa première boutique sur la via della Vigna Nuova à Florence,
+            spécialisée dans les bagages de style anglais.
+          </Text>
+        </BoxCascade>
+        <BoxCascade
+          className="[&_b]:underline"
+          title="Qu'est-ce qui fait la réputation d'Ormés ?"
+        >
+          <Text>
+            Gucci incarne le summum de l’excellence de l’artisanat italien et
+            ses créations sont sans égal en matière de qualité et de soin
+            apporté aux détails. Maison aujourd’hui centenaire, Gucci continue
+            de redéfinir le luxe tout en mettant à l’honneur la créativité et
+            l’innovation à travers ses collections de prêt-à-porter, de
+            maroquinerie, de chaussures, de <b>sacs</b>, de <b>joaillerie</b>,
+            de <b>montres</b> et d’
+            <b>articles de décoration</b>, parmi tant d’autres.
+          </Text>
+        </BoxCascade>
+      </div>
 
-      <figure className="flex flex-col items-center gap-3 w-full ">
+      <figure className="flex flex-col items-center gap-3 w-full px-5">
         <Image
           width={1800}
           height={1800}
@@ -71,7 +70,7 @@ const PageOrmes = () => {
         </figcaption>
       </figure>
       <Section title="La créatrice">
-        <Text className="text-center">
+        <Text>
           La Maison ORMÉS a été fondée par Sandra Djangoné, issue d' une famille
           d' artisans, de passionnés d' art et de vintage.
           <br />
@@ -119,7 +118,7 @@ const PageOrmes = () => {
       </Section>
 
       <Section title="Manifeste">
-        <Text className="text-center">
+        <Text>
           Je pense qu 'il y a trop de vêtements et de matières synthétiques qui
           polluent notre planète.
           <br />
@@ -138,10 +137,10 @@ const PageOrmes = () => {
         </Text>
       </Section>
       <Section title="Engagements">
-        <div className="flex flex-col gap-2 items-center">
+        <div className="flex flex-col gap-2 ">
           <h6 className="uppercase text-xl">UNE MODE RESPONSABLE</h6>
 
-          <Text className="text-center">
+          <Text>
             ORMÉS s ’ engage à utiliser exclusivement des ingrédients 100 %
             naturels, issus de sources durables et respectueuses de l’
             environnement. Chaque matière première est soigneusement
@@ -149,21 +148,21 @@ const PageOrmes = () => {
             des vêtements authentiques et respectueux de la biodiversité.
           </Text>
         </div>
-        <div className="flex flex-col gap-2 items-center">
+        <div className="flex flex-col gap-2">
           <h6 className="uppercase text-xl">Des matières naturelles</h6>
 
-          <Text className="text-center">
+          <Text>
             Chaque pièce est conçue pour durer dans le temps, en utilisant
             exclusivement des matières naturelles d’ exception, toutes
             certifiées par des labels écologiques rigoureux.
           </Text>
         </div>
-        <div className="flex flex-col gap-2 items-center">
+        <div className="flex flex-col gap-2 ">
           <h6 className="uppercase text-xl">
             Une fabrication raisonnée européenne
           </h6>
 
-          <Text className="text-center">
+          <Text>
             La production, 100 % européenne, repose sur un modèle à la demande
             ou en petites séries. Cela permet une fabrication raisonnée, limitée
             à l' essentiel et soucieuse de l'impact environnemental.
@@ -171,7 +170,9 @@ const PageOrmes = () => {
         </div>
       </Section>
 
-      <Btn variant="link">En savoir plus sur la fabrication à la demande</Btn>
+      <Btn className="" variant="link">
+        En savoir plus sur la fabrication à la demande
+      </Btn>
     </div>
   );
 };
@@ -184,7 +185,7 @@ const Section = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className="flex flex-col items-center xl:gap-20 gap-5 xl:w-2/3 w-full xl:py-20 py-10">
+    <div className="flex px-5 text-justify flex-col items-center xl:gap-20 gap-10 xl:w-2/3 w-full xl:py-20 py-10">
       <Title className="uppercase text-center text-4xl">{title}</Title>
       {children}
     </div>

@@ -123,25 +123,40 @@ export async function GET(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const tracking = request.nextUrl.searchParams.get("tracking") as string;
-  const stripe_id = request.nextUrl.searchParams.get("stripe_id") as string;
+  const body = await request.json();
+  const tracking = body.tracking as string;
+  const stripe_id = body.stripe_id as string;
 
   try {
     if (!tracking) throw new Error("Tracking not found");
     const items = await getBuyingByStripeIdQuery(stripe_id);
 
+    if (!items.length) throw new Error("No items found");
     for (let index = 0; index < items.length; index++) {
-      await updateBuyingQuery({
-        ...items[index],
+      const { items: _, ...item } = items[index];
+
+      let res = await updateBuyingQuery({
+        ...item,
         status: "shipped",
         tracking,
       });
+      if (!res) throw new Error("Error updating buying");
     }
     return NextResponse.json(
       { message: "OK", result: { success: true } },
       { status: 200 }
     );
   } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    console.log(
+      "Error /api/buy/PUT",
+      error instanceof Error ? error.message : "Error"
+    );
+    return NextResponse.json(
+      {
+        message: "Error",
+        error: error instanceof Error ? error.message : "Error",
+      },
+      { status: 500 }
+    );
   }
 }

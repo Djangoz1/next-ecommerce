@@ -1,10 +1,11 @@
+import { Carousel } from "@/components/ui/box/carousel";
 import { Btn } from "@/components/ui/btn";
 
 import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="w-screen max-w-full flex flex-col gap-5 pb-5">
+    <main className="w-screen max-w-full flex flex-col gap-5">
       <section className="relative w-full">
         <Image
           width={1800}
@@ -76,6 +77,15 @@ export default function Home() {
             </Btn>
           </div>
         </div>
+      </section>
+      <section>
+        <Carousel
+          slides={[
+            { src: "/model/1.jpg", title: "Robe" },
+            { src: "/model/2.jpg", title: "Miniature" },
+            { src: "/model/3.jpg", title: "Peinture" },
+          ]}
+        />
       </section>
     </main>
   );

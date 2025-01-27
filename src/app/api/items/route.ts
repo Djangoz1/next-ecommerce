@@ -52,74 +52,92 @@ export async function POST(request: NextRequest) {
     } = body;
 
     const values = [
-      name,
-      type,
-      stock,
-      description,
-      abstract_description,
-      main_image,
-      discount,
-      price,
+      {
+        name,
+        type,
+        stock,
+        description,
+        abstract_description,
+        main_image,
+        discount,
+        price,
+      },
     ];
 
-    const result = await pool.from("items").insert(values).select();
+    console.log({ value: values[0] });
 
-    const itemId = result.data?.[0].id;
+    const result = await pool.from("items").insert(values).select().single();
+
+    console.log({ result });
+    if (!result.data) throw new Error("Error creating the item");
+    const itemId = result.data.id;
 
     const [_care, _compo, _details, _traceability, _engagements, _model] =
       await Promise.all([
-        createMetadataQuery(
-          itemId,
-          {
-            content: care,
-            title: null,
-          },
-          "care"
-        ),
-        createMetadataQuery(
-          itemId,
-          {
-            content: compo,
-            title: null,
-          },
-          "compo"
-        ),
-        createMetadataQuery(
-          itemId,
-          {
-            content: details,
-            title: details_title,
-          },
-          "details"
-        ),
-        createMetadataQuery(
-          itemId,
-          {
-            content: traceability,
-            title: null,
-          },
-          "traceability"
-        ),
-        createMetadataQuery(
-          itemId,
-          {
-            content: engagements,
-            title: null,
-          },
-          "engagements"
-        ),
-        createMetadataQuery(
-          itemId,
-          {
-            name: model_name,
-            regular: regular,
-            size: size,
-            tall: tall,
-            dimension: dimension,
-            centimeters_by_size: centimeters_by_size,
-          },
-          "model"
-        ),
+        care
+          ? createMetadataQuery(
+              itemId,
+              {
+                content: care,
+                title: null,
+              },
+              "care"
+            )
+          : null,
+        compo
+          ? createMetadataQuery(
+              itemId,
+              {
+                content: compo,
+                title: null,
+              },
+              "compo"
+            )
+          : null,
+        details
+          ? createMetadataQuery(
+              itemId,
+              {
+                content: details,
+                title: details_title,
+              },
+              "details"
+            )
+          : null,
+        traceability
+          ? createMetadataQuery(
+              itemId,
+              {
+                content: traceability,
+                title: null,
+              },
+              "traceability"
+            )
+          : null,
+        engagements
+          ? createMetadataQuery(
+              itemId,
+              {
+                content: engagements,
+                title: null,
+              },
+              "engagements"
+            )
+          : null,
+        model_name
+          ? createMetadataQuery(
+              itemId,
+              {
+                name: model_name,
+                regular: regular,
+                size: size,
+                tall: tall,
+                dimension: dimension,
+                centimeters_by_size: centimeters_by_size,
+              },
+              "model"
+            )
+          : null,
       ]);
 
     return NextResponse.json(
@@ -140,6 +158,11 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
+    const err =
+      error instanceof Error
+        ? `Error creating the item: ${error.message}`
+        : "An error occured while creating the item";
+    console.log("Error /api/items/POST", err);
+    return NextResponse.json({ message: "Error", error: err }, { status: 500 });
   }
 }

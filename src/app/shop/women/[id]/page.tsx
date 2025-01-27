@@ -205,8 +205,11 @@ const Mobile = ({
         ))}
       </div>
       <div className="flex flex-col w-full  py-3 gap-5">
-        <div className="flex w-full justify-between items-center gap-2 px-5">
-          <Title className="text-xl">{item.abstract_description}</Title>
+        <div className="flex w-full justify-between items-center gap-2 px-5 ">
+          <div className="flex flex-col ">
+            <Title className="text-xl">{item.name}</Title>
+            <p className="text-sm font-light">{item.abstract_description}</p>
+          </div>
 
           <div className="flex whitespace-nowrap items-center gap-2 font-black text-xs">
             {item.discount ? (

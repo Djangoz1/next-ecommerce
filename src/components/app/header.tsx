@@ -117,18 +117,21 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
           </Button>
         </motion.div>
         <div className="flex px-3 flex-col gap-5 uppercase opacity-50 font-bold text-sm py-5 mt-20">
-          <Link className="" href={"/shop/women/"}>
-            Suivre ma commande
-          </Link>
-          <Link className="" href={"/shop/women/"}>
-            Faire un retour
-          </Link>
-          <Link className="" href={"/shop/women/"}>
-            Contactez nous
-          </Link>
-          <Link className="" href={"/shop/women/"}>
-            FAQ
-          </Link>
+          {[
+            { url: "/tracking/", children: "Suivre ma commande" },
+            { url: "/shop/women/", children: "Faire un retour" },
+            { url: "/shop/women/", children: "Contactez nous" },
+            { url: "/faq/", children: "FAQ" },
+          ].map((item, i) => (
+            <Link
+              onClick={() => setIsOpen(false)}
+              className=""
+              key={`button-sidebar-link-${i}`}
+              href={item.url}
+            >
+              {item.children}
+            </Link>
+          ))}
         </div>
 
         <div className="flex py-5 justify-center gap-5 w-full border-y">

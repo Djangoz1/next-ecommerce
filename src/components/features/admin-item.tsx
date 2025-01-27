@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { Title } from "../ui/typography/title";
 import { Input } from "../form/input";
 import { useFormContext } from "react-hook-form";
@@ -16,6 +16,13 @@ import { SelectBtn } from "../form/select-btn";
 
 import { Loader } from "../ui/box/loader";
 import { Item, ItemMetadata } from "@/types/items";
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { Badge } from "../ui/btn/badge";
+import { ItemCareMultipleInput } from "./admin/item-care-multiple-input";
+import { ItemEngagementMultipleInput } from "./admin/item-engagement-multiple-input";
+import { ItemTraceabilityMultipleInput } from "./admin/item-traceability-multiple-input";
+import { useAsyncApi } from "@/hooks/useAsyncApi";
 
 export const AdminItem = ({ isActive }: { isActive: string }) => {
   const { watch, setValue } = useFormContext();
@@ -31,29 +38,64 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
     method: "GET",
     enabled: isActive !== "new",
   });
-  console.log({ item });
+
+  const { mutateAsync } = useAsyncApi({
+    invalidateQueries: [["api", `/items/${isActive}`]],
+  });
+
+  const router = useRouter();
+
   if (isActive !== "new" && !item && !isFetched) {
     return <Loader />;
   }
 
   return (
-    <>
-      <div className="flex flex-col divide-y divide-dashed">
+    <div
+      className="fixed w-screen flex  h-screen top-0 left-0 bg-black/50 backdrop-blur z-[100] "
+      onClick={() => router.push("/admin")}
+    >
+      <motion.div
+        onClick={(e) => e.stopPropagation()}
+        initial={{ x: -100 }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.3 }}
+        exit={{ x: -100 }}
+        className="flex pb-40  flex-col divide-y divide-dashed  w-screen xl:w-2/3   bg-background  xl:ml-auto overflow-y-scroll relative"
+      >
+        <Btn
+          size="sm"
+          href={`/admin`}
+          className="m-5 xl:relative fixed top-5 right-5 xl:top-0 xl:right-0 !ml-auto z-10"
+        >
+          <Icon icon={"mdi:close"} className="text-2xl" /> Fermer
+        </Btn>
         <Box
           title="Fiche du produit"
           description="Informations mise en avant pour la fiche produit"
           className="grid grid-cols-2"
         >
-          <SelectBtn
-            className="col-span-2"
-            arr={[
-              { label: "Les vêtements", value: "dress" },
-              { label: "Les miniatures", value: "miniature" },
-              { label: "Les peintures", value: "paint" },
-            ]}
-            id={`type-${isActive}`}
-            defaultValue={item?.type || "dress"}
-          />
+          {isActive === "new" ? (
+            <SelectBtn
+              className="col-span-2"
+              arr={[
+                { label: "Les vêtements", value: "dress" },
+                { label: "Les miniatures", value: "miniature" },
+                { label: "Les peintures", value: "painting" },
+              ]}
+              id={`type-${isActive}`}
+              defaultValue={item?.type || "dress"}
+            />
+          ) : (
+            <Badge className="col-span-2 py-1 text-base uppercase font-semibold">
+              {
+                {
+                  dress: "Vêtements",
+                  miniature: "Miniatures",
+                  painting: "Peintures",
+                }[item?.type || "dress"]
+              }
+            </Badge>
+          )}
           <Input
             title="Nom du produit"
             placeholder={"Robe Mila"}
@@ -164,14 +206,14 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                     <Btn
                       className="px-1 py-1 text-red-500"
                       onClick={async () => {
-                        await fetch(
-                          `${process.env.NEXT_PUBLIC_API_URL}/upload/${el.id}`,
-                          {
-                            method: "DELETE",
-                          }
-                        );
-                        await client.invalidateQueries({
-                          queryKey: ["api", `/items/${isActive}`],
+                        await mutateAsync({
+                          path: `/upload/${el.id}`,
+                          method: "DELETE",
+                          params: {},
+
+                          toast: {
+                            description: "Image supprimée",
+                          },
                         });
                       }}
                     >
@@ -187,20 +229,14 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                         };
 
                         console.log({ body });
-                        const res = await fetch(
-                          `${process.env.NEXT_PUBLIC_API_URL}/items/${isActive}`,
-                          {
-                            method: "PUT",
-                            headers: {
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify(body),
-                          }
-                        );
 
-                        console.log({ res: await res.json() });
-                        await client.invalidateQueries({
-                          queryKey: ["api", `/items/${isActive}`],
+                        await mutateAsync({
+                          path: `/items/${isActive}`,
+                          method: "PUT",
+                          params: body,
+                          toast: {
+                            description: "Image principale mise à jour",
+                          },
                         });
                       }}
                       variant={
@@ -246,20 +282,19 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                       if (isActive !== "new") {
                         formData.append("itemId", isActive);
                       }
-                      console.log({ test: formData });
-                      const res = await fetch(
-                        `${process.env.NEXT_PUBLIC_API_URL}/upload`,
-                        {
-                          method: "POST",
-                          body: formData,
-                        }
-                      );
-                      const data = await res.json();
 
-                      console.log({ data });
+                      let data = await mutateAsync({
+                        path: `/upload`,
+                        method: "POST",
+                        params: formData,
+                        headers: false,
+                        toast: {
+                          description: "Image ajoutée",
+                        },
+                      });
 
                       if (!watch(`main_image-${isActive}`)) {
-                        setValue(`main_image-${isActive}`, data.url);
+                        setValue(`main_image-${isActive}`, data.result.url);
                       }
                     }
 
@@ -345,33 +380,57 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
             placeholder={"52% viscose"}
             id={`compo-${isActive}`}
           />
-          <MultipleInput
-            placeholder={"Ne pas laver à la machine"}
-            title="Entretien"
-            defaultValue={item?.metadata?.care?.content}
-            id={`care-${isActive}`}
-          />
+          <ItemCareMultipleInput data={item?.metadata} isActive={isActive} />
         </Box>
 
         <Box
           title={"Engagements & Traçabilité"}
           description="Décrivez les engagements du produit"
         >
-          <MultipleInput
-            placeholder={"Transport routier"}
-            title="Engagements"
-            defaultValue={item?.metadata?.engagements?.content}
-            id={`engagements-${isActive}`}
+          <ItemEngagementMultipleInput
+            data={item?.metadata}
+            isActive={isActive}
           />
-          <MultipleInput
-            placeholder={"100% Made in France"}
-            title="Traçabilité"
-            defaultValue={item?.metadata?.traceability?.content}
-            id={`traceability-${isActive}`}
+          <ItemTraceabilityMultipleInput
+            data={item?.metadata}
+            isActive={isActive}
           />
         </Box>
-      </div>
-    </>
+
+        {isActive ? (
+          <div className=" fixed bottom-10 xl:right-20  right-10 flex gap-5   !border-0">
+            {isActive !== "new" ? (
+              <Btn
+                onClick={async () => {
+                  await mutateAsync({
+                    path: `/items/${isActive}`,
+                    method: "DELETE",
+                    params: {},
+                    invalidateQueries: [
+                      ["api", `/items/${isActive}`],
+                      ["api", `/items`],
+                    ],
+                    toast: {
+                      description: "Produit supprimé",
+                    },
+                  });
+
+                  router.push("/admin");
+                }}
+                variant="default"
+              >
+                Supprimer
+              </Btn>
+            ) : null}
+            <Btn type="submit" variant="primary">
+              Enregistrer
+            </Btn>
+          </div>
+        ) : (
+          <></>
+        )}
+      </motion.div>
+    </div>
   );
 };
 
@@ -387,9 +446,9 @@ const Box = ({
   className?: string;
 }) => {
   return (
-    <div className="flex justify-between  xl:flex-row flex-col p-5 py-20  gap-10  w-full xl:p-20">
+    <div className="flex justify-between  xl:flex-row flex-col p-5 py-20  gap-10  w-full xl:p-10">
       <div className="flex flex-col xl:w-1/4">
-        <Title className="whitespace-nowrap text-xl">{title}</Title>
+        <Title className=" text-xl">{title}</Title>
 
         <p className="font-light">{description}</p>
       </div>

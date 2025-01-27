@@ -1,13 +1,12 @@
 import { Title } from "../ui/typography/title";
 
-import { FormProvider } from "@/context/form";
-import { Input } from "../form/input";
 import { ButtonHeader } from "./header";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { InputNewsletter } from "../features/input-newsletter";
 
 export const Footer = () => {
   return (
-    <footer className=" z-50  xl:py-20 py-10  bg-[#FAF7F2] border-t  gap-20 flex flex-col">
+    <footer className="  xl:py-20 py-10  bg-[#FAF7F2] border-t  gap-20 flex flex-col">
       <div className="flex flex-col divide-y">
         <div className="flex flex-col gap-5 px-3 pb-10">
           <Title className="uppercase text-2xl">Plus d'Ormés ici</Title>
@@ -18,9 +17,7 @@ export const Footer = () => {
             des communication personnalisée et les dernières actualités de la
             Maison.
           </p>
-          <FormProvider onSubmit={() => {}}>
-            <Input defaultValue={""} placeholder="Addresse email" id="email" />
-          </FormProvider>
+          <InputNewsletter />
         </div>
         <ButtonHeader
           arr={[
@@ -47,7 +44,7 @@ export const Footer = () => {
               children: <>Contactez-nous</>,
             },
             {
-              url: "#",
+              url: "/faq",
               children: <>FAQ</>,
             },
             {

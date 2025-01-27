@@ -1,5 +1,6 @@
 "use client";
 import { cn } from "@/utils/cn";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 import * as React from "react";
 
@@ -9,9 +10,11 @@ export const Input = ({
   title,
   classNameBox = "",
   variant = "primary",
+  submit = false,
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & {
   classNameBox?: string;
+  submit?: boolean;
   onChange?: (value: string) => void;
   variant?: "primary" | "secondary";
 }) => {
@@ -55,6 +58,15 @@ export const Input = ({
         >
           {title}
         </label>
+      ) : null}
+
+      {submit ? (
+        <button
+          type="submit"
+          className="absolute right-2 top-1/2 -translate-y-1/2"
+        >
+          <Icon icon="mdi:arrow-right" />
+        </button>
       ) : null}
     </div>
   );

@@ -2,7 +2,7 @@
 import { OrderDetails } from "@/components/features/order-details";
 import { SelectBtn } from "@/components/form/select-btn";
 import { Loader } from "@/components/ui/box/loader";
-import { Btn } from "@/components/ui/btn";
+
 import { FormProvider } from "@/context/form";
 import { useApi } from "@/hooks/useApi";
 import { BuyingApi } from "@/types/items";
@@ -18,27 +18,10 @@ const Page = () => {
     queryKey: status || undefined,
     params: status ? { status } : undefined,
   });
-  console.log({ data, status });
 
   return (
-    <div className="py-20 flex flex-col gap-5 min-h-screen">
-      <div className="flex w-full border-y">
-        <Btn
-          href={"/admin"}
-          className="opacity-50 w-full hover:opacity-100 py-2 text-xs rounded-none justify-center"
-          variant="ghost"
-        >
-          Articles
-        </Btn>
-        <Btn
-          href={"/admin/order"}
-          className="text-xs py-2 rounded-none w-full justify-center"
-          variant="primary"
-        >
-          Commandes
-        </Btn>
-      </div>
-      <FormProvider className="px-3 flex flex-col gap-5" onSubmit={() => {}}>
+    <div className="flex flex-col gap-5 ">
+      <FormProvider className=" flex justify-center" onSubmit={() => {}}>
         <SelectBtn
           onUrl
           defaultValue={

@@ -8,15 +8,27 @@ import { useApi } from "@/hooks/useApi";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { Item } from "../shop/women/page";
-import { useQueryClient } from "@tanstack/react-query";
+
 import { Suspense } from "react";
+import { Badge } from "@/components/ui/btn/badge";
+import { AnimatePresence } from "framer-motion";
+import { BoxError } from "@/components/ui/box/box-error";
+import { Loader } from "@/components/ui/box/loader";
+import { useAsyncApi } from "@/hooks/useAsyncApi";
 
 const PageAdmin = () => {
   const itemId = Number(useSearchParams().get("item_id"));
   const create = useSearchParams().get("create");
+
+  const { mutateAsync, ...rest } = useAsyncApi({
+    // path: "/items",
+    // method: "POST",
+  });
+
+  console.log({ rest });
 
   return (
     <FormProvider
@@ -47,23 +59,27 @@ const PageAdmin = () => {
         };
         console.log({ params });
 
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/items${
-            create ? "" : `/${itemId}`
-          }`,
-          {
-            method: create ? "POST" : "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(params),
-          }
-        );
+        // const res = await fetch(
+        //   `${process.env.NEXT_PUBLIC_API_URL}/items${
+        //     create ? "" : `/${itemId}`
+        //   }`,
+        //   {
+        //     method: create ? "POST" : "PUT",
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(params),
+        //   }
+        // );
 
-        const data = await res.json();
-        console.log({ res, data });
+        const data = await mutateAsync({
+          params,
+          method: create ? "POST" : "PUT",
+          path: `/items${create ? "" : `/${itemId}`}`,
+        });
+        console.log({ data });
       }}
-      className="w-screen py-40"
+      className="w-full"
     >
       <Page />
     </FormProvider>
@@ -73,25 +89,25 @@ const PageAdmin = () => {
 const Page = () => {
   const isActive = Number(useSearchParams().get("item_id"));
   const isCreate = useSearchParams().get("create");
-  const { data } = useApi({
+  const { data, isFetched } = useApi<Item[]>({
     path: "/items",
     method: "GET",
-  }) as { data: Item[] | undefined };
-  const router = useRouter();
-  const client = useQueryClient();
+  });
 
-  if (!data) return null;
-  return (
+  return data ? (
     <>
-      <div
-        key={`form-${isActive}`}
-        className="flex xl:flex-wrap overflow-x-auto  overflow-y-hidden w-full  border-y xl:px-20 xl:gap-4"
-      >
+      <div key={`form-${isActive}`} className="flex flex-col divide-y border-y">
+        <div className="w-full items-center flex gap-5  p-5 bg-black/5 justify-between border-y border-black">
+          <Title className="text-lg"> Sélectionner un produit</Title>
+          <Btn size="xs" variant="primary" href={`/admin?create=true`}>
+            Créer un produit
+          </Btn>
+        </div>
         {data?.map((item, i) => (
           <Link
             href={isActive === item.id ? `/admin` : `/admin?item_id=${item.id}`}
             key={`item-${i}`}
-            className="xl:h-[300px] h-[150px] w-fit"
+            className="w-full flex gap-5  p-5 hover:bg-black/5"
           >
             <Image
               src={item.main_image}
@@ -99,66 +115,39 @@ const Page = () => {
               width={800}
               height={800}
               className={cn(
-                "h-full xl:max-w-[300px] max-w-[150px] object-cover shadow-2xl rounded",
+                "w-[70px] object-cover shadow-2xl rounded",
                 isActive === item.id
                   ? "opacity-100"
                   : "opacity-50 hover:opacity-80"
               )}
             />
+
+            <div className="flex flex-col gap-px mr-auto">
+              <Title className="text-base">{item.name}</Title>
+              <Title className="text-base">{item.price}€</Title>
+              <p>
+                <b>Stock:</b>
+                {item.stock}
+              </p>
+            </div>
+            <Badge>{item.type}</Badge>
           </Link>
         ))}
       </div>
       <div className="flex flex-col gap-10">
-        {isActive ? (
-          <AdminItem isActive={isActive.toString()} />
-        ) : isCreate ? (
-          <AdminItem isActive={"new"} />
-        ) : (
-          <div className="w-full items-center flex-col flex gap-5 justify-center h-full py-40 text-center">
-            <Title>Aucun produit sélectionné</Title>
-            <div className="flex gap-3">
-              <Btn variant="primary" href={`/admin?create=true`}>
-                Créer un produit
-              </Btn>
-              <Btn href={`/admin/order`}>Voir les commandes</Btn>
-            </div>
-          </div>
-        )}
-        {isActive || isCreate ? (
-          <div className="fixed bottom-10 right-10 flex gap-5  justify-end">
-            {!isCreate ? (
-              <Btn
-                onClick={async () => {
-                  const res = await fetch(
-                    `${process.env.NEXT_PUBLIC_API_URL}/items/${isActive}`,
-                    {
-                      method: "DELETE",
-                    }
-                  );
-                  console.log({ res });
-
-                  await client.invalidateQueries({
-                    queryKey: ["api", `/items/${isActive}`],
-                  });
-                  await client.invalidateQueries({
-                    queryKey: ["api", `/items`],
-                  });
-                  router.push("/admin");
-                }}
-                variant="default"
-              >
-                Supprimer
-              </Btn>
-            ) : null}
-            <Btn type="submit" variant="primary">
-              Enregistrer
-            </Btn>
-          </div>
-        ) : (
-          <></>
-        )}
+        <AnimatePresence>
+          {isActive ? (
+            <AdminItem isActive={isActive.toString()} />
+          ) : isCreate ? (
+            <AdminItem isActive={"new"} />
+          ) : null}
+        </AnimatePresence>
       </div>
     </>
+  ) : isFetched ? (
+    <BoxError />
+  ) : (
+    <Loader />
   );
 };
 

@@ -2,6 +2,8 @@
 import { Footer } from "@/components/app/footer";
 import { Header } from "@/components/app/header";
 
+import { Toaster } from "@/components/ui/toaster";
+
 import {
   QueryClient,
   QueryClientProvider,
@@ -36,12 +38,12 @@ const Element = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <AppContext.Provider value={{ uniqueId: data }}>
-        <div className="w-full max-w-full  absolute h-screen flex flex-col  ">
+        <div className="w-full max-w-full   flex flex-col  ">
           <main className="w-full  flex flex-col overflow overflow-x-hidden ">
             {children}
           </main>
-          <Footer />
         </div>
+        <Footer />
         <Header />
       </AppContext.Provider>
     </>
@@ -51,6 +53,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <Element>{children}</Element>
+      <Toaster />
     </QueryClientProvider>
   );
 };
