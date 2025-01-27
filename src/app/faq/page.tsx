@@ -28,8 +28,8 @@ const FaqPage = () => {
           >
             Produits Conseils & Entretiens
           </Button>
-          <Button href={"/faq/order-payment-gift-card"} icon="carbon:delivery">
-            Commande, Paiement & Cartes cadeaux
+          <Button href={"/faq/order-payment"} icon="carbon:delivery">
+            Commande & Paiement
           </Button>
           <Button
             href={"/faq/delivery"}

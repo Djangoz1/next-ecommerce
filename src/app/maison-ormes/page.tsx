@@ -8,7 +8,7 @@ import React from "react";
 const PageOrmes = () => {
   return (
     <div className="flex flex-col xl:py-40 py-20 items-center gap-10 xl:gap-20">
-      <Section title="La Maison Ormés">
+      <Section title={<span className="normal-case">La Maison ORMÉS</span>}>
         <Text>
           ORMÉS est une maison de création et de savoir-faire.
           <br />
@@ -181,11 +181,11 @@ const Section = ({
   title,
   children,
 }: {
-  title: string;
+  title: string | React.ReactNode;
   children: React.ReactNode;
 }) => {
   return (
-    <div className="flex px-5 text-justify flex-col items-center xl:gap-20 gap-10 xl:w-2/3 w-full xl:py-20 py-10">
+    <div className="flex px-5 flex-col items-center xl:gap-20 gap-10 xl:w-2/3 w-full xl:py-20 py-10">
       <Title className="uppercase text-center text-4xl">{title}</Title>
       {children}
     </div>

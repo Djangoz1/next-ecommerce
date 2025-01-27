@@ -12,7 +12,7 @@ const variants = {
     "bg-transparent border-black/0 shadow-none hover:bg-black/10 opacity-75 hover:opacity-100",
   secondary:
     "bg-black/10 border-2 backdrop-blur-xl text-white border-white hover:bg-black/30",
-  link: "shadow-none   hover:text-black text-gray-500 border-none underline font-medium",
+  link: "shadow-none text-black hover:text-gray-500 border-none underline font-medium",
 };
 
 const sizes = {

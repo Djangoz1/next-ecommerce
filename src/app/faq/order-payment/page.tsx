@@ -1,13 +1,12 @@
 import { BoxCascade } from "@/components/ui/box/box-cascade";
 import { Title } from "@/components/ui/typography/title";
+import { CONTACT } from "@/constants/inc";
 import React from "react";
 
 const PageOrderPaymentGiftCard = () => {
   return (
     <div className="py-20">
-      <Title className="text-center px-5">
-        Commande, paiement & cartes cadeaux
-      </Title>
+      <Title className="text-center px-5">Commande & paiement</Title>
       <div className="flex flex-col divide-y divide-dashed w-full">
         <BoxCascade title="Ma commande est-elle validée ?">
           <p>
@@ -70,57 +69,90 @@ const PageOrderPaymentGiftCard = () => {
         <BoxCascade title="Je souhaite annuler, modifier ou fusionner ma commande, comment faire ?">
           <p>
             Pour annuler, modifier ou fusionner votre commande, vous pouvez
-            contacter notre service client à l’adresse suivante :
-            <a href="mailto:contact@rouje.com">contact@rouje.com</a> et nous
-            étudierons au cas par cas ce qu'il est possible de faire.
+            contacter notre service client à l’adresse suivante :{" "}
+            <a
+              className="underline text-blue-500"
+              href={`mailto:${CONTACT.email_customer_service}`}
+            >
+              {CONTACT.email_customer_service}
+            </a>{" "}
+            et nous étudierons au cas par cas ce qu'il est possible de faire.
           </p>
         </BoxCascade>
         <BoxCascade title="Où en est ma commande ?">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita
-            dicta illum ipsa accusamus eveniet minima facilis. Dignissimos
-            maiores, sit tempore nostrum dolorem alias vitae sint, aliquam
-            corporis molestiae, beatae nam.
+            Tout au long de la confection de votre pièce, nous vous écrivons
+            pour vous donner de ses nouvelles.{" "}
+            <b>En cas de retard, nous vous prévenons immédiatement</b> et vous
+            pouvez annuler votre commande à tout moment.
           </p>
         </BoxCascade>
         <BoxCascade title="Comment fonctionne la pré-commande ?">
+          <h6 className="font-bold">La création</h6>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita
-            dicta illum ipsa accusamus eveniet minima facilis. Dignissimos
-            maiores, sit tempore nostrum dolorem alias vitae sint, aliquam
-            corporis molestiae, beatae nam.
+            Inspirées par l’art, la mode , le design et les femmes qui
+            m’entourent, chaque création reflète ma vision, nourrie par ma
+            passion pour les savoir-faire et enrichie par vos besoins et désirs.
+          </p>
+          <h6 className="mt-5 font-bold">Le prototype</h6>
+          <p>
+            Nous transformons l’idée en vêtement avec l’aide des modélistes et
+            artisans. Après plusieurs prototypes, nous peaufinons le produit
+            pour qu’il soit parfait.
+          </p>
+          <h6 className="mt-5 font-bold">La commande</h6>
+          <p>
+            Chaque pièce est mise en ligne sur le site en quantité limitée, pour
+            une période de quelques jours seulement.
+          </p>
+          <h6 className="mt-5 font-bold">La fabrication</h6>
+          <p>
+            Vos commandes sont envoyées à nos ateliers, exclusivement en Europe,
+            et la Maison vous tient informés tout au long du processus.
+          </p>
+          <h6 className="mt-5 font-bold">La livraison</h6>
+          <p>
+            Vous recevez votre pièce à domicile. Si elle ne vous convient pas,
+            vous pouvez l’échanger ou la retourner.
+          </p>
+          <h6 className="mt-5 font-bold">Le surplus</h6>
+          <p>
+            ORMÉS produit 5% de pièces supplémentaires pour garantir les
+            échanges. Une fois ces derniers terminés, elles sont proposées à la
+            vente et livrées chez vous sous 48h.
           </p>
         </BoxCascade>
         <BoxCascade title="Quels sont les différents moyens de paiement?">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita
-            dicta illum ipsa accusamus eveniet minima facilis. Dignissimos
-            maiores, sit tempore nostrum dolorem alias vitae sint, aliquam
-            corporis molestiae, beatae nam.
+            Nous utilisons les services de Stripe pour le paiement de vos
+            commandes.
           </p>
         </BoxCascade>
         <BoxCascade title="Les paiements sont-ils bien sécurisés ?">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita
-            dicta illum ipsa accusamus eveniet minima facilis. Dignissimos
-            maiores, sit tempore nostrum dolorem alias vitae sint, aliquam
-            corporis molestiae, beatae nam.
+            Bien sûr, nous traitons vos données avec le respect qu'elles
+            méritent : nos transactions sont entièrement sécurisées, et aucune
+            information personnelle n’est divulguée. Vos coordonnées bancaires
+            sont entièrement traitées par nos partenaires financiers Squarespace
+            et Stripe, sans que nos équipes ne puissent y avoir accès et cela,
+            même si vous choisissez de sauvegarder vos données de paiement pour
+            vos prochains achats.
           </p>
         </BoxCascade>
-        <BoxCascade title="Tout savoir sur les cartes cadeaux">
+
+        <BoxCascade title="Comment utiliser mon code de réduction ?">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita
-            dicta illum ipsa accusamus eveniet minima facilis. Dignissimos
-            maiores, sit tempore nostrum dolorem alias vitae sint, aliquam
-            corporis molestiae, beatae nam.
-          </p>
-        </BoxCascade>
-        <BoxCascade title="Comment utiliser mon code de réduction ou ma carte cadeau?">
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita
-            dicta illum ipsa accusamus eveniet minima facilis. Dignissimos
-            maiores, sit tempore nostrum dolorem alias vitae sint, aliquam
-            corporis molestiae, beatae nam.
+            Vous avez un code de réduction ? Quelle chance! Il vous suﬃt
+            d’entrer le code en bas de votre panier au moment de la finalisation
+            de votre commande, et de bien cliquer sur “Appliquer”
+            <br />
+            <br />
+            Une fois la commande validée, il n’est pas possible d’en rembourser
+            une partie ou d'appliquer un code promo.
+            <br />
+            <br />
+            Celui-ci peut toutefois s'appliquer sur une prochaine commande, dans
+            la limite de sa validité.
           </p>
         </BoxCascade>
       </div>
