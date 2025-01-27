@@ -245,7 +245,7 @@ const Mobile = ({
           ) : null}
         </div>
 
-        <div className="flex flex-col w-full border-t divide-y">
+        <div className="flex flex-col w-full border-t divide-y divide-dashed">
           <BoxCascade title="Détails">
             <>
               {item.metadata.details.title}

@@ -62,7 +62,7 @@ const Button = ({
   return (
     <Link
       href={href}
-      className="flex flex-col gap-2 bg-[#F1E8E0] rounded shadow text-4xl items-center p-10 w-full h-[200px] text-center"
+      className="flex flex-col gap-2 bg-secondary rounded shadow text-4xl items-center p-10 w-full h-[200px] text-center"
     >
       <div className="w-fit h-fit">
         <Icon icon={icon} className="text-5xl" />

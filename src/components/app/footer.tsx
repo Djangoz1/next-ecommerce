@@ -6,8 +6,8 @@ import { InputNewsletter } from "../features/input-newsletter";
 
 export const Footer = () => {
   return (
-    <footer className="  xl:py-20 py-10  bg-[#FAF7F2] border-t  gap-20 flex flex-col">
-      <div className="flex flex-col divide-y">
+    <footer className="  xl:py-20 py-10  bg-secondary border-t border-black/50  gap-20 flex flex-col">
+      <div className="flex flex-col divide-y divide-dashed divide-black/30">
         <div className="flex flex-col gap-5 px-3 pb-10">
           <Title className="uppercase text-2xl">Plus d'Ormés ici</Title>
           <p className="opacity-50 font-light text-sm">
