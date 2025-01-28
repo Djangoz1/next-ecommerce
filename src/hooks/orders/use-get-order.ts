@@ -15,7 +15,7 @@ export const useGetOrder = ({
 }) => {
   return useQuery({
     enabled,
-    queryKey: ["orders"],
+    queryKey: ["order", stripe_id],
     queryFn: async () => {
       const userRes = await clientDb.auth.getUser();
       const user = userRes.data.user;

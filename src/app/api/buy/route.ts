@@ -6,7 +6,7 @@ import {
 
 import { getItemByIdQuery } from "@/api/items";
 import { stripe } from "@/services/stripe-node";
-import { pool } from "@/utils/db";
+
 import { NextRequest, NextResponse } from "next/server";
 // Create a buying with stripe session id and customer data
 export async function POST(request: NextRequest) {

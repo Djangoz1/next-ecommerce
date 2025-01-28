@@ -1,25 +1,6 @@
-import {
-  createMetadataQuery,
-  getAllItemsQuery,
-  getItemByTypeQuery,
-} from "@/api/items";
+import { createMetadataQuery } from "@/api/items";
 import { pool } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
-
-export async function GET(request: NextRequest) {
-  const type = request.nextUrl.searchParams.get("type");
-  try {
-    let items;
-    if (type) {
-      items = await getItemByTypeQuery(type as string);
-    } else {
-      items = await getAllItemsQuery();
-    }
-    return NextResponse.json({ message: "OK", result: items }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
-  }
-}
 
 export async function POST(request: NextRequest) {
   const body = await request.json();

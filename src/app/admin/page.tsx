@@ -10,14 +10,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-import { Item } from "../shop/women/page";
-
 import { Suspense } from "react";
 import { Badge } from "@/components/ui/btn/badge";
 import { AnimatePresence } from "framer-motion";
 import { BoxError } from "@/components/ui/box/box-error";
 import { Loader } from "@/components/ui/box/loader";
 import { useAsyncApi } from "@/hooks/useAsyncApi";
+import { Item } from "@/types/items";
+import { useGetItems } from "@/hooks/items/use-get-items";
 
 const PageAdmin = () => {
   const itemId = Number(useSearchParams().get("item_id"));
@@ -89,9 +89,8 @@ const PageAdmin = () => {
 const Page = () => {
   const isActive = Number(useSearchParams().get("item_id"));
   const isCreate = useSearchParams().get("create");
-  const { data, isFetched } = useApi<Item[]>({
-    path: "/items",
-    method: "GET",
+  const { data, isFetched } = useGetItems({
+    params: {},
   });
 
   return data ? (

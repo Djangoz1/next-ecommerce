@@ -51,14 +51,6 @@ const BoxIcon = ({
 
 const Page = () => {
   const stripe_id = useSearchParams().get("id");
-  // const { data, isFetched, isLoading } = useApi<{
-  //   items: (Item & { details: Buying })[];
-  //   customer: Customer;
-  // }>({
-  //   path: "/buy",
-  //   method: "GET",
-  //   params: { stripe_id: stripe_id || "" },
-  // });
 
   const { data, isFetched, isLoading } = useGetOrder({
     params: {

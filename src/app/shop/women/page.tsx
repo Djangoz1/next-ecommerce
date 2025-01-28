@@ -1,9 +1,11 @@
 "use client";
 import { Loader } from "@/components/ui/box/loader";
+import { BtnMenu } from "@/components/ui/btn/btn-menu";
 import { Title } from "@/components/ui/typography/title";
-import { useApi } from "@/hooks/useApi";
+import { useGetItems } from "@/hooks/items/use-get-items";
+
 import { Item } from "@/types/items";
-import { cn } from "@/utils/cn";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -11,11 +13,12 @@ import { Suspense } from "react";
 
 const StorePage = ({}) => {
   const searchParams = useSearchParams();
+  const type = (searchParams.get("t") as Item["type"]) || "dress";
 
-  const type = searchParams.get("t") || "dress";
-  const { data, isFetched } = useApi<Item[]>({
-    path: `/items?type=${type}`,
-    method: "GET",
+  const { data, isFetched } = useGetItems({
+    params: {
+      type,
+    },
   });
 
   return (
@@ -26,7 +29,7 @@ const StorePage = ({}) => {
             {
               dress: "Vêtements",
               miniature: "Miniatures",
-              paint: "Peintures",
+              painting: "Peintures",
             }[type]
           }
         </Title>
@@ -36,35 +39,14 @@ const StorePage = ({}) => {
       </div>
 
       <div className="flex text-sm opacity-75  uppercase items-center overflow-x-auto">
-        <div className="flex px-5 border-r py-2">Filtres</div>
-        <Link
-          className={cn(
-            "px-5 h-full flex items-center justify-center",
-            type === "dress" ? "bg-black text-white" : ""
-          )}
-          href={`/shop/women?t=dress`}
-        >
-          Vêtements
-        </Link>
-        <Link
-          className={cn(
-            "px-5 h-full flex items-center justify-center",
-
-            type === "miniature" ? "bg-black text-white" : ""
-          )}
-          href={`/shop/women?t=miniature`}
-        >
-          Miniatures
-        </Link>
-        <Link
-          href={`/shop/women?t=paint`}
-          className={cn(
-            "px-5 h-full flex items-center justify-center",
-            type === "paint" ? "bg-black text-white" : ""
-          )}
-        >
-          Peintures
-        </Link>
+        <BtnMenu
+          value={`/shop/women?t=${type}`}
+          arr={[
+            { label: "Vêtements", value: "/shop/women?t=dress" },
+            { label: "Miniatures", value: "/shop/women?t=miniature" },
+            { label: "Peintures", value: "/shop/women?t=painting" },
+          ]}
+        />
       </div>
       <div className="flex flex-col p-5 xl:grid xl:grid-cols-4  w-full gap-10">
         {isFetched ? (

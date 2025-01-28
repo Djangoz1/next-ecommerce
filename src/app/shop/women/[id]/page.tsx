@@ -9,7 +9,7 @@ import { useApi } from "@/hooks/useApi";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import React from "react";
-import { Item } from "../page";
+
 import { cn } from "@/utils/cn";
 import { BtnBuyingAction } from "@/components/features/btn-buying-action";
 import { BoxError } from "@/components/ui/box/box-error";
@@ -19,6 +19,7 @@ import { DetailsSize } from "@/components/features/details-size";
 import { DetailsCompoAndCare } from "@/components/features/details-compo-and-care";
 import { DetailsEngagement } from "@/components/features/details-engagement";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { Item } from "@/types/items";
 
 type BaseMetadata = {
   title: string;
