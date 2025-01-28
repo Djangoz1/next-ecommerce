@@ -7,15 +7,22 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendOrderConfirmationEmail = async ({
   items,
-  customers,
+  user,
 }: {
   items: (Buying & { items: Item })[];
-  customers: Customer;
+  user: {
+    email: string;
+    name: string;
+    phone: string;
+    address: string;
+    zipcode: string;
+    city: string;
+  };
 }) => {
   try {
     return await resend.emails.send({
       from: "onboarding@resend.dev",
-      to: customers.email,
+      to: user.email,
       subject: "Confirmation de votre commande",
       text: "Merci pour votre commande",
       html: `
@@ -25,7 +32,7 @@ export const sendOrderConfirmationEmail = async ({
           <h4 style="color: #333; font-size: 24px; margin-bottom: 20px;">Confirmation de commande</h4>
           
           <p style="color: #666; font-size: 16px;">
-            Merci ${customers.name} pour votre commande !
+            Merci ${user.name} pour votre commande !
           </p>
 
           <div style="margin: 30px 0; border-top: 1px solid #eee; padding-top: 20px;">
@@ -50,9 +57,9 @@ export const sendOrderConfirmationEmail = async ({
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
             <p style="color: #666; font-size: 14px;">
               Adresse de livraison:<br>
-              ${customers.name}<br>
-              ${customers.address}<br>
-              ${customers.zipcode} ${customers.city}
+              ${user.name}<br>
+              ${user.address}<br>
+              ${user.zipcode} ${user.city}
             </p>
           </div>
         </div>

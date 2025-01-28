@@ -1,5 +1,5 @@
 "use client";
-import { Buying, Customer, Item } from "@/types/items";
+import { Buying, Item } from "@/types/items";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { ReactNode, useState } from "react";
 import { Title } from "../ui/typography/title";
@@ -11,13 +11,13 @@ import { Tabs } from "../ui/box/tabs";
 import { FormProvider } from "@/context/form";
 import { Input } from "../form/input";
 import { useAsyncApi } from "@/hooks/useAsyncApi";
+import { useSession } from "@/context/app";
 
 export const OrderDetails = ({
   data,
 }: {
   data: {
     items: (Buying & { items: Item & { quantity: number } })[];
-    customers: Customer;
     stripe_id: string;
     price: number;
   };
@@ -28,6 +28,8 @@ export const OrderDetails = ({
     method: "PUT",
     invalidateQueries: [["api", `/buy/order`]],
   });
+
+  const { user } = useSession();
 
   return (
     <div
@@ -42,15 +44,13 @@ export const OrderDetails = ({
       >
         <div className="flex flex-col w-fit ">
           <div className="flex items-center gap-3">
-            <div className="text-lg font-bold">
-              Commande n°{data.customers.id}
-            </div>
+            <div className="text-lg font-bold">Commande n°{data.stripe_id}</div>
             <div className="px-3 py-px text-xs rounded-full bg-black uppercase text-white">
               {data.items[0].status}
             </div>
           </div>
           <div className="text-sm text-gray-500">
-            {data.customers.name}
+            {user?.user_metadata?.name}
             <p className="font-light text-xs">
               Nombre d'articles : {data.items.length}
             </p>
@@ -190,13 +190,13 @@ export const OrderDetails = ({
           </div>
           <div className="grid grid-cols-2 gap-5 w-full my-5 p-5">
             <BoxData icon="line-md:account" title="Client">
-              {data.customers.name}
+              {user?.user_metadata?.name}
             </BoxData>
             <BoxData icon="line-md:email-filled" title="Email">
-              {data.customers.email}
+              {user?.user_metadata?.email}
             </BoxData>
             <BoxData icon="line-md:phone-filled" title="Téléphone">
-              {data.customers.phone}
+              {user?.user_metadata?.phone}
             </BoxData>
             <BoxData icon="solar:euro-broken" title="Montant total">
               {data.price} €
@@ -206,11 +206,11 @@ export const OrderDetails = ({
             <Title className="text-sm">Address</Title>
 
             <p className="opacity-50 font-light">
-              {data.customers.address}
+              {user?.user_metadata?.address}
               <br />
-              {data.customers.city}
+              {user?.user_metadata?.city}
               <br />
-              {data.customers.zipcode}
+              {user?.user_metadata?.zipcode}
               <br />
             </p>
           </div>

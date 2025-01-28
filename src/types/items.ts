@@ -41,7 +41,7 @@ export type Buying = {
   created_at: string;
   buying_at: string | null;
   tracking: string | null;
-  customer_id: number | null;
+  user_id: string;
 };
 
 export type BuyingApi = {

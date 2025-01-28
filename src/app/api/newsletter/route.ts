@@ -1,15 +1,21 @@
 import { createNewsletterQuery, getNewsletterQuery } from "@/api/newsletter";
 import { sendNewsletterEmail } from "@/services/send-mail";
+
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
+
   try {
     if (!body.email) {
       throw new Error("Email is required");
     }
+
     const result = await createNewsletterQuery(body.email);
-    await sendNewsletterEmail(result.email);
+    if (result.email) {
+      let send = await sendNewsletterEmail(result.email);
+      console.log("send newsletter email", send);
+    }
     return NextResponse.json({ message: "OK", result }, { status: 201 });
   } catch (error) {
     console.error("Error /api/newsletter/POST", error);

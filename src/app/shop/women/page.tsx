@@ -2,23 +2,12 @@
 import { Loader } from "@/components/ui/box/loader";
 import { Title } from "@/components/ui/typography/title";
 import { useApi } from "@/hooks/useApi";
+import { Item } from "@/types/items";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-
-export type Item = {
-  abstract_description: string;
-  description: string;
-  discount: number;
-  id: number;
-  main_image: string;
-  price: string;
-  stock: number;
-  name: string;
-  type: "dress" | "miniature" | "painting";
-};
 
 const StorePage = ({}) => {
   const searchParams = useSearchParams();

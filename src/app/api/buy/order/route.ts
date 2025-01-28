@@ -2,6 +2,7 @@ import {
   getAllBuyingQuery,
   getBuyingByEmailAndZipcodeQuery,
   getBuyingByStatusQuery,
+  getBuyingByUserIdQuery,
 } from "@/api/buy";
 import { Buying, Customer, Item } from "@/types/items";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,15 +16,20 @@ export async function GET(request: NextRequest) {
   const zipcode = request.nextUrl.searchParams.get("zipcode") as
     | string
     | undefined;
+  const user_id = request.nextUrl.searchParams.get("user_id") as
+    | string
+    | undefined;
 
   try {
-    let res;
+    let res: (Buying & { items: Item })[];
 
     if (status) {
       res = await getBuyingByStatusQuery(status);
     } else if (email && zipcode) {
       res = await getBuyingByEmailAndZipcodeQuery(email, zipcode);
       console.log({ items: res });
+    } else if (user_id) {
+      res = await getBuyingByUserIdQuery(user_id);
     } else {
       res = await getAllBuyingQuery();
     }
@@ -37,18 +43,18 @@ export async function GET(request: NextRequest) {
               Buying & { items: Item & { quantity: number } },
               "stripe_id"
             >[];
-            customers: Customer;
+
             stripe_id: string;
             price: number;
             status: Buying["status"];
           }
         >,
-        { customers, stripe_id, ...el }
+        { stripe_id, ...el }
       ) => {
         if (!acc[stripe_id]) {
           acc[stripe_id] = {
             items: [],
-            customers,
+
             stripe_id,
 
             status: el.status,
@@ -56,7 +62,7 @@ export async function GET(request: NextRequest) {
           };
         }
         const index = acc[stripe_id].items.findIndex(
-          (item) => item.items.id === el.items.id && item.size === el.size
+          (item) => item.items.id === el.item_id && item.size === el.size
         );
         if (index !== -1) {
           acc[stripe_id].items[index].items.quantity++;

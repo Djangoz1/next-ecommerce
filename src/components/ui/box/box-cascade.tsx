@@ -8,15 +8,20 @@ export const BoxCascade = ({
   className = "",
   children,
   title,
+  classNameBox = "",
 }: {
   className?: string;
   children: React.ReactNode;
   title: string;
+  classNameBox?: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <Box
-      className="gap-10 cursor-pointer  border-black/40 relative px-5"
+      className={cn(
+        "gap-10 cursor-pointer  border-black/40 relative px-5",
+        classNameBox
+      )}
       onClick={() => setIsOpen(!isOpen)}
       title={title}
     >

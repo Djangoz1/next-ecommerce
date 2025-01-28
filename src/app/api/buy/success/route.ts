@@ -3,6 +3,7 @@ import { getCustomerByIdQuery } from "@/api/customer";
 import { updateItemQuery } from "@/api/items";
 import { sendOrderConfirmationEmail } from "@/services/send-mail";
 import { stripe } from "@/services/stripe-node";
+import { pool } from "@/utils/db";
 
 import { NextRequest, NextResponse } from "next/server";
 
@@ -29,14 +30,24 @@ export async function GET(request: NextRequest) {
       });
     });
 
-    if (!items[0].customer_id) throw new Error("Customer not found");
-
-    const send = await sendOrderConfirmationEmail({
+    if (!items[0].user_id) throw new Error("Customer not found");
+    const {
+      data: { user },
+      error,
+    } = await pool.auth.admin.getUserById(items[0].user_id);
+    if (!user || error) throw new Error("User not found");
+    await sendOrderConfirmationEmail({
       items,
-      customers: await getCustomerByIdQuery(items[0].customer_id),
+      user: {
+        email: user.email as string,
+        name: user.user_metadata.name as string,
+        phone: user.user_metadata.phone as string,
+        address: user.user_metadata.address as string,
+        zipcode: user.user_metadata.zipcode as string,
+        city: user.user_metadata.city as string,
+      },
     });
 
-    console.log({ send });
     // redirection to /success page
     return NextResponse.redirect(
       new URL("/success?id=" + session.id, request.url)

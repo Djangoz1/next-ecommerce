@@ -82,6 +82,19 @@ export const getBuyingByIdQuery = async (id: number) => {
     throw error;
   }
 };
+export const getBuyingByUserIdQuery = async (id: string) => {
+  try {
+    const res = await pool
+      .from("buying")
+      .select("*, items(*)")
+      .eq("user_id", id);
+
+    return res.data as (Buying & { items: Item })[];
+  } catch (error) {
+    console.error("Error fetching items", error);
+    throw error;
+  }
+};
 
 export const getBuyingByStripeIdQuery = async (id: string) => {
   try {
@@ -119,10 +132,8 @@ export const createBuyingQuery = async (
   item: { id: number },
   data: {
     size: string;
-    customer_id: number;
+    user_id: string;
     stripe_id: string;
-    created_at: string;
-    buying_at: string;
     status: Buying["status"];
   }
 ) => {
@@ -133,10 +144,9 @@ export const createBuyingQuery = async (
         item_id: item.id,
         size: data.size,
         status: "pending",
-        customer_id: data.customer_id,
+        user_id: data.user_id,
         stripe_id: data.stripe_id,
-        created_at: data.created_at,
-        buying_at: data.buying_at,
+
         message: "test",
       })
       .select()

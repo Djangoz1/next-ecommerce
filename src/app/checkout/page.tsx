@@ -5,10 +5,12 @@ import { Loader } from "@/components/ui/box/loader";
 import { Btn } from "@/components/ui/btn";
 import { Switch } from "@/components/ui/btn/switch";
 import { Title } from "@/components/ui/typography/title";
+import { useSession } from "@/context/app";
 import { FormProvider } from "@/context/form";
 import { useApi } from "@/hooks/useApi";
+import { useAsyncApi } from "@/hooks/useAsyncApi";
 import { stripePromise } from "@/services/stripe-js";
-import { Item } from "@/types/items";
+import { Item, Newsletter } from "@/types/items";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -27,8 +29,17 @@ const Page = () => {
       id: searchParams.get("id") as string,
     },
   });
+  const { user } = useSession();
   const { watch } = useFormContext();
   console.log({ data, searchParams });
+
+  const { mutateAsync } = useAsyncApi({});
+
+  const { data: newsletter } = useApi<Newsletter | null>({
+    path: `/newsletter/${user?.email}`,
+    method: "GET",
+    enabled: !!user?.email,
+  });
 
   const total = (data?.total || 0) / 100;
 
@@ -42,6 +53,7 @@ const Page = () => {
         <Input
           type="email"
           title="Compte"
+          defaultValue={user?.email}
           placeholder="johndoe@gmail.com"
           id="email"
         />
@@ -54,17 +66,44 @@ const Page = () => {
           </p>
         </div>
         <div className="flex flex-col gap-5 px-3">
-          <Input title="Pays" id="country" placeholder="France" />
-          <Input title="Prénom" id="firstName" placeholder="John" />
-          <Input title="Nom" id="lastName" placeholder="Doe" />
           <Input
+            defaultValue={user?.user_metadata?.country}
+            title="Pays"
+            id="country"
+            placeholder="France"
+          />
+          <Input
+            defaultValue={user?.user_metadata?.name?.split(" ")[0]}
+            title="Prénom"
+            id="firstName"
+            placeholder="John"
+          />
+          <Input
+            defaultValue={user?.user_metadata?.name?.split(" ")[1]}
+            title="Nom"
+            id="lastName"
+            placeholder="Doe"
+          />
+          <Input
+            defaultValue={user?.user_metadata?.address}
             title="Adresse"
             id="address"
             placeholder="123 rue de la paix"
           />
-          <Input title="Code postal" id="zipcode" placeholder="75000" />
-          <Input title="Ville" id="city" placeholder="Paris" />
           <Input
+            defaultValue={user?.user_metadata?.zipcode}
+            title="Code postal"
+            id="zipcode"
+            placeholder="75000"
+          />
+          <Input
+            defaultValue={user?.user_metadata?.city}
+            title="Ville"
+            id="city"
+            placeholder="Paris"
+          />
+          <Input
+            defaultValue={user?.user_metadata?.phone}
             type="tel"
             title="Téléphone"
             id="phone"
@@ -99,7 +138,11 @@ const Page = () => {
             Restez informé de nos nouveautés, promotions et évènements de la
             Maison Ormés.
           </p>
-          <Switch id="newsletter" className="mt-5" />
+          <Switch
+            id="newsletter"
+            className="mt-5"
+            defaultChecked={!!newsletter}
+          />
         </div>
       </div>
       <div className="flex flex-col border-t py-10 gap-10 px-3">
@@ -143,7 +186,7 @@ const Page = () => {
           className="w-full text-center"
           onClick={async () => {
             console.log("newsletter", watch("newsletter"));
-            if (watch("newsletter")) {
+            if (watch("newsletter") && !newsletter) {
               fetch(`${process.env.NEXT_PUBLIC_API_URL}/newsletter`, {
                 method: "POST",
                 body: JSON.stringify({
@@ -162,15 +205,17 @@ const Page = () => {
               city: watch("city"),
               phone: watch("phone"),
               stripe_id: searchParams.get("id") as string,
+              user_id: user?.id,
             };
 
             console.log({ form });
 
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/buy/`, {
+            const result = await mutateAsync({
+              path: "/buy",
               method: "POST",
-              body: JSON.stringify(form),
+              params: form,
             });
-            const result = await res.json();
+
             console.log({ result });
             const stripe = await stripePromise;
             if (!stripe) return;

@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Title } from "../ui/typography/title";
 
 import { BtnBagAction } from "../features/btn-bag-action";
+import { Btn } from "../ui/btn";
 export const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -138,6 +139,16 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
           <Icon icon={"circum:instagram"} width={20} height={20} />
           <Icon icon={"circum:facebook"} width={20} height={20} />
           <Icon icon={"ph:whatsapp-logo-thin"} width={20} height={20} />
+        </div>
+        <div className="mt-auto px-2 flex justify-between">
+          <Btn
+            onClick={() => setIsOpen(false)}
+            variant="link"
+            href="/account"
+            size="sm"
+          >
+            Mon compte
+          </Btn>
         </div>
       </motion.div>
       <motion.header

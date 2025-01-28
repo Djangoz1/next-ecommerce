@@ -1,12 +1,12 @@
 import {
   createBuyingQuery,
-  getBuyingByIdQuery,
   getBuyingByStripeIdQuery,
   updateBuyingQuery,
 } from "@/api/buy";
-import { createCustomer, getCustomerByIdQuery } from "@/api/customer";
+
 import { getItemByIdQuery } from "@/api/items";
 import { stripe } from "@/services/stripe-node";
+import { pool } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
 // Create a buying with stripe session id and customer data
 export async function POST(request: NextRequest) {
@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
     city: string;
     phone: string;
     stripe_id: string;
-    customer_id?: string;
+
+    user_id?: string;
   } = await request.json();
 
   try {
@@ -30,18 +31,8 @@ export async function POST(request: NextRequest) {
 
     if (!result.metadata) throw new Error("Metadata not found");
 
-    let customer_id = Number(body?.customer_id);
-    if (!body.customer_id) {
-      const customer = await createCustomer({
-        email: body.email,
-        name: `${body.firstName} ${body.lastName}`,
-        phone: body.phone,
-        address: body.address,
-        zipcode: body.zipcode,
-        city: body.city,
-      });
-
-      customer_id = Number(customer.id);
+    if (!body.user_id) {
+      throw new Error("User Id not found");
     }
 
     const arr = JSON.parse(result.metadata!.items) as {
@@ -54,10 +45,8 @@ export async function POST(request: NextRequest) {
       results.push(
         await createBuyingQuery(item, {
           size: arr[index].size,
-          customer_id,
+          user_id: body.user_id,
           stripe_id: body.stripe_id,
-          created_at: new Date().toISOString(),
-          buying_at: new Date().toISOString(),
           status: "pending",
         })
       );
@@ -95,7 +84,11 @@ export async function GET(request: NextRequest) {
     if (!arr.length) {
       throw new Error("No items found");
     }
-
+    const {
+      data: { user },
+      error,
+    } = await pool.auth.admin.getUserById(items[0].user_id);
+    if (!user || error) throw new Error("User not found");
     return NextResponse.json(
       {
         message: "OK",
@@ -103,7 +96,12 @@ export async function GET(request: NextRequest) {
           items: arr,
           customer: {
             stripe: result.customer_details,
-            ...(await getCustomerByIdQuery(Number(arr[0].details.customer_id))),
+            name: user.user_metadata.name,
+            email: user.email,
+            phone: user.user_metadata.phone,
+            address: user.user_metadata.address,
+            zipcode: user.user_metadata.zipcode,
+            city: user.user_metadata.city,
           },
         },
       },

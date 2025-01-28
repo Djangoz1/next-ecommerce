@@ -69,7 +69,7 @@ export function Carousel({ slides }: CarouselProps) {
               onClick={() => handleSlideClick(index)}
               key={`carousel-title-${index}`}
               className={cn(
-                "font-extralight title text-3xl h-full min-w-[33.33%] uppercase transition-all duration-1000 ease-in-out",
+                "font-extralight title text-2xl text-center h-full min-w-[33.33%] uppercase transition-all duration-1000 ease-in-out",
                 current === index ? "text-white" : "text-black",
                 current > index ? "-translate-x-1/2" : "",
                 current < index ? "translate-x-1/2" : ""

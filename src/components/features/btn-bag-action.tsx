@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { Title } from "../ui/typography/title";
 import Link from "next/link";
 import { Btn } from "../ui/btn";
-import { useSession } from "@/context/app";
+
 import { handleCheckout } from "@/services/stripe-js";
 import { useRouter } from "next/navigation";
 
@@ -69,8 +69,7 @@ const Div = ({
       )
     );
   }, [pendingItems]);
-  const { uniqueId } = useSession();
-  const queryClient = useQueryClient();
+
   const router = useRouter();
   return (
     <>

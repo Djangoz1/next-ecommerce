@@ -22,7 +22,9 @@ export const useAsyncApi = ({
       toast: _toast,
       headers,
     }: {
-      params: Record<string, string | number | boolean | string[]> | FormData;
+      params:
+        | Record<string, string | number | boolean | string[] | unknown>
+        | FormData;
       path?: `/${string}`;
       method?: "GET" | "POST" | "PUT" | "DELETE";
       invalidateQueries?: string[][];
@@ -53,6 +55,7 @@ export const useAsyncApi = ({
           throw new Error(res.statusText || "Error fetching items");
         }
 
+        console.log({ dataapoiezae: data });
         if (invalidateQueries) {
           invalidateQueries.forEach((keys) => {
             client.invalidateQueries({ queryKey: keys });
