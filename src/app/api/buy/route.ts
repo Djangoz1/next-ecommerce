@@ -62,64 +62,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
-  const stripe_id = request.nextUrl.searchParams.get("stripe_id") as string;
-
-  try {
-    if (!stripe_id) throw new Error("Stripe ID not found");
-    const result = await stripe.checkout.sessions.retrieve(stripe_id);
-
-    if (!result.metadata) throw new Error("Metadata not found");
-    const items = await getBuyingByStripeIdQuery(stripe_id);
-
-    const arr = await Promise.all(
-      items.map(async (item) => {
-        return {
-          ...(await getItemByIdQuery(Number(item.item_id))),
-          details: item,
-        };
-      })
-    );
-
-    if (!arr.length) {
-      throw new Error("No items found");
-    }
-    const {
-      data: { user },
-      error,
-    } = await pool.auth.admin.getUserById(items[0].user_id);
-    if (!user || error) throw new Error("User not found");
-    return NextResponse.json(
-      {
-        message: "OK",
-        result: {
-          items: arr,
-          customer: {
-            stripe: result.customer_details,
-            name: user.user_metadata.name,
-            email: user.email,
-            phone: user.user_metadata.phone,
-            address: user.user_metadata.address,
-            zipcode: user.user_metadata.zipcode,
-            city: user.user_metadata.city,
-          },
-        },
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.log("Error /api/buy/GET", error);
-    return NextResponse.json(
-      {
-        message: "Error",
-        error:
-          error instanceof Error ? error.message : "Stripe session not found",
-      },
-      { status: 500 }
-    );
-  }
-}
-
 export async function PUT(request: NextRequest) {
   const body = await request.json();
   const tracking = body.tracking as string;

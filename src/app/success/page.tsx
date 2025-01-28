@@ -3,6 +3,7 @@ import { clearPendingItems } from "@/components/features/btn-buying-action";
 import { BoxError } from "@/components/ui/box/box-error";
 import { Loader } from "@/components/ui/box/loader";
 import { Title } from "@/components/ui/typography/title";
+import { useGetOrder } from "@/hooks/orders/use-get-order";
 import { useApi } from "@/hooks/useApi";
 import { Buying, Customer, Item } from "@/types/items";
 import { cn } from "@/utils/cn";
@@ -50,43 +51,30 @@ const BoxIcon = ({
 
 const Page = () => {
   const stripe_id = useSearchParams().get("id");
-  const { data, isFetched, isLoading } = useApi<{
-    items: (Item & { details: Buying })[];
-    customer: Customer;
-  }>({
-    path: "/buy",
-    method: "GET",
-    params: { stripe_id: stripe_id || "" },
+  // const { data, isFetched, isLoading } = useApi<{
+  //   items: (Item & { details: Buying })[];
+  //   customer: Customer;
+  // }>({
+  //   path: "/buy",
+  //   method: "GET",
+  //   params: { stripe_id: stripe_id || "" },
+  // });
+
+  const { data, isFetched, isLoading } = useGetOrder({
+    params: {
+      stripe_id: stripe_id || "",
+    },
   });
 
-  const status = useMemo(() => {
-    if (!data) return null;
-    let status = "paid";
-    for (const item of data.items) {
-      if (item.details.status === "pending") {
-        status = "pending";
-      }
-      if (item.details.status === "cancelled") {
-        status = "cancelled";
-      }
-    }
-    return status;
-  }, [data]);
+  console.log({ data });
+
   const queryClient = useQueryClient();
-  useEffect(() => {
+  useMemo(() => {
     clearPendingItems(queryClient);
   }, []);
   if (!data) return null;
-  const castArr = data?.items.reduce((acc: Item[][], item) => {
-    const existingGroup = acc.find((group) => group[0]?.id === item.id);
 
-    if (existingGroup) {
-      existingGroup.push(item);
-      return acc;
-    }
-    return [...acc, [item]];
-  }, []);
-  console.log({ castArr, data });
+  console.log({ data });
   return data ? (
     <div className="py-20">
       <div className="flex flex-col text-center items-center justify-center pb-20 w-full">
@@ -97,7 +85,7 @@ const Page = () => {
           confirmation dans les prochaines minutes.
         </p>
       </div>
-      <div className="flex border-y w-full justify-evenly bg-white">
+      {/* <div className="flex border-y w-full justify-evenly bg-white">
         <BoxIcon
           isActive={status === "paid"}
           title={"Production"}
@@ -119,23 +107,23 @@ const Page = () => {
         >
           Commande reçue
         </BoxIcon>
-      </div>
+      </div> */}
       <div className="flex flex-col divide-y">
-        {castArr?.map((items, i) => (
+        {data?.items?.map((items, i) => (
           <div key={`image-${i}`} className="flex gap-5 px-3 py-5">
             <Image
-              src={items[0]?.main_image}
+              src={items[0].items.main_image}
               alt="image"
               width={100}
               height={100}
               className=""
             />
             <div className="flex flex-col">
-              <Title className="text-lg">{items[0]?.name}</Title>
-              <p className="text-sm">{items[0]?.abstract_description}</p>
-              <span className="text-sm">QTY: {items.length}</span>
+              <Title className="text-lg">{items[0].items.name}</Title>
+              <p className="text-sm">{items[0].items.abstract_description}</p>
+              <span className="text-sm">QTY: {items?.length}</span>
               <span className="font-bold text-sm">
-                $ {Number(items[0]?.price || 0) * items.length}
+                $ {Number(items[0].items.price || 0) * items.length}
               </span>
             </div>
           </div>
