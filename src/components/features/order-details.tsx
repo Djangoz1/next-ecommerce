@@ -26,7 +26,7 @@ export const OrderDetails = ({
   const { mutateAsync } = useAsyncApi({
     path: `/buy`,
     method: "PUT",
-    invalidateQueries: [["api", `/buy/order`]],
+    invalidateQueries: [["orders"]],
   });
 
   const { user } = useSession();

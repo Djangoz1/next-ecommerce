@@ -27,13 +27,102 @@ export const useGetOrders = ({
         : email && zipcode
         ? ["email", email, "zipcode", zipcode]
         : null;
-      if (!payload) throw new Error("No payload");
-      let res = await clientDb
-        .from("buying")
-        .select("*, items(*)")
-        .eq(payload[0], payload[1]);
+
+      let res =
+        email && zipcode
+          ? await clientDb
+              .from("buying")
+              .select("*, items(*)")
+              .eq("email", email)
+              .eq("zipcode", zipcode)
+          : payload
+          ? await clientDb
+              .from("buying")
+              .select("*, items(*)")
+              .eq(payload[0], payload[1])
+          : await clientDb.from("buying").select("*, items(*)");
+
+      console.log({ res });
       if (res.error) throw new Error(res.error.message);
-      return res.data as Buying & { items: Item }[];
+      return formatBuying({
+        data: res.data as (Buying & {
+          items: Item;
+          status: Buying["status"];
+        })[],
+      });
     },
   });
+};
+
+export const formatBuying = ({
+  data,
+}: {
+  data: (Buying & {
+    items: Item;
+    status: Buying["status"];
+    stripe_id: string;
+  })[];
+}) => {
+  const result = data.reduce(
+    (
+      acc: Record<
+        string,
+        {
+          items: Omit<
+            Buying & { items: Item & { quantity: number } },
+            "stripe_id"
+          >[];
+
+          stripe_id: string;
+          price: number;
+          status: Buying["status"];
+        }
+      >,
+      { stripe_id, ...el }
+    ) => {
+      if (!acc[stripe_id]) {
+        acc[stripe_id] = {
+          items: [],
+
+          stripe_id,
+
+          status: el.status,
+          price: 0,
+        };
+      }
+      const index = acc[stripe_id].items.findIndex(
+        (item) => item.items.id === el.item_id && item.size === el.size
+      );
+      if (index !== -1) {
+        acc[stripe_id].items[index].items.quantity++;
+      } else {
+        acc[stripe_id].items.push({
+          ...el,
+          items: { ...el.items, quantity: 1 },
+        });
+      }
+
+      if (acc[stripe_id].status === "paid") {
+        acc[stripe_id].status = el.status;
+      }
+
+      acc[stripe_id].price += Number(el.items.price);
+      return acc;
+    },
+    {} as Record<
+      string,
+      {
+        items: Omit<
+          Buying & {
+            items: Item & { quantity: number };
+          },
+          "stripe_id"
+        >[];
+        stripe_id: string;
+        price: number;
+        status: Buying["status"];
+      }
+    >
+  );
+  return Object.values(result);
 };

@@ -4,21 +4,20 @@ import { SelectBtn } from "@/components/form/select-btn";
 import { Loader } from "@/components/ui/box/loader";
 
 import { FormProvider } from "@/context/form";
-import { useApi } from "@/hooks/useApi";
-import { BuyingApi } from "@/types/items";
+import { useGetOrders } from "@/hooks/orders/use-get-orders";
+
+import { Buying } from "@/types/items";
 import { useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
 
 const Page = () => {
-  const status = useSearchParams().get("status");
+  const status = useSearchParams().get("status") as Buying["status"];
 
-  const { data, isFetched } = useApi<BuyingApi[]>({
-    path: `/buy/order`,
-    method: "GET",
-    queryKey: status || undefined,
-    params: status ? { status } : undefined,
+  const { data, isFetched } = useGetOrders({
+    params: { status },
   });
 
+  console.log({ data });
   return (
     <div className="flex flex-col gap-5 ">
       <FormProvider className=" flex justify-center" onSubmit={() => {}}>

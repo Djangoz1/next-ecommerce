@@ -11,23 +11,13 @@ import React from "react";
 const PageAccountOrders = () => {
   const { user } = useSession();
 
-  const { data } = useApi<BuyingApi[]>({
-    path: `/buy/order`,
-
-    enabled: !!user?.id,
-    params: {
-      user_id: user?.id as string,
-    },
-    method: "GET",
-  });
-
-  const { data: orders } = useGetOrders({
+  const { data } = useGetOrders({
     enabled: !!user?.id,
     params: {
       user_id: user?.id as string,
     },
   });
-  console.log({ data, orders, user });
+  console.log({ data, user });
 
   return (
     <div className="w-full relative min-h-screen flex xl:flex-row flex-col xl:justify-between py-20 ">
