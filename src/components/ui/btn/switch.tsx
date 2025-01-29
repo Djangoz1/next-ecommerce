@@ -5,12 +5,13 @@ import * as SwitchPrimitives from "@radix-ui/react-switch";
 import { cn } from "@/utils/cn";
 import { useFormContext } from "react-hook-form";
 
-const Switch = React.forwardRef<
+const SwitchPrimitive = React.forwardRef<
   React.ComponentRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
->(({ className, id = "", ...props }, ref) => {
-  const { setValue, watch } = useFormContext();
-
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> & {
+    setValue: (value: boolean) => void;
+    _value: boolean;
+  }
+>(({ className, _value, setValue, id = "", ...props }, ref) => {
   return (
     <SwitchPrimitives.Root
       className={cn(
@@ -19,9 +20,9 @@ const Switch = React.forwardRef<
       )}
       {...props}
       checked={
-        props?.checked && watch(id) === undefined ? props?.checked : watch(id)
+        props?.checked && _value === undefined ? props?.checked : !_value
       }
-      onCheckedChange={(checked) => setValue(id, checked)}
+      onCheckedChange={(checked) => setValue(checked)}
       ref={ref}
     >
       <SwitchPrimitives.Thumb
@@ -32,6 +33,21 @@ const Switch = React.forwardRef<
     </SwitchPrimitives.Root>
   );
 });
+
+const Switch = React.forwardRef<
+  React.ComponentRef<typeof SwitchPrimitives.Root>,
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
+>(({ className, id = "", ...props }, ref) => {
+  const { setValue, watch } = useFormContext();
+
+  return (
+    <SwitchPrimitive
+      _value={watch(id)}
+      setValue={(checked) => setValue(id, checked)}
+      {...props}
+    />
+  );
+});
 Switch.displayName = SwitchPrimitives.Root.displayName;
 
-export { Switch };
+export { Switch, SwitchPrimitive };

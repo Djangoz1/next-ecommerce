@@ -1,6 +1,7 @@
 "use client";
 
 import { BaseHookResult } from "@/types/app";
+import { Address } from "@/types/customer";
 import { Buying, Item } from "@/types/items";
 import { clientDb } from "@/utils/client-db";
 import { useQuery } from "@tanstack/react-query";
@@ -47,11 +48,20 @@ export const useGetOrders = ({
 
       console.log({ res });
       if (res.error) throw new Error(res.error.message);
+      const { data: address, ...rest } = await clientDb
+        .from("addresses")
+        .select(`*`)
+        .eq("id", res.data[0].address_id)
+        .maybeSingle();
+
+      console.log({ restsrqjrskjqsrj: rest });
+
       return formatBuying({
         data: res.data as (Buying & {
           items: Item;
           status: Buying["status"];
         })[],
+        address: address as Address,
       });
     },
   });
@@ -59,12 +69,14 @@ export const useGetOrders = ({
 
 export const formatBuying = ({
   data,
+  address,
 }: {
   data: (Buying & {
     items: Item;
     status: Buying["status"];
     stripe_id: string;
   })[];
+  address: Address;
 }) => {
   const result = data.reduce(
     (
@@ -79,6 +91,7 @@ export const formatBuying = ({
           stripe_id: string;
           price: number;
           status: Buying["status"];
+          address: Address;
         }
       >,
       { stripe_id, ...el }
@@ -91,6 +104,7 @@ export const formatBuying = ({
 
           status: el.status,
           price: 0,
+          address: address,
         };
       }
       const index = acc[stripe_id].items.findIndex(
@@ -110,6 +124,7 @@ export const formatBuying = ({
       }
 
       acc[stripe_id].price += Number(el.items.price);
+
       return acc;
     },
     {} as Record<
@@ -124,6 +139,7 @@ export const formatBuying = ({
         stripe_id: string;
         price: number;
         status: Buying["status"];
+        address: Address;
       }
     >
   );

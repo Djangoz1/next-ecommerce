@@ -6,7 +6,8 @@ import { Btn } from "@/components/ui/btn";
 import { Switch } from "@/components/ui/btn/switch";
 import { Title } from "@/components/ui/typography/title";
 import { FormProvider } from "@/context/form";
-import { useAuthRedirect } from "@/hooks/use-auth-redirect";
+import { useNeedNotAuth } from "@/hooks/accounts/use-need-not-auth";
+
 import { useAsyncApi } from "@/hooks/useAsyncApi";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,7 +17,7 @@ const PageAccountLogin = () => {
   const { data, mutateAsync, ...rest } = useAsyncApi({
     path: "/auth/sign-in",
   });
-  useAuthRedirect();
+  useNeedNotAuth();
   const router = useRouter();
 
   return (
@@ -54,7 +55,7 @@ const PageAccountLogin = () => {
             if (data.refresh_token) {
               localStorage.setItem("token", data.refresh_token);
             }
-            router.push("/account");
+            // router.push("/account");
 
             console.log({ data, rest });
           }}

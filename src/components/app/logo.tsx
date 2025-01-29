@@ -7,7 +7,7 @@ export const Logo = ({ className = "" }: { className?: string }) => {
     <Link
       href={"/"}
       className={cn(
-        "text-2xl uppercase tracking-[0.2em] title font-bold",
+        "text-2xl uppercase tracking-[0.2em] title font-light",
         className
       )}
     >

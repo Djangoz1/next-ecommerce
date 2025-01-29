@@ -1,22 +1,28 @@
 "use client";
 
-import { Input } from "@/components/form/input";
+import { FormAddress } from "@/components/features/account/form-address";
+import { ViewAddress } from "@/components/features/account/view-address";
+
 import { Loader } from "@/components/ui/box/loader";
+import { Modal } from "@/components/ui/box/modal";
 import { Btn } from "@/components/ui/btn";
-import { Switch } from "@/components/ui/btn/switch";
+import { Switch, SwitchPrimitive } from "@/components/ui/btn/switch";
 import { Title } from "@/components/ui/typography/title";
 import { useSession } from "@/context/app";
-import { FormProvider } from "@/context/form";
+
+import { useAddresses } from "@/hooks/accounts/use-addresses";
 import { useNewsletter } from "@/hooks/accounts/use-newsletter";
 import { useApi } from "@/hooks/useApi";
 import { useAsyncApi } from "@/hooks/useAsyncApi";
 import { stripePromise } from "@/services/stripe-js";
+import { Address } from "@/types/customer";
 import { Item } from "@/types/items";
+import { cn } from "@/utils/cn";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import React, { Suspense } from "react";
-import { useFormContext } from "react-hook-form";
+import React, { Suspense, useState } from "react";
+// import { useFormContext } from "react-hook-form";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -31,7 +37,7 @@ const Page = () => {
     },
   });
   const { user } = useSession();
-  const { watch } = useFormContext();
+  // const { watch, setValue } = useFormContext();
   console.log({ data, searchParams });
 
   const { mutateAsync } = useAsyncApi({});
@@ -40,83 +46,103 @@ const Page = () => {
     params: {},
   });
 
+  const { data: addresses } = useAddresses({
+    params: {
+      user_id: user?.id,
+    },
+  });
+
+  const [isData, setIsData] = useState<{
+    address_id: Address["id"] | null;
+    newsletter: boolean;
+  }>({
+    address_id: null,
+    newsletter: !!newsletter,
+  });
   const total = (data?.total || 0) / 100;
 
   return data ? (
-    <div className="gap-10 flex flex-col py-20 ">
-      <div className="bg-[#F6EFE4] flex justify-between items-center w-full px-3 py-5 border-y">
-        <span className="font-light text-foreground">Total de la commande</span>
-        <span className="text-2xl font-bold">{total} €</span>
+    <div className=" flex flex-col py-20 ">
+      <div className="px-3 flex justify-between w-full pb-10">
+        <div className="flex flex-col gap-">
+          <p className="w-full uppercase font-medium">
+            Hello,
+            <br />
+            <b>{user?.user_metadata?.name}</b>
+          </p>
+          <span className="flex items-center gap-2 text-sm">
+            <Icon icon={"mdi:email"} />
+            <span className="text-muted-foreground font-light">
+              {user?.email}
+            </span>
+          </span>
+        </div>
+        <Btn className="whitespace-nowrap" size="xs" onClick={() => {}}>
+          Changer de compte
+        </Btn>
       </div>
-      <div className="px-3">
-        <Input
-          type="email"
-          title="Compte"
-          defaultValue={user?.email}
-          placeholder="johndoe@gmail.com"
-          id="email"
-        />
+      <div className="bg-secondary flex justify-between items-center w-full px-3 py-5 border-y">
+        <span className="font-medium uppercase text-foreground">
+          Total de la commande
+        </span>
+        <span className="text-2xl font-bold">{total} €</span>
       </div>
       <div className="flex flex-col border-t py-10 gap-10">
         <div className="flex flex-col px-3">
           <Title className="text-2xl">Livraison</Title>
-          <p className="opacity-80 font-light text-s">
-            Tu ne trouves pas ton pays ? Contacte-nous
+          <p className="text-muted-foreground font-light text-sm w-2/3">
+            En raison du lancement de la maison, nous démarrons sur le système
+            de précommande. Vous recevrez vos articles d'ici 3 mois.
           </p>
         </div>
-        <div className="flex flex-col gap-5 px-3">
-          <Input
-            defaultValue={user?.user_metadata?.country}
-            title="Pays"
-            id="country"
-            placeholder="France"
-          />
-          <Input
-            defaultValue={user?.user_metadata?.name?.split(" ")[0]}
-            title="Prénom"
-            id="firstName"
-            placeholder="John"
-          />
-          <Input
-            defaultValue={user?.user_metadata?.name?.split(" ")[1]}
-            title="Nom"
-            id="lastName"
-            placeholder="Doe"
-          />
-          <Input
-            defaultValue={user?.user_metadata?.address}
-            title="Adresse"
-            id="address"
-            placeholder="123 rue de la paix"
-          />
-          <Input
-            defaultValue={user?.user_metadata?.zipcode}
-            title="Code postal"
-            id="zipcode"
-            placeholder="75000"
-          />
-          <Input
-            defaultValue={user?.user_metadata?.city}
-            title="Ville"
-            id="city"
-            placeholder="Paris"
-          />
-          <Input
-            defaultValue={user?.user_metadata?.phone}
-            type="tel"
-            title="Téléphone"
-            id="phone"
-            placeholder="06 06 06 06 06"
-          />
+
+        <div className="flex flex-col divide-y divide-d">
+          {!addresses?.length ? (
+            <p className="p-20 w-full uppercase text-muted-foreground text-sm font-medium text-center">
+              Aucune addresse trouvée
+            </p>
+          ) : (
+            addresses?.map((el, i) => (
+              <div
+                key={`address-customer-${el.id}-${i}`}
+                className={cn(
+                  "flex flex-col gap-5 w-full p-5 "
+                  // watch("address_id") === el.id ||
+                  //   (!watch("address_id") && el.default)
+                  //   ? "bg-black text-white"
+                  //   : ""
+                )}
+              >
+                <ViewAddress data={el} id={`${i}`} />
+                <Btn
+                  className="min-w-32 text-xs whitespace-nowrap"
+                  onClick={() => setIsData({ ...isData, address_id: el.id })}
+                  size="sm"
+                  {...(isData.address_id === el.id ||
+                  (!isData.address_id && el.default)
+                    ? {
+                        variant: "primary",
+
+                        children: <Icon icon="mdi:check" />,
+                      }
+                    : { variant: "secondary", children: "Choisi" })}
+                />
+              </div>
+            ))
+          )}
+
+          <Modal
+            btnProps={{
+              children: "Ajouter une adresse",
+              variant: "primary",
+              className: "w-80 mx-auto",
+            }}
+          >
+            <FormAddress />
+          </Modal>
         </div>
       </div>
-      <div className="flex flex-col px-3">
-        <Title className="text-2xl">Mode de livraison</Title>
-        <p className="opacity-80 font-light text-s">
-          En raison du lancement de la maison, nous démarrons sur le système de
-          précommande. Vous recevrez vos articles d'ici 3 mois.
-        </p>
-      </div>
+
       <div className="flex flex-col border-t px-3 py-10 gap-10">
         <div className="flex flex-col ">
           <Title className="text-2xl">Paiement</Title>
@@ -137,7 +163,9 @@ const Page = () => {
             Restez informé de nos nouveautés, promotions et évènements de la
             Maison Ormés.
           </p>
-          <Switch
+          <SwitchPrimitive
+            _value={isData.newsletter as boolean}
+            setValue={(value) => setIsData({ ...isData, newsletter: value })}
             id="newsletter"
             className="mt-5"
             defaultChecked={!!newsletter}
@@ -184,27 +212,22 @@ const Page = () => {
           variant="primary"
           className="w-full text-center"
           onClick={async () => {
-            console.log("newsletter", watch("newsletter"));
-            if (watch("newsletter") && !newsletter) {
+            if (!user) throw new Error("Required authenticated user");
+            if (isData.newsletter && !newsletter) {
               fetch(`${process.env.NEXT_PUBLIC_API_URL}/newsletter`, {
                 method: "POST",
                 body: JSON.stringify({
-                  email: watch("email"),
+                  email: user?.email,
                 }),
               });
             }
 
             const form = {
-              email: watch("email"),
-              country: watch("country"),
-              firstName: watch("firstName"),
-              lastName: watch("lastName"),
-              address: watch("address"),
-              zipcode: watch("zipcode"),
-              city: watch("city"),
-              phone: watch("phone"),
+              address_id:
+                isData.address_id || addresses?.find((el) => el.default)?.id,
+              // message: "",
               stripe_id: searchParams.get("id") as string,
-              user_id: user?.id,
+              user_id: user.id,
             };
 
             console.log({ form });
@@ -237,23 +260,9 @@ const Page = () => {
 export default () => {
   return (
     <Suspense fallback={<div>Loading ...</div>}>
-      <FormProvider
-        onSubmit={(e) => {
-          const form = e as {
-            email: string;
-            country: string;
-            firstName: string;
-            lastName: string;
-            address: string;
-            zipCode: string;
-            city: string;
-            phone: string;
-          };
-          console.log("coucou", form);
-        }}
-      >
+      <div>
         <Page />
-      </FormProvider>
+      </div>
     </Suspense>
   );
 };

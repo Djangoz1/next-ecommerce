@@ -1,5 +1,6 @@
 "use client";
 
+import { Address } from "@/types/customer";
 import { Buying, Item } from "@/types/items";
 import { clientDb } from "@/utils/client-db";
 import { useQuery } from "@tanstack/react-query";
@@ -22,13 +23,13 @@ export const useGetOrder = ({
       if (!user) throw new Error("User not found");
       const { data, error } = await clientDb
         .from("buying")
-        .select("*, items(*)")
+        .select("*, items(*), addresses(*)")
         .eq("stripe_id", stripe_id);
-      const arr = data as (Buying & { items: Item })[];
+      const arr = data as (Buying & { items: Item; addresses: Address })[];
       if (error) throw new Error(error.message);
       if (!arr.length) throw new Error("No items found");
       const castArr = arr.reduce(
-        (acc: (Buying & { items: Item })[][], item) => {
+        (acc: (Buying & { items: Item; addresses: Address })[][], item) => {
           const existingGroup = acc.find((group) => group[0]?.id === item.id);
 
           if (existingGroup) {
@@ -39,17 +40,7 @@ export const useGetOrder = ({
         },
         []
       );
-      return {
-        items: castArr,
-        customer: {
-          name: user.user_metadata.name,
-          email: user.email,
-          phone: user.user_metadata.phone,
-          address: user.user_metadata.address,
-          zipcode: user.user_metadata.zipcode,
-          city: user.user_metadata.city,
-        },
-      };
+      return castArr;
     },
   });
 };

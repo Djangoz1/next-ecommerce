@@ -26,15 +26,7 @@ const PageAccount = () => {
   console.log({ newsletter, user });
 
   return (
-    <div className="w-full relative min-h-screen flex xl:flex-row flex-col xl:justify-between py-20 gap-20">
-      <BtnMenu
-        arr={[
-          { label: "Mon profil", value: "/account" },
-          { label: "Mes commandes", value: "/account/orders" },
-          { label: "Mes adresses", value: "/account/addresses" },
-          { label: "Déconnexion", value: "/account/logout" },
-        ]}
-      />
+    <div className="py-10">
       <FormProvider
         className="flex flex-col gap-10 px-5"
         onSubmit={async ({ firstName, lastName, ...e }) => {

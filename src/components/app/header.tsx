@@ -9,6 +9,8 @@ import { Title } from "../ui/typography/title";
 
 import { BtnBagAction } from "../features/btn-bag-action";
 import { Btn } from "../ui/btn";
+import { Modal, ModalProvider, useModal } from "../ui/box/modal";
+import { useSession } from "@/context/app";
 export const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -70,42 +72,49 @@ export const Header = () => {
           </Link>
         </div>
       </motion.header>
-      <MobileHeader scroll={scrolled} url={url} />
+      <>
+        <MobileHeader scroll={scrolled} url={url} />
+      </>
     </>
   );
 };
 
-const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const Sidebar = () => {
+  const { isOpen, setIsOpen } = useModal();
+  const { user } = useSession();
 
   return (
-    <>
-      <motion.div
-        initial={{
-          opacity: 0,
-          x: "200%",
-        }}
-        animate={{ opacity: isOpen ? 1 : 0, x: isOpen ? "0" : "200%" }}
-        transition={{
-          duration: 1,
-          type: "spring",
-        }}
-        className={cn(
-          "fixed xl:hidden  top-0 left-0 bg-background text-black right-0 bottom-0 backdrop-blur z-50  w-full h-screen flex flex-col py-20",
-          isOpen ? "pointer-events-auto" : "pointer-events-none"
-        )}
-      >
+    <Modal
+      className="py-0"
+      btnProps={{
+        variant: "ghost",
+        children: (
+          <Icon
+            icon={isOpen ? "system-uicons:cross" : "line-md:menu"}
+            width={"20"}
+            height={"20"}
+          />
+        ),
+        className: "w-fit h-fit px-1 py-1",
+      }}
+    >
+      <>
         <motion.div className="flex flex-col divide-y">
-          <Button
-            onClick={() => setIsOpen(false)}
-            arr={[
-              { url: "/shop/women?t=dress", children: "Les vêtements" },
-              { url: "/shop/women?t=miniature", children: "Les minitatures" },
-              { url: "/shop/women?t=painting", children: "La peinture" },
-            ]}
-          >
-            Boutique
-          </Button>
+          <div onClick={(e) => e.stopPropagation()} className="w-full">
+            <Button
+              onClick={() => setIsOpen(false)}
+              arr={[
+                { url: "/shop/women?t=dress", children: "Les vêtements" },
+                {
+                  url: "/shop/women?t=miniature",
+                  children: "Les minitatures",
+                },
+                { url: "/shop/women?t=painting", children: "La peinture" },
+              ]}
+            >
+              Boutique
+            </Button>
+          </div>
           <Button onClick={() => setIsOpen(false)} url={"/journal"} arr={[]}>
             Journal
           </Button>
@@ -117,7 +126,7 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
             Maison Ormès
           </Button>
         </motion.div>
-        <div className="flex px-3 flex-col gap-5 uppercase opacity-50 font-bold text-sm py-5 mt-20">
+        <div className="flex px-3 flex-col gap-5 uppercase opacity-50 font-bold text-sm py-5 my-10">
           {[
             { url: "/tracking/", children: "Suivre ma commande" },
             { url: "/shop/women/", children: "Faire un retour" },
@@ -140,17 +149,27 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
           <Icon icon={"circum:facebook"} width={20} height={20} />
           <Icon icon={"ph:whatsapp-logo-thin"} width={20} height={20} />
         </div>
-        <div className="mt-auto px-2 flex justify-between">
+        <div className="mt-10 px-2 flex justify-between">
           <Btn
             onClick={() => setIsOpen(false)}
             variant="link"
-            href="/account"
+            {...(user
+              ? { href: "/account", children: "Mon compte" }
+              : {
+                  href: "/account/login",
+                  children: "Se connecter",
+                })}
             size="sm"
-          >
-            Mon compte
-          </Btn>
+          />
         </div>
-      </motion.div>
+      </>
+    </Modal>
+  );
+};
+
+const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
+  return (
+    <>
       <motion.header
         initial={{
           position: "fixed",
@@ -161,22 +180,15 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
           position: "fixed",
           top: "0",
           left: 0,
-          color: !scroll && !isOpen && url == "/" ? "white" : "black",
+          color: !scroll && url == "/" ? "white" : "black",
         }}
         className={cn(
-          "xl:hidden z-50  p-2  flex items-center w-screen  justify-between",
-          isOpen ? "border-b" : ""
+          "xl:hidden z-50  p-2  flex items-center w-screen  justify-between"
         )}
       >
-        <div className="flex gap-10 items-center">
-          <button onClick={() => setIsOpen(!isOpen)}>
-            <Icon
-              icon={isOpen ? "system-uicons:cross" : "line-md:menu"}
-              width={"20"}
-              height={"20"}
-            />
-          </button>
-        </div>
+        <ModalProvider>
+          <Sidebar />
+        </ModalProvider>
 
         <motion.h1 className="title  text-2xl uppercase tracking-[0.2em]  ">
           <Link href={"/"}>Ormés</Link>

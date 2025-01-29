@@ -11,17 +11,10 @@ import { NextRequest, NextResponse } from "next/server";
 // Create a buying with stripe session id and customer data
 export async function POST(request: NextRequest) {
   const body: {
-    email: string;
-    country: string;
-    firstName: string;
-    lastName: string;
-    address: string;
-    zipcode: string;
-    city: string;
-    phone: string;
+    message?: string;
     stripe_id: string;
-
-    user_id?: string;
+    address_id: string;
+    user_id: string;
   } = await request.json();
 
   try {
@@ -47,6 +40,8 @@ export async function POST(request: NextRequest) {
           size: arr[index].size,
           user_id: body.user_id,
           stripe_id: body.stripe_id,
+          address_id: body.address_id,
+          message: body?.message,
           status: "pending",
         })
       );

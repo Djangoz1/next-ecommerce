@@ -40,6 +40,8 @@ export const createBuyingQuery = async (
     user_id: string;
     stripe_id: string;
     status: Buying["status"];
+    address_id: string;
+    message?: string;
   }
 ) => {
   try {
@@ -51,8 +53,8 @@ export const createBuyingQuery = async (
         status: "pending",
         user_id: data.user_id,
         stripe_id: data.stripe_id,
-
-        message: "test",
+        address_id: data.address_id,
+        message: data?.message,
       })
       .select()
       .single();

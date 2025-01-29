@@ -4,11 +4,12 @@ import React, { createContext, useContext, useState } from "react";
 import { Btn, BtnProps } from "../btn";
 import { cn } from "@/utils/cn";
 import { Icon } from "@iconify/react/dist/iconify.js";
-
-const ModalContext = createContext({
-  isOpen: false,
-  setIsOpen: (isOpen: boolean) => {},
-});
+import { Logo } from "@/components/app/logo";
+type Ctx = {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+};
+const ModalContext = createContext<Ctx | undefined>(undefined);
 
 export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,16 +21,28 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const useModal = () => {
-  return useContext(ModalContext);
+  const ctx = useContext(ModalContext);
+  if (!ctx) throw new Error("useModal must be used within a ModalProvider");
+  return ctx;
+};
+
+export const ModalPrimitive = ({
+  ...props
+}: {
+  children: React.ReactNode;
+  btnProps: BtnProps;
+  className?: string;
+}) => {
+  return <Element {...props} />;
 };
 
 export const Modal = ({
   ...props
 }: {
-  btn: React.ReactNode;
   children: React.ReactNode;
-  classNameBtn?: string;
-  btnVariant?: BtnProps["variant"];
+
+  btnProps: BtnProps;
+
   className?: string;
 }) => {
   return (
@@ -40,30 +53,28 @@ export const Modal = ({
 };
 
 const Element = ({
-  btn,
   children,
   className = "",
-  btnVariant = "primary",
+
   ...props
 }: {
-  btn: React.ReactNode;
+  btnProps: BtnProps;
   children: React.ReactNode;
-  classNameBtn?: string;
-  btnVariant?: BtnProps["variant"];
+
   className?: string;
 }) => {
   const { isOpen, setIsOpen } = useModal();
 
   return (
-    <ModalProvider>
+    <>
       <Btn
         size="sm"
-        variant={btnVariant}
-        onClick={() => setIsOpen(true)}
-        className={props?.classNameBtn}
-      >
-        {btn}
-      </Btn>
+        onClick={(e) => {
+          setIsOpen(true);
+          props?.btnProps?.onClick?.(e);
+        }}
+        {...props.btnProps}
+      />
 
       <AnimatePresence>
         {isOpen ? (
@@ -73,23 +84,31 @@ const Element = ({
             transition={{
               duration: 0.3,
             }}
-            animate={{ x: 0 }}
+            animate={{ x: 0, zIndex: 1000 }}
             className={cn(
-              "bg-background z-50 fixed px-5 py-20 top-0 right-0 w-screen h-screen"
+              "bg-background text-black z-50 fixed  top-0 right-0 w-screen h-screen"
             )}
+            onClick={(e) => setIsOpen(false)}
           >
-            <Btn
-              className="mb-10 ml-auto"
-              size="xs"
-              onClick={() => setIsOpen(false)}
-            >
-              <Icon icon="mdi:close"></Icon> Fermer
-            </Btn>
-
-            {children}
+            <div className="flex justify-between p-5 border-b">
+              <>
+                <Logo />
+              </>
+              <Btn
+                className="ml-auto"
+                size="sm"
+                variant="primary"
+                onClick={() => setIsOpen(false)}
+              >
+                <Icon icon="mdi:close"></Icon>
+              </Btn>
+            </div>
+            <div className={cn("py-10 w-full h-full", className)}>
+              {children}
+            </div>
           </motion.div>
         ) : null}
       </AnimatePresence>
-    </ModalProvider>
+    </>
   );
 };

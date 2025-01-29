@@ -40,6 +40,8 @@ export const useAddresses = ({
     }:
       | {
           method?: "POST" | "PUT";
+          first_name: string;
+          last_name: string;
           zipcode: string;
           city: string;
           country: string;

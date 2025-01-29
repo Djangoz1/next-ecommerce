@@ -12,6 +12,7 @@ import { Btn } from "../ui/btn";
 import { handleCheckout } from "@/services/stripe-js";
 import { useRouter } from "next/navigation";
 import { useGetItem } from "@/hooks/items/use-get-item";
+import { Modal, useModal } from "../ui/box/modal";
 
 export const BtnBagAction = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,30 +24,38 @@ export const BtnBagAction = () => {
   const handleClick = () => setIsOpen(true);
   return (
     <>
-      <button onClick={handleClick} className="relative">
-        <Icon icon="tdesign:shop-filled" width="30" height="30" />
-        {pendingItems?.length ? (
-          <span className="text-white absolute bottom-0 font-bold left-1/2 text-[10px] w-fit z-2 -translate-x-1/2 -translate-y-1/3">
-            {pendingItems?.length}
-          </span>
-        ) : null}
-      </button>
-      <AnimatePresence>
-        {isOpen ? (
-          <Div setIsOpen={setIsOpen} pendingItems={pendingItems} />
-        ) : null}
-      </AnimatePresence>
+      <Modal
+        btnProps={{
+          children: (
+            <>
+              <Icon icon="tdesign:shop-filled" className="text-xl" />
+              {pendingItems?.length ? (
+                <span className="text-white absolute bottom-0 font-bold left-1/2 text-[10px] w-fit z-2 -translate-x-1/2 -translate-y-1/3">
+                  {pendingItems?.length}
+                </span>
+              ) : null}
+            </>
+          ),
+          variant: "ghost",
+          size: "sm",
+          className: "relative py-1 px-1 ",
+        }}
+        className="py-0 px-5"
+      >
+        <>
+          <Div pendingItems={pendingItems} />
+        </>
+      </Modal>
     </>
   );
 };
 
 const Div = ({
-  setIsOpen,
   pendingItems,
 }: {
-  setIsOpen: (isOpen: boolean) => void;
   pendingItems: { id: string; size: string }[];
 }) => {
+  const { setIsOpen } = useModal();
   const [filteredArr, setFilteredArr] = useState<
     { id: string; size: string }[][]
   >([]);
@@ -73,30 +82,7 @@ const Div = ({
   const router = useRouter();
   return (
     <>
-      <motion.div
-        initial={{
-          x: 1000,
-        }}
-        animate={{
-          x: 0,
-        }}
-        exit={{
-          x: 1000,
-        }}
-        transition={{
-          duration: 0.7,
-        }}
-        className="bg-[#FBF6F3] fixed divide-y uppercase top-0 left-0 right-0 bottom-0  flex flex-col"
-      >
-        <div className="flex items-center justify-between p-3 w-full">
-          <Link href="/">
-            <Title>Ormés</Title>
-          </Link>
-          <Btn variant="ghost" onClick={() => setIsOpen(false)}>
-            <Icon icon="mdi:close" />
-          </Btn>
-        </div>
-
+      <>
         <p className="underline uppercase font-medium p-3 text-sm">
           Panier ({pendingItems?.length})
         </p>
@@ -159,7 +145,7 @@ const Div = ({
             </div>
           )}
         </>
-      </motion.div>
+      </>
     </>
   );
 };

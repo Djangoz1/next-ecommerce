@@ -18,7 +18,21 @@ export async function PUT(request: NextRequest) {
   try {
     if (!id) throw new Error("Required id");
     if (!body.user_id) throw new Error("Required user_id");
-    await checkUpdateDefault(body.user_id);
+    if (body.default) {
+      const { data } = await checkUpdateDefault(body.user_id);
+      if (!data) {
+        body.default = true;
+      }
+    } else {
+      const { data } = await pool
+        .from("addresses")
+        .select("default")
+        .eq("user_id", body.user_id)
+        .eq("default", true)
+        .single();
+      if (!data) body.default = true;
+    }
+
     const { data: addresses, error } = await pool
       .from("addresses")
       .update({ ...body })

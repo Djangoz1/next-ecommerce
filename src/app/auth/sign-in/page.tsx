@@ -3,17 +3,19 @@ import { Logo } from "@/components/app/logo";
 import { Input } from "@/components/form/input";
 import { Btn } from "@/components/ui/btn";
 import { Title } from "@/components/ui/typography/title";
+import { useSession } from "@/context/app";
 
 import { FormProvider } from "@/context/form";
-import { useAuthRedirect } from "@/hooks/use-auth-redirect";
+import { useNeedNotAuth } from "@/hooks/accounts/use-need-not-auth";
 
 import { clientDb } from "@/utils/client-db";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
-const PageAccountLogin = () => {
-  useAuthRedirect();
-  const router = useRouter();
+const PageAuthSignIn = () => {
+  const { user, refresh } = useSession();
+  console.log({ user });
+  useNeedNotAuth();
+
   return (
     <div className="w-full relative h-screen flex xl:flex-row flex-col xl:justify-between">
       <Image
@@ -34,13 +36,13 @@ const PageAccountLogin = () => {
           onSubmit={async (e) => {
             if (!e.email || !e.password)
               throw new Error("Email or password is required");
-            const { error } = await clientDb.auth.signInWithPassword({
+            const res = await clientDb.auth.signInWithPassword({
               email: e.email as string,
               password: e.password as string,
             });
-            if (error) throw new Error(error.message);
-
-            router.push("/account");
+            console.log({ logRes: res });
+            if (res.error) throw new Error(res.error.message);
+            refresh();
           }}
           className="flex flex-col gap-5 w-full py-5 "
         >
@@ -74,4 +76,4 @@ const PageAccountLogin = () => {
   );
 };
 
-export default PageAccountLogin;
+export default PageAuthSignIn;

@@ -11,7 +11,7 @@ export const BtnMenu = ({
   value,
 }: {
   value?: string;
-  arr: { label: string; value: string }[];
+  arr: { label: string; value: string; onClick?: () => void }[];
   classNameEl?: string;
 }) => {
   const url = usePathname();
@@ -27,6 +27,7 @@ export const BtnMenu = ({
             toCheck === el.value ? "opacity-100 bg-zinc-800 text-white" : "",
             classNameEl
           )}
+          onClick={el?.onClick}
         >
           {el.label}
         </Link>

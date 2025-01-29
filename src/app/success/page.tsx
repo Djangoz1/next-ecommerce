@@ -1,4 +1,5 @@
 "use client";
+import { ViewAddress } from "@/components/features/account/view-address";
 import { clearPendingItems } from "@/components/features/btn-buying-action";
 import { BoxError } from "@/components/ui/box/box-error";
 import { Loader } from "@/components/ui/box/loader";
@@ -100,7 +101,7 @@ const Page = () => {
         </BoxIcon>
       </div> */}
       <div className="flex flex-col divide-y">
-        {data?.items?.map((items, i) => (
+        {data?.map((items, i) => (
           <div key={`image-${i}`} className="flex gap-5 px-3 py-5">
             <Image
               src={items[0].items.main_image}
@@ -122,20 +123,7 @@ const Page = () => {
       </div>
       <div className="flex flex-col gap-5 px-3">
         <Title className="text-lg">Livraison</Title>
-        <p className="opacity-50 font-light">
-          {data.customer.name}
-          <br />
-          {data.customer.address}
-          <br />
-          {data.customer.city}
-          <br />
-          {data.customer.zipcode}
-          <br />
-          {data.customer.email}
-          <br />
-          {data.customer.phone}
-          <br />
-        </p>
+        <ViewAddress id="main" data={data[0][0].addresses} />
       </div>
     </div>
   ) : !isFetched || isLoading ? (

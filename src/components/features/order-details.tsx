@@ -14,6 +14,12 @@ import { useAsyncApi } from "@/hooks/useAsyncApi";
 import { useSession } from "@/context/app";
 import { GetOrdersHook } from "@/hooks/orders/use-get-orders";
 
+import { ViewAddress } from "./account/view-address";
+
+const orderId = (data: GetOrdersHook[0]) => {
+  return `${data.address.first_name[0]}${data.address.last_name[0]}${data.address.zipcode[0]}${data.address.id}-${data.items[0].id}-${data.items[0].item_id}`;
+};
+
 export const OrderDetails = ({ data }: { data: GetOrdersHook[0] }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutateAsync } = useAsyncApi({
@@ -37,7 +43,7 @@ export const OrderDetails = ({ data }: { data: GetOrdersHook[0] }) => {
       >
         <div className="flex flex-col w-fit ">
           <div className="flex items-center gap-3">
-            <div className="text-lg font-bold">Commande n°{data.stripe_id}</div>
+            <div className="text-lg font-bold">Commande n°{orderId(data)}</div>
             <div className="px-3 py-px text-xs rounded-full bg-black uppercase text-white">
               {data.items[0].status}
             </div>
@@ -181,7 +187,7 @@ export const OrderDetails = ({ data }: { data: GetOrdersHook[0] }) => {
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-5 w-full my-5 p-5">
+          {/* <div className="grid grid-cols-2 gap-5 w-full my-5 p-5">
             <BoxData icon="line-md:account" title="Client">
               {user?.user_metadata?.name}
             </BoxData>
@@ -194,18 +200,11 @@ export const OrderDetails = ({ data }: { data: GetOrdersHook[0] }) => {
             <BoxData icon="solar:euro-broken" title="Montant total">
               {data.price} €
             </BoxData>
-          </div>
+          </div> */}
           <div className="flex flex-col p-5">
-            <Title className="text-sm">Address</Title>
+            <Title className="text-sm">Adresse de livraison</Title>
 
-            <p className="opacity-50 font-light">
-              {user?.user_metadata?.address}
-              <br />
-              {user?.user_metadata?.city}
-              <br />
-              {user?.user_metadata?.zipcode}
-              <br />
-            </p>
+            <ViewAddress id="main" data={data.address} />
           </div>
           <span className="opacity-50 hover:opacity-100 hover:underline text-xs font-extralight px-5">
             # {data.stripe_id}

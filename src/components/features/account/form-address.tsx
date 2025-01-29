@@ -27,15 +27,17 @@ export const FormAddress = ({
   });
 
   const { isOpen, setIsOpen } = useModal();
-
+  console.log({ isOpen, setIsOpen });
   return (
     <>
       <FormProvider
-        className={cn("flex flex-col gap-10", className)}
+        className={cn("flex flex-col px-5 gap-10", className)}
         onSubmit={async ({ ...e }) => {
           if (!user) return;
 
           let res = await execute({
+            first_name: e.first_name as string,
+            last_name: e.last_name as string,
             zipcode: e.zipcode as string,
             city: e.city as string,
             country: e.country as string,
@@ -50,6 +52,24 @@ export const FormAddress = ({
           setIsOpen(false);
         }}
       >
+        <div className="flex gap-10">
+          <Input
+            defaultValue={
+              data?.first_name || user?.user_metadata?.name.split(" ")[0] || ""
+            }
+            title="Prénom"
+            placeholder={"John"}
+            id={"first_name"}
+          />
+          <Input
+            defaultValue={
+              data?.last_name || user?.user_metadata?.name.split(" ")[1] || ""
+            }
+            placeholder="Doe"
+            title={"Nom"}
+            id={"last_name"}
+          />
+        </div>
         <Input
           defaultValue={data?.address}
           required
@@ -111,7 +131,7 @@ export const FormAddress = ({
         </div>
 
         <Btn className="w-full" type="submit" variant="primary">
-          Mettre à jour
+          {data ? "Mettre à jour" : "Ajouter"}
         </Btn>
       </FormProvider>
     </>
