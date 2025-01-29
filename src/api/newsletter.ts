@@ -17,24 +17,6 @@ export const createNewsletterQuery = async (email: string) => {
   }
 };
 
-export const getNewsletterQuery = async () => {
-  const result = await pool.from("newsletter").select();
-  return result.data as { id: number; email: string; created_at: string }[];
-};
-
-export const getNewsletterByEmailQuery = async (email: string) => {
-  try {
-    const result = await pool
-      .from("newsletter")
-      .select()
-      .eq("email", email)
-      .single();
-    return result.data as { id: number; email: string; created_at: string };
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const deleteNewsletterQuery = async (id: number) => {
   const result = await pool
     .from("newsletter")

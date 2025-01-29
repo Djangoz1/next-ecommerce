@@ -4,14 +4,13 @@ import { BoxError } from "@/components/ui/box/box-error";
 import { Loader } from "@/components/ui/box/loader";
 import { Title } from "@/components/ui/typography/title";
 import { useGetOrder } from "@/hooks/orders/use-get-order";
-import { useApi } from "@/hooks/useApi";
-import { Buying, Customer, Item } from "@/types/items";
+
 import { cn } from "@/utils/cn";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import React, { ReactNode, Suspense, useEffect, useMemo } from "react";
+import React, { ReactNode, Suspense, useMemo } from "react";
 
 const BoxIcon = ({
   icon,

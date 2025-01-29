@@ -6,9 +6,10 @@ import { BtnMenu } from "@/components/ui/btn/btn-menu";
 import { Switch } from "@/components/ui/btn/switch";
 import { useSession } from "@/context/app";
 import { FormProvider } from "@/context/form";
-import { useApi } from "@/hooks/useApi";
+import { useNewsletter } from "@/hooks/accounts/use-newsletter";
+
 import { useAsyncApi } from "@/hooks/useAsyncApi";
-import { Newsletter } from "@/types/items";
+
 import { clientDb } from "@/utils/client-db";
 
 import React from "react";
@@ -18,11 +19,8 @@ const PageAccount = () => {
 
   const { user, refresh } = useSession();
 
-  const { data: newsletter } = useApi<Newsletter>({
-    path: `/newsletter/${user?.email}`,
-
-    enabled: !!user?.email,
-    method: "GET",
+  const { data: newsletter } = useNewsletter({
+    params: {},
   });
 
   console.log({ newsletter, user });

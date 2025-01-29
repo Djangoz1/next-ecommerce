@@ -2,17 +2,23 @@
 import { BoxError } from "@/components/ui/box/box-error";
 import { Loader } from "@/components/ui/box/loader";
 import { Btn } from "@/components/ui/btn";
-import { useApi } from "@/hooks/useApi";
+
 import { useAsyncApi } from "@/hooks/useAsyncApi";
 import { Newsletter } from "@/types/items";
+import { clientDb } from "@/utils/client-db";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useQuery } from "@tanstack/react-query";
 
 import React from "react";
 
 const PageNewsletter = () => {
-  const { data, isFetched } = useApi<Newsletter[]>({
-    path: "/newsletter",
-    method: "GET",
+  const { data, isFetched } = useQuery({
+    queryKey: ["newsletters"],
+    queryFn: async () => {
+      const { data, error } = await clientDb.from("newsletter").select("*");
+      if (error) throw new Error(error.message);
+      return data as Newsletter[];
+    },
   });
 
   const { mutateAsync } = useAsyncApi({

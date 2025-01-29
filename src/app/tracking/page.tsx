@@ -7,8 +7,7 @@ import { Btn } from "@/components/ui/btn";
 import { Title } from "@/components/ui/typography/title";
 import { FormProvider } from "@/context/form";
 import { useGetOrders } from "@/hooks/orders/use-get-orders";
-import { useApi } from "@/hooks/useApi";
-import { BuyingApi } from "@/types/items";
+
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense } from "react";
 

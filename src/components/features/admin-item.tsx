@@ -1,21 +1,20 @@
 "use client";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import { Title } from "../ui/typography/title";
 import { Input } from "../form/input";
 import { useFormContext } from "react-hook-form";
 import { Btn } from "../ui/btn";
 import { Textarea } from "../form/textarea";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useApi } from "@/hooks/useApi";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { MultipleInput } from "../form/multiple-input";
 import { SelectBtn } from "../form/select-btn";
 
 import { Loader } from "../ui/box/loader";
-import { Item, ItemMetadata } from "@/types/items";
+
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Badge } from "../ui/btn/badge";
@@ -23,19 +22,14 @@ import { ItemCareMultipleInput } from "./admin/item-care-multiple-input";
 import { ItemEngagementMultipleInput } from "./admin/item-engagement-multiple-input";
 import { ItemTraceabilityMultipleInput } from "./admin/item-traceability-multiple-input";
 import { useAsyncApi } from "@/hooks/useAsyncApi";
+import { useGetItem } from "@/hooks/items/use-get-item";
 
 export const AdminItem = ({ isActive }: { isActive: string }) => {
   const { watch, setValue } = useFormContext();
   const client = useQueryClient();
 
-  const { data: item, isFetched } = useApi<
-    Item & {
-      gallery: { image: string; id: string }[];
-      metadata: ItemMetadata;
-    }
-  >({
-    path: `/items/${isActive}`,
-    method: "GET",
+  const { data: item, isFetched } = useGetItem({
+    params: { id: isActive === "new" ? undefined : Number(isActive) },
     enabled: isActive !== "new",
   });
 

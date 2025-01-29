@@ -1,27 +1,6 @@
 import { Item, ItemMetadata } from "@/types/items";
 import { pool } from "@/utils/db";
 
-export const getAllItemsQuery = async () => {
-  try {
-    const res = await pool.from("items").select("*");
-    return res.data as Item[];
-  } catch (error) {
-    console.error("Error fetching items", error);
-    throw error;
-  }
-};
-
-export const getItemByTypeQuery = async (type: string) => {
-  try {
-    const res = await pool.from("items").select("*").eq("type", type);
-
-    return res.data as Item[];
-  } catch (error) {
-    console.error("Error fetching items by type", error);
-    throw error;
-  }
-};
-
 export const getItemByIdQuery = async (id: number) => {
   try {
     if (id === undefined) {

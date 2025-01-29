@@ -1,6 +1,5 @@
 "use client";
-import { useApi } from "@/hooks/useApi";
-import { Item } from "@/types/items";
+
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";

@@ -7,10 +7,11 @@ import { Switch } from "@/components/ui/btn/switch";
 import { Title } from "@/components/ui/typography/title";
 import { useSession } from "@/context/app";
 import { FormProvider } from "@/context/form";
+import { useNewsletter } from "@/hooks/accounts/use-newsletter";
 import { useApi } from "@/hooks/useApi";
 import { useAsyncApi } from "@/hooks/useAsyncApi";
 import { stripePromise } from "@/services/stripe-js";
-import { Item, Newsletter } from "@/types/items";
+import { Item } from "@/types/items";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -35,10 +36,8 @@ const Page = () => {
 
   const { mutateAsync } = useAsyncApi({});
 
-  const { data: newsletter } = useApi<Newsletter | null>({
-    path: `/newsletter/${user?.email}`,
-    method: "GET",
-    enabled: !!user?.email,
+  const { data: newsletter } = useNewsletter({
+    params: {},
   });
 
   const total = (data?.total || 0) / 100;
