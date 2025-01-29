@@ -28,15 +28,18 @@ const PageAccountOrders = () => {
           { label: "Déconnexion", value: "/account/logout" },
         ]}
       />
-      {data?.map?.length ? (
-        <div className="flex flex-col gap-5">
-          {data.map((el, i) => (
-            <OrderDetails key={`order-${i}`} data={el} />
-          ))}
-        </div>
-      ) : (
-        <div>Aucune commande</div>
-      )}
+
+      <>
+        {data?.map?.length ? (
+          <div className="flex flex-col divide-y divide-dashed">
+            {data.map((el, i) => (
+              <OrderDetails key={`order-${i}`} data={el} />
+            ))}
+          </div>
+        ) : (
+          <div>Aucune commande</div>
+        )}
+      </>
     </div>
   );
 };

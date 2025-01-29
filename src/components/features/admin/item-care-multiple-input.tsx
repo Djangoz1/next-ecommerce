@@ -23,7 +23,7 @@ export const ItemCareMultipleInput = ({
     <MultipleInput
       placeholder={"Ne pas laver à la machine"}
       title="Entretien"
-      defaultValue={data?.care?.content || moock?.content}
+      defaultValue={data?.care?.content || moock?.[0]?.content}
       id={`care-${isActive}`}
     />
   );

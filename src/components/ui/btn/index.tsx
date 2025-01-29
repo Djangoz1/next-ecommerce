@@ -22,7 +22,7 @@ const sizes = {
   lg: "px-3 py-2 text-lg",
 };
 
-type BtnProps = {
+export type BtnProps = {
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
   href?: string;
