@@ -4,7 +4,6 @@ import { Tabs } from "@/components/ui/box/tabs";
 import { Btn } from "@/components/ui/btn";
 import { Dropdown } from "@/components/ui/btn/dropdown";
 import { Title } from "@/components/ui/typography/title";
-import { useApi } from "@/hooks/useApi";
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -19,7 +18,8 @@ import { DetailsSize } from "@/components/features/details-size";
 import { DetailsCompoAndCare } from "@/components/features/details-compo-and-care";
 import { DetailsEngagement } from "@/components/features/details-engagement";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Item } from "@/types/items";
+
+import { GetItemHook, useGetItem } from "@/hooks/items/use-get-item";
 
 type BaseMetadata = {
   title: string;
@@ -53,15 +53,12 @@ const images = [
 const Page = () => {
   const params = useParams();
 
-  const { data, isFetched } = useApi<
-    Item & {
-      gallery: { image: string; id: string }[];
-      metadata: ItemMetadata;
-    }
-  >({
-    path: `/items/${params.id}`,
-    method: "GET",
+  const { data, isFetched } = useGetItem({
+    params: {
+      id: Number(params.id),
+    },
   });
+
   console.log({ data });
   if (!isFetched) return <Loader />;
   if (!data) return <BoxError />;
@@ -73,14 +70,7 @@ const Page = () => {
   );
 };
 
-const Device = ({
-  item,
-}: {
-  item: Item & {
-    gallery: { image: string; id: string }[];
-    metadata: ItemMetadata;
-  };
-}) => {
+const Device = ({ item }: { item: GetItemHook }) => {
   return (
     <div className="hidden xl:flex   w-full relative">
       <div className="relative flex w-full ">
@@ -183,14 +173,7 @@ const Device = ({
   );
 };
 
-const Mobile = ({
-  item,
-}: {
-  item: Item & {
-    gallery: { image: string; id: string }[];
-    metadata: ItemMetadata;
-  };
-}) => {
+const Mobile = ({ item }: { item: GetItemHook }) => {
   return (
     <div className=" flex xl:hidden  flex-col w-full relative">
       <div className="flex w-screen overflow-x-scroll">

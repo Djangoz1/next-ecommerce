@@ -1,4 +1,3 @@
-import { getItemImagesQuery } from "@/api/gallery";
 import {
   getItemByIdQuery,
   getItemMetadataByIdQuery,
@@ -7,32 +6,6 @@ import {
 import { ItemMetadata } from "@/types/items";
 import { pool } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
-
-export async function GET(request: NextRequest) {
-  const id = request.nextUrl.pathname.split("/").pop();
-
-  try {
-    const [item, gallery, metadata] = await Promise.all([
-      getItemByIdQuery(Number(id)),
-      getItemImagesQuery(Number(id)),
-      getItemMetadataByIdQuery(Number(id)),
-    ]);
-
-    return NextResponse.json(
-      {
-        message: "OK",
-        result: {
-          ...item,
-          gallery,
-          metadata,
-        },
-      },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json({ message: "Error", error }, { status: 500 });
-  }
-}
 
 export async function PUT(request: NextRequest) {
   const id = request.nextUrl.pathname.split("/").pop();

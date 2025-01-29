@@ -1,8 +1,11 @@
 "use client";
 
+import { BaseHookResult } from "@/types/app";
 import { Buying, Item } from "@/types/items";
 import { clientDb } from "@/utils/client-db";
 import { useQuery } from "@tanstack/react-query";
+
+export type GetOrdersHook = BaseHookResult<typeof useGetOrders>;
 
 export const useGetOrders = ({
   enabled = true,

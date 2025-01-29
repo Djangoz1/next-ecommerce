@@ -6,6 +6,7 @@ import { Tabs } from "@/components/ui/box/tabs";
 import { Btn } from "@/components/ui/btn";
 import { Title } from "@/components/ui/typography/title";
 import { FormProvider } from "@/context/form";
+import { useGetOrders } from "@/hooks/orders/use-get-orders";
 import { useApi } from "@/hooks/useApi";
 import { BuyingApi } from "@/types/items";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -94,12 +95,10 @@ const Page = () => {
 };
 
 const Element = ({ email, zipcode }: { email: string; zipcode: string }) => {
-  const { data, isFetched } = useApi<BuyingApi[]>({
-    path: `/buy/order`,
-    method: "GET",
-    queryKey: "tracking",
+  const { data, isFetched } = useGetOrders({
     params: { email, zipcode },
   });
+
   console.log({ data });
   return data?.length ? (
     <div>

@@ -1,5 +1,5 @@
 "use client";
-import { Buying, Item } from "@/types/items";
+
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { ReactNode, useState } from "react";
 import { Title } from "../ui/typography/title";
@@ -12,16 +12,9 @@ import { FormProvider } from "@/context/form";
 import { Input } from "../form/input";
 import { useAsyncApi } from "@/hooks/useAsyncApi";
 import { useSession } from "@/context/app";
+import { GetOrdersHook } from "@/hooks/orders/use-get-orders";
 
-export const OrderDetails = ({
-  data,
-}: {
-  data: {
-    items: (Buying & { items: Item & { quantity: number } })[];
-    stripe_id: string;
-    price: number;
-  };
-}) => {
+export const OrderDetails = ({ data }: { data: GetOrdersHook[0] }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutateAsync } = useAsyncApi({
     path: `/buy`,
