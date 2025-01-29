@@ -1,6 +1,7 @@
 "use client";
 import { MultipleInput } from "@/components/form/multiple-input";
-import { useApi } from "@/hooks/useApi";
+import { useGetItemDetails } from "@/hooks/items/use-get-item-details";
+
 import { ItemMetadata } from "@/types/items";
 import React from "react";
 
@@ -11,19 +12,18 @@ export const ItemEngagementMultipleInput = ({
   data: ItemMetadata | undefined;
   isActive: string;
 }) => {
-  const { data: moock } = useApi<ItemMetadata["engagements"]>({
-    path: "/items/details/engagements",
-    method: "GET",
-
+  const { data: moock } = useGetItemDetails({
     enabled: isActive === "new",
+    params: {
+      type: "engagements",
+    },
   });
 
-  console.log({ moock });
   return (
     <MultipleInput
       placeholder={"Transport routier"}
       title="Engagements"
-      defaultValue={data?.engagements?.content || moock?.content}
+      defaultValue={data?.engagements?.content || moock?.[0]?.content}
       id={`engagements-${isActive}`}
     />
   );

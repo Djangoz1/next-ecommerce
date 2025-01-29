@@ -1,5 +1,5 @@
 import { getBuyingByStripeIdQuery, updateBuyingQuery } from "@/api/buy";
-import { getCustomerByIdQuery } from "@/api/customer";
+
 import { updateItemQuery } from "@/api/items";
 import { sendOrderConfirmationEmail } from "@/services/send-mail";
 import { stripe } from "@/services/stripe-node";

@@ -12,6 +12,7 @@ import { Btn } from "../ui/btn";
 
 import { handleCheckout } from "@/services/stripe-js";
 import { useRouter } from "next/navigation";
+import { useGetItem } from "@/hooks/items/use-get-item";
 
 export const BtnBagAction = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,7 +20,7 @@ export const BtnBagAction = () => {
     queryKey: ["pending-items"],
     queryFn: () => JSON.parse(localStorage.getItem("pending-items") || "[]"),
   });
-
+  console.log({ pendingItems });
   const handleClick = () => setIsOpen(true);
   return (
     <>
@@ -172,11 +173,9 @@ const Element = ({
   setTotal: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const index = 0;
-  const { data: item } = useApi({
-    path: `/items/${arr[index].id}`,
-    method: "GET",
-    enabled: !!arr[index].id,
-  }) as { data: Item };
+
+  const { data: item } = useGetItem({ params: { id: Number(arr[index].id) } });
+
   const queryClient = useQueryClient();
 
   useEffect(() => {
