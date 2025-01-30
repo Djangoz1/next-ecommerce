@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/btn/switch";
 import { useSession } from "@/context/app";
 import { FormProvider } from "@/context/form";
 import { useNewsletter } from "@/hooks/accounts/use-newsletter";
+import { useToast } from "@/hooks/use-toast";
 
 import { useAsyncApi } from "@/hooks/useAsyncApi";
 
@@ -22,7 +23,7 @@ const PageAccount = () => {
   const { data: newsletter } = useNewsletter({
     params: {},
   });
-
+  const { toast } = useToast();
   console.log({ newsletter, user });
 
   return (
@@ -54,6 +55,9 @@ const PageAccount = () => {
           }
 
           refresh();
+          await toast({
+            description: "Vos informations ont été mises à jour",
+          });
         }}
       >
         <Input

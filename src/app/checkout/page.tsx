@@ -2,6 +2,8 @@
 
 import { FormAddress } from "@/components/features/account/form-address";
 import { ViewAddress } from "@/components/features/account/view-address";
+import { ViewOrderItem } from "@/components/features/items/view-order-item";
+import { Input } from "@/components/form/input";
 
 import { Loader } from "@/components/ui/box/loader";
 import { Modal } from "@/components/ui/box/modal";
@@ -9,8 +11,10 @@ import { Btn } from "@/components/ui/btn";
 import { Switch, SwitchPrimitive } from "@/components/ui/btn/switch";
 import { Title } from "@/components/ui/typography/title";
 import { useSession } from "@/context/app";
+import { FormProvider } from "@/context/form";
 
 import { useAddresses } from "@/hooks/accounts/use-addresses";
+import { useNeedAuth } from "@/hooks/accounts/use-need-auth-redirect";
 import { useNewsletter } from "@/hooks/accounts/use-newsletter";
 import { useApi } from "@/hooks/useApi";
 import { useAsyncApi } from "@/hooks/useAsyncApi";
@@ -27,7 +31,7 @@ import React, { Suspense, useState } from "react";
 const Page = () => {
   const searchParams = useSearchParams();
   const { data, isFetched } = useApi<{
-    items: (Item & { size: string })[];
+    items: (Item & { size: string; quantity: number })[];
     total: number;
   }>({
     path: "/buy/checkout",
@@ -39,6 +43,7 @@ const Page = () => {
   const { user } = useSession();
   // const { watch, setValue } = useFormContext();
   console.log({ data, searchParams });
+  useNeedAuth();
 
   const { mutateAsync } = useAsyncApi({});
 
@@ -81,8 +86,8 @@ const Page = () => {
           Changer de compte
         </Btn>
       </div>
-      <div className="bg-secondary flex justify-between items-center w-full px-3 py-5 border-y">
-        <span className="font-medium uppercase text-foreground">
+      <div className="bg-secondary flex justify-between items-center w-full px-3 py-5 border-y ">
+        <span className="font-medium uppercase text-foreground text-sm">
           Total de la commande
         </span>
         <span className="text-2xl font-bold">{total} €</span>
@@ -172,40 +177,39 @@ const Page = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col border-t py-10 gap-10 px-3">
+      <div className="flex flex-col border-t py-10  px-3">
         <div className="flex flex-col">
           <Title className="text-2xl">Résumé de la commande</Title>
         </div>
-        <div className="flex w-full gap-5">
-          <div className="relative">
-            <Image
-              src={data?.items[0].main_image}
-              alt={data?.items[0].name}
-              width={100}
-              height={100}
+        <div className="flex flex-col divide-y divide-dashed">
+          {data.items.map((item, i) => (
+            <ViewOrderItem key={`order-item-${i}`} item={item} />
+          ))}
+        </div>
+
+        <div className="py-5 w-full flex flex-col gap-2 text-sm mt-5">
+          <FormProvider className="mb-2" onSubmit={() => {}}>
+            <Input
+              required
+              submit
+              id="promo"
+              defaultValue={""}
+              placeholder="Code promo"
             />
-            <span className="absolute w-10 h-10 bg-black text-white flex items-center justify-center rounded-full shadow-sm top-0 right-0 translate-x-1">
-              {data?.items?.length}
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <Title className="text-xl">{data?.items[0].name}</Title>
-            <p className="opacity-80 font-light text-s">
-              Taille : {data?.items[0].size}
+          </FormProvider>
+          <div className="flex justify-between  items-center">
+            <h6 className="text-xs font-medium">Expédition</h6>
+            <p className="opacity-80 font-semibold uppercase text-xs">
+              {total > 250 ? "Gratuit" : "25 €"}
             </p>
           </div>
-        </div>
-        <div className="flex justify-between items-center">
-          <Title className="text-xl">Expédition</Title>
-          <p className="opacity-80 font-light text-s">
-            {total > 250 ? 0 : 25} €
-          </p>
-        </div>
-        <div className="flex justify-between items-center">
-          <Title className="text-xl">Total</Title>
-          <p className="opacity-80 font-light text-s">
-            {total > 250 ? total : total + 25} €
-          </p>
+          <div className="flex justify-between  items-center">
+            <h6 className=" font-bold text-xl">Total</h6>
+            <p className="opacity-80 font-semibold uppercase  text-lg ">
+              <span className="text-sm text-muted-foreground">EUR</span> {"  "}
+              {total > 250 ? total : total + 25} €
+            </p>
+          </div>
         </div>
 
         <Btn
@@ -249,6 +253,14 @@ const Page = () => {
           Payer maintenant
         </Btn>
       </div>
+      <p className="text-xs font-light  p-5 border-t">
+        Les articles soldés ne peuvent pas être retournés en boutique et doivent
+        être renvoyés par la voie postale uniquement.
+        <br />
+        <br />
+        Bonne nouvelle : Le montant total que vous payez inclut tous les droits
+        de douane et taxes applicables.
+      </p>
     </div>
   ) : isFetched ? (
     <div>Aucune commande trouvée</div>

@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(
-      { message: "OK", result: { id: result.id } },
+      { message: "OK", result: { id: `${result.id}` } },
       { status: 201 }
     );
   } catch (error) {
@@ -65,6 +65,20 @@ export async function POST(request: NextRequest) {
   }
 }
 
+const castArr = (arr: { id: string; size: string }[]) => {
+  return Object.values(
+    arr.reduce((acc, item) => {
+      const key = `${item.id}-${item.size}`;
+      if (acc[key]) {
+        acc[key].quantity++;
+      } else {
+        acc[key] = { ...item, quantity: 1 };
+      }
+      return acc;
+    }, {} as { [key: string]: { id: string; size: string; quantity: number } })
+  );
+};
+
 export async function GET(request: NextRequest) {
   const sessionId = request.nextUrl.searchParams.get("id") as string;
   try {
@@ -80,10 +94,10 @@ export async function GET(request: NextRequest) {
     }[];
 
     const items = await Promise.all(
-      arr.map(async (item) => {
+      castArr(arr).map(async (item) => {
         return {
           ...(await getItemByIdQuery(Number(item.id))),
-          size: item.size,
+          ...item,
         };
       })
     );

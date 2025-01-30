@@ -86,7 +86,7 @@ const Element = ({
             }}
             animate={{ x: 0, zIndex: 1000 }}
             className={cn(
-              "bg-background text-black z-50 fixed  top-0 right-0 w-screen h-screen"
+              "bg-background text-black z-50 fixed  top-0 right-0 w-screen h-screen max-h-screen"
             )}
             onClick={(e) => setIsOpen(false)}
           >
@@ -103,7 +103,9 @@ const Element = ({
                 <Icon icon="mdi:close"></Icon>
               </Btn>
             </div>
-            <div className={cn("py-10 w-full h-full", className)}>
+            <div
+              className={cn("py-10 w-full h-full overflow-y-auto", className)}
+            >
               {children}
             </div>
           </motion.div>

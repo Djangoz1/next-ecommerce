@@ -1,6 +1,14 @@
 import { pool } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
-import { checkUpdateDefault } from "./[id]/route";
+
+const checkUpdateDefault = async (user_id: string) =>
+  await pool
+    .from("addresses")
+    .update({ default: false })
+    .eq("user_id", user_id)
+    .eq("default", true)
+    .select()
+    .single();
 
 export async function POST(request: NextRequest) {
   const body = await request.json();

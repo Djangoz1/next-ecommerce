@@ -1,7 +1,9 @@
 "use client";
 
 import { OrderDetails } from "@/components/features/order-details";
+import { BoxEmpty } from "@/components/ui/box/box-empty";
 import { Loader } from "@/components/ui/box/loader";
+import { Btn } from "@/components/ui/btn";
 
 import { useSession } from "@/context/app";
 import { useGetOrders } from "@/hooks/orders/use-get-orders";
@@ -30,7 +32,11 @@ const PageAccountOrders = () => {
               ))}
             </div>
           ) : (
-            <div>Aucune commande</div>
+            <BoxEmpty text="Aucune commande trouvée">
+              <Btn variant="primary" className="" size="xs" href="/shop/women">
+                Retour à la boutique
+              </Btn>
+            </BoxEmpty>
           )}
         </div>
       ) : (

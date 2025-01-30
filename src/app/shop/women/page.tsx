@@ -15,11 +15,13 @@ const StorePage = ({}) => {
   const searchParams = useSearchParams();
   const type = (searchParams.get("t") as Item["type"]) || "dress";
 
-  const { data, isFetched } = useGetItems({
+  const { data, isFetched, ...rest } = useGetItems({
     params: {
       type,
     },
   });
+
+  console.log({ items: data, rest });
 
   return (
     <div className="flex flex-col w-full divide-y">

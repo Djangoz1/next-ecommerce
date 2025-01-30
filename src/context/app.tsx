@@ -14,6 +14,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { createContext, useContext } from "react";
 
 const queryClient = new QueryClient();
@@ -45,7 +46,7 @@ const Element = ({ children }: { children: React.ReactNode }) => {
 
   const { toast } = useToast();
   const client = useQueryClient();
-
+  const router = useRouter();
   return (
     <>
       <AppContext.Provider
@@ -64,6 +65,7 @@ const Element = ({ children }: { children: React.ReactNode }) => {
                 title: "Vous avez été déconnecté",
                 description: `À bientôt ${name}`,
               });
+              router.push("/");
             }
           },
         }}

@@ -1,7 +1,7 @@
 import { pool } from "@/utils/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export const checkUpdateDefault = async (user_id: string) =>
+const checkUpdateDefault = async (user_id: string) =>
   await pool
     .from("addresses")
     .update({ default: false })

@@ -13,9 +13,6 @@ export const useGetItems = ({
     enabled,
     queryKey: ["items", type],
     queryFn: async () => {
-      const userRes = await clientDb.auth.getUser();
-      const user = userRes.data.user;
-      if (!user) throw new Error("User not found");
       const { data, error } = type
         ? await clientDb.from("items").select("*").eq("type", type)
         : await clientDb.from("items").select("*");

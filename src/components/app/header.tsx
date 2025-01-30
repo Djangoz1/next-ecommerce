@@ -81,11 +81,11 @@ export const Header = () => {
 
 const Sidebar = () => {
   const { isOpen, setIsOpen } = useModal();
-  const { user } = useSession();
+  const { user, logout } = useSession();
 
   return (
     <Modal
-      className="py-0"
+      className="pb-40 pt-0"
       btnProps={{
         variant: "ghost",
         children: (
@@ -98,7 +98,7 @@ const Sidebar = () => {
         className: "w-fit h-fit px-1 py-1",
       }}
     >
-      <>
+      <div>
         <motion.div className="flex flex-col divide-y">
           <div onClick={(e) => e.stopPropagation()} className="w-full">
             <Button
@@ -156,13 +156,19 @@ const Sidebar = () => {
             {...(user
               ? { href: "/account", children: "Mon compte" }
               : {
-                  href: "/account/login",
+                  href: "/auth/sign-in",
                   children: "Se connecter",
                 })}
             size="sm"
           />
+
+          {user ? (
+            <Btn variant="link" size="sm" onClick={logout}>
+              Se déconnecter
+            </Btn>
+          ) : null}
         </div>
-      </>
+      </div>
     </Modal>
   );
 };

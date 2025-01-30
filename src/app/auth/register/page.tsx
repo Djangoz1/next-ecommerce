@@ -126,7 +126,7 @@ const PageAccountLogin = () => {
             Créer un compte
           </Btn>
           <div className="flex justify-end w-full text-muted-foreground">
-            <Btn variant="link" size="xs" href="/account/login">
+            <Btn variant="link" size="xs" href="/auth/sign-in">
               J'ai déjà un compte
             </Btn>
           </div>

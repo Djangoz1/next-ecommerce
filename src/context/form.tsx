@@ -8,8 +8,10 @@ export function FormProvider({
   onSubmit,
   onChange,
   className,
+
   formRef,
 }: {
+  onClick?: () => void;
   formRef?: React.RefObject<HTMLFormElement>;
   className?: string;
   onSubmit: (e: Record<string, string | number | boolean | string[]>) => void;
@@ -29,6 +31,7 @@ export function FormProvider({
     <>
       <ReactFormProvider {...methods}>
         <form
+          onClick={(e) => e.stopPropagation()}
           ref={formRef}
           className={className}
           onChange={() => {

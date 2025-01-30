@@ -2,6 +2,7 @@
 
 import { FormAddress } from "@/components/features/account/form-address";
 import { ViewAddress } from "@/components/features/account/view-address";
+import { BoxEmpty } from "@/components/ui/box/box-empty";
 import { Loader } from "@/components/ui/box/loader";
 
 import { Modal } from "@/components/ui/box/modal";
@@ -71,9 +72,7 @@ const PageAccountAddresses = () => {
                 </div>
               ))
             ) : (
-              <p className="p-20 py-40 w-full text-center  uppercase font-medium">
-                Vous n'avez pas encore renseigné d'addresse
-              </p>
+              <BoxEmpty text="Vous n'avez pas encore renseigné d'adresse" />
             )}
           </div>
           <Modal

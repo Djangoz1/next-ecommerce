@@ -30,7 +30,7 @@ export const Footer = () => {
               children: <>Gérer mon retour</>,
             },
             {
-              url: "#",
+              url: "/account",
               children: <>Mon compte</>,
             },
           ]}
