@@ -21,42 +21,41 @@ const PageAuthSignIn = () => {
       <div className="flex   flex-col xl:w-1/3 w-full p-5 bg-background shadow pt-20 h-full">
         <FormProvider
           onSubmit={async (e) => {
-            if (!e.email || !e.password)
-              throw new Error("Email or password is required");
-            const res = await clientDb.auth.signInWithPassword({
-              email: e.email as string,
-              password: e.password as string,
-            });
+            if (!e.email) throw new Error("Email or password is required");
+            const res = await clientDb.auth.resetPasswordForEmail(
+              e.email as string,
+              {
+                redirectTo: `${
+                  process.env.APP_URL || "http://localhost:3000"
+                }/auth/reset-password`,
+              }
+            );
             console.log({ logRes: res });
             if (res.error) throw new Error(res.error.message);
-            if (!res.data.user) throw new Error("User not found");
-            refresh();
-            router.push("/account");
           }}
           className="flex flex-col gap-5 w-full py-5 "
         >
           <h6 className="text-center  w-full font-light uppercase">
-            Clients
+            <b className="font-medium text-2xl">Mot de passe</b>
             <br />
-            <b className="font-medium text-2xl">enregistrés</b>
+            oublié
           </h6>
+          <p className="text-center text-xs font-light text-muted-foreground">
+            Veuillez entrer votre email ci-dessous pour recevoir un lien et
+            réinitialiser votre mot de passe.
+          </p>
 
           <Input required id="email" placeholder="Addresse email" />
-          <Input
-            required
-            id="password"
-            type="password"
-            placeholder="Mot de passe"
-          />
+
           <Btn type="submit" variant="primary" size="sm" className="w-full">
-            Se connecter
+            Valider
           </Btn>
           <div className="flex justify-between w-full text-muted-foreground">
-            <Btn variant="link" size="sm" href="/auth/register">
-              S'inscrire
+            <Btn variant="link" size="sm" href="/auth/sign-in">
+              Se connecter
             </Btn>
-            <Btn variant="link" size="sm" href="/auth/recover">
-              Mot de passe oublié
+            <Btn variant="link" size="sm" href="/auth/register">
+              Créer un compte
             </Btn>
           </div>
         </FormProvider>

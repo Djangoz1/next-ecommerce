@@ -1,6 +1,8 @@
 "use client";
 import { ViewAddress } from "@/components/features/account/view-address";
 import { clearPendingItems } from "@/components/features/btn-buying-action";
+import { ViewOrderItem } from "@/components/features/items/view-order-item";
+import { OrderDetails } from "@/components/features/order-details";
 import { BoxError } from "@/components/ui/box/box-error";
 import { Loader } from "@/components/ui/box/loader";
 import { Title } from "@/components/ui/typography/title";
@@ -67,11 +69,12 @@ const Page = () => {
   if (!data) return null;
 
   console.log({ data });
+
   return data ? (
     <div className="py-20">
-      <div className="flex flex-col text-center items-center justify-center pb-20 w-full">
-        <Icon icon="mingcute:check-fill" className="text-4xl text-green-500" />
+      <div className="flex flex-col text-center px-10 items-center justify-center pb-10 w-full">
         <Title className="text-2xl">Commande réussie</Title>
+        <Icon icon="mingcute:check-fill" className="text-4xl text-green-500" />
         <p className="text-sm font-light">
           Votre commande a été passée avec succès. Vous recevrez un email de
           confirmation dans les prochaines minutes.
@@ -100,30 +103,22 @@ const Page = () => {
           Commande reçue
         </BoxIcon>
       </div> */}
-      <div className="flex flex-col divide-y">
-        {data?.map((items, i) => (
-          <div key={`image-${i}`} className="flex gap-5 px-3 py-5">
-            <Image
-              src={items[0].items.main_image}
-              alt="image"
-              width={100}
-              height={100}
-              className=""
-            />
-            <div className="flex flex-col">
-              <Title className="text-lg">{items[0].items.name}</Title>
-              <p className="text-sm">{items[0].items.abstract_description}</p>
-              <span className="text-sm">QTY: {items?.length}</span>
-              <span className="font-bold text-sm">
-                $ {Number(items[0].items.price || 0) * items.length}
-              </span>
-            </div>
-          </div>
+      <div className="flex flex-col divide-y border-y divide-dashed">
+        {data?.items?.map((item, i) => (
+          <ViewOrderItem
+            key={`order-details-${i}`}
+            className="px-5"
+            item={{
+              ...item.items,
+              size: item.size,
+              quantity: Number(item.quantity),
+            }}
+          />
         ))}
       </div>
       <div className="flex flex-col gap-5 px-3">
         <Title className="text-lg">Livraison</Title>
-        <ViewAddress id="main" data={data[0][0].addresses} />
+        <ViewAddress id="main" data={data.address} />
       </div>
     </div>
   ) : !isFetched || isLoading ? (

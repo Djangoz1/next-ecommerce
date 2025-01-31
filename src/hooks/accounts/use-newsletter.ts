@@ -22,7 +22,7 @@ export const useNewsletter = ({
         .from("newsletter")
         .select("*")
         .eq("email", user.email)
-        .single();
+        .maybeSingle();
 
       if (error) throw new Error(error.message);
 

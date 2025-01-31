@@ -1,10 +1,11 @@
 "use client";
 
+import { BaseHookResult } from "@/types/app";
 import { Address } from "@/types/customer";
 import { Buying, Item } from "@/types/items";
 import { clientDb } from "@/utils/client-db";
 import { useQuery } from "@tanstack/react-query";
-
+export type GetOrderHook = BaseHookResult<typeof useGetOrder>;
 export const useGetOrder = ({
   enabled = true,
   params: { stripe_id },
@@ -23,24 +24,38 @@ export const useGetOrder = ({
       if (!user) throw new Error("User not found");
       const { data, error } = await clientDb
         .from("buying")
-        .select("*, items(*), addresses(*)")
+        .select("*, items(*)")
         .eq("stripe_id", stripe_id);
-      const arr = data as (Buying & { items: Item; addresses: Address })[];
+      const arr = data as (Buying & { items: Item })[];
       if (error) throw new Error(error.message);
       if (!arr.length) throw new Error("No items found");
-      const castArr = arr.reduce(
-        (acc: (Buying & { items: Item; addresses: Address })[][], item) => {
-          const existingGroup = acc.find((group) => group[0]?.id === item.id);
 
-          if (existingGroup) {
-            existingGroup.push(item);
+      const { data: addresses, ...rest } = await clientDb
+        .from("addresses")
+        .select("*")
+        .eq("id", arr[0].address_id)
+        .single();
+
+      const castArr = Object.values(
+        arr.reduce(
+          (
+            acc: Record<string, Buying & { items: Item; quantity: number }>,
+            item
+          ) => {
+            const key = `${item.item_id}-${item.size}`;
+
+            if (acc[key]) {
+              acc[key].quantity++;
+            } else {
+              acc[key] = { ...item, quantity: 1 };
+            }
+
             return acc;
-          }
-          return [...acc, [item]];
-        },
-        []
+          },
+          {} as Record<string, Buying & { items: Item; quantity: number }>
+        )
       );
-      return castArr;
+      return { items: castArr, address: addresses as Address };
     },
   });
 };

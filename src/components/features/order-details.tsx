@@ -15,6 +15,7 @@ import { useSession } from "@/context/app";
 import { GetOrdersHook } from "@/hooks/orders/use-get-orders";
 
 import { ViewAddress } from "./account/view-address";
+import { ViewOrderItem } from "./items/view-order-item";
 
 const orderId = (data: GetOrdersHook[0]) => {
   return `${data.address.first_name[0]}${data.address.last_name[0]}${data.address.zipcode[0]}${data.address.id}-${data.items[0].id}-${data.items[0].item_id}`;
@@ -140,50 +141,59 @@ export const OrderDetails = ({ data }: { data: GetOrdersHook[0] }) => {
 
             <div className="flex flex-col  divide-y border-y">
               {data.items.map((item, i) => (
-                <div
-                  key={`order-item-${item.id}-${i}`}
-                  className={cn(
-                    "flex p-5  gap-5",
-                    i % 2 === 0 ? "bg-gray-100" : "bg-gray-300"
-                  )}
-                >
-                  <Image
-                    src={item.items.main_image}
-                    alt={item.items.name}
-                    width={100}
-                    height={100}
-                    className="w-28"
-                  />
+                <ViewOrderItem
+                  className="px-5"
+                  key={`order-${i}`}
+                  item={{
+                    ...item.items,
 
-                  <div className="flex flex-col justify-between w-full ">
-                    <div className="flex flex-col w-full">
-                      <div className="flex gap-2 items-center w-full justify-between">
-                        <Title className="text-lg">{item.items.name}</Title>
-                        <Badge>
-                          {
-                            {
-                              dress: "Vêtements",
-                              painting: "Peintures",
-                              miniature: "Miniatures",
-                            }[item.items.type]
-                          }
-                        </Badge>
-                      </div>
-                      <p className="font-light text-xs">
-                        {item.items.abstract_description}
-                      </p>
-                    </div>
-                    <div className="flex flex-col  mt-auto">
-                      <p className="text-xs">Taille : {item.size}</p>
-                      <div className="flex gap-10 items-end justify-between w-full">
-                        <p className="text-xs">
-                          €{Number(item.items.price) * item.items.quantity}
-                        </p>
-                        <p className="font-bold">x{item.items.quantity}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                    size: item.size,
+                  }}
+                />
+                // <div
+                //   key={`order-item-${item.id}-${i}`}
+                //   className={cn(
+                //     "flex p-5  gap-5",
+                //     i % 2 === 0 ? "bg-gray-100" : "bg-gray-300"
+                //   )}
+                // >
+                //   <Image
+                //     src={item.items.main_image}
+                //     alt={item.items.name}
+                //     width={100}
+                //     height={100}
+                //     className="w-28"
+                //   />
+
+                //   <div className="flex flex-col justify-between w-full ">
+                //     <div className="flex flex-col w-full">
+                //       <div className="flex gap-2 items-center w-full justify-between">
+                //         <Title className="text-lg">{item.items.name}</Title>
+                //         <Badge>
+                //           {
+                //             {
+                //               dress: "Vêtements",
+                //               painting: "Peintures",
+                //               miniature: "Miniatures",
+                //             }[item.items.type]
+                //           }
+                //         </Badge>
+                //       </div>
+                //       <p className="font-light text-xs">
+                //         {item.items.abstract_description}
+                //       </p>
+                //     </div>
+                //     <div className="flex flex-col  mt-auto">
+                //       <p className="text-xs">Taille : {item.size}</p>
+                //       <div className="flex gap-10 items-end justify-between w-full">
+                //         <p className="text-xs">
+                //           €{Number(item.items.price) * item.items.quantity}
+                //         </p>
+                //         <p className="font-bold">x{item.items.quantity}</p>
+                //       </div>
+                //     </div>
+                //   </div>
+                // </div>
               ))}
             </div>
           </div>
@@ -207,7 +217,7 @@ export const OrderDetails = ({ data }: { data: GetOrdersHook[0] }) => {
             <ViewAddress id="main" data={data.address} />
           </div>
           <span className="opacity-50 hover:opacity-100 hover:underline text-xs font-extralight px-5">
-            # {data.stripe_id}
+            # {orderId(data)}
           </span>
         </div>
       ) : null}

@@ -2,11 +2,10 @@
 
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
+
 import React, { useEffect, useState } from "react";
 import { Title } from "../ui/typography/title";
-import Link from "next/link";
+
 import { Btn } from "../ui/btn";
 
 import { handleCheckout } from "@/services/stripe-js";

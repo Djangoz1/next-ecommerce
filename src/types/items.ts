@@ -1,3 +1,5 @@
+import { Address } from "./customer";
+
 type BaseMetadata = {
   title: string | null;
   content: string[];
@@ -36,6 +38,7 @@ export type Buying = {
   item_id: number;
   stripe_id: string;
   size: string;
+  address_id: Address["id"];
   message: string | null;
   status: "pending" | "paid" | "shipped" | "delivered" | "cancelled";
   created_at: string;
