@@ -50,6 +50,8 @@ export const useAsyncApi = ({
               : JSON.stringify(params),
         });
 
+        console.log({ reszerzefez: res });
+
         const data = await res.json();
         if (!res.ok) {
           throw new Error(res.statusText || "Error fetching items");

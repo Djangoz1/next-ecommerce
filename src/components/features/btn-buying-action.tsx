@@ -6,6 +6,7 @@ import { Item } from "@/types/items";
 import { AnimatePresence, motion } from "framer-motion";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { BtnItemSizeGuide } from "./items/btn-item-size-guide";
 
 export const clearPendingItems = (queryClient: QueryClient) => {
   if (typeof window !== "undefined") {
@@ -25,6 +26,7 @@ export const BtnBuyingAction = ({ item }: { item: Item }) => {
         onClick={() => setIsOpen(true)}
         variant="primary"
         className="w-full text-center justify-center"
+        size="sm"
       >
         Ajouter au panier
       </Btn>
@@ -76,12 +78,9 @@ export const BtnBuyingAction = ({ item }: { item: Item }) => {
                   )
                 )}
               </div>
-              <Btn
-                variant="ghost"
-                className="w-full text-center !text-[10px] underline justify-center border-t-black/50 rounded-none"
-              >
-                Guide des tailles
-              </Btn>
+              <div className="w-full py-5">
+                <BtnItemSizeGuide />
+              </div>
             </motion.div>
           </motion.div>
         ) : null}

@@ -12,7 +12,7 @@ export const Tabs = ({
   const [active, setActive] = useState(0);
   return (
     <div className={cn("flex flex-col gap-5", className)}>
-      <div className="flex gap-5">
+      <div className="flex gap-5 justify-center">
         {arr.map((item, index) => (
           <button
             key={index}

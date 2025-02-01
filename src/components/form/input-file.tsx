@@ -2,21 +2,29 @@
 import { useAsyncApi } from "@/hooks/useAsyncApi";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 export const InputFile = ({
   id,
   fn,
+  required = false,
   ...props
 }: {
   keys?: string[];
+  defaultValue?: string;
+  required?: boolean;
   id: string;
   className?: string;
   fn?: (formData: FormData) => FormData;
 }) => {
   const { watch, setValue } = useFormContext();
   const { mutateAsync } = useAsyncApi({});
+  useEffect(() => {
+    if (props.defaultValue) {
+      setValue(id, props.defaultValue);
+    }
+  }, [props.defaultValue]);
 
   return (
     <>
@@ -40,6 +48,7 @@ export const InputFile = ({
         <input
           type="file"
           className="absolute w-full h-full opacity-0"
+          required={required}
           multiple
           onChange={async (e) => {
             try {

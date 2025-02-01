@@ -9,7 +9,7 @@ import { Title } from "../ui/typography/title";
 
 import { BtnBagAction } from "../features/btn-bag-action";
 import { Btn } from "../ui/btn";
-import { Modal, ModalProvider, useModal } from "../ui/box/modal";
+import { ModalPrimitive, ModalProvider, useModal } from "../ui/box/modal";
 import { useSession } from "@/context/app";
 export const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -80,21 +80,15 @@ export const Header = () => {
 };
 
 const Sidebar = () => {
-  const { isOpen, setIsOpen } = useModal();
+  const { setIsOpen } = useModal();
   const { user, logout } = useSession();
 
   return (
-    <Modal
+    <ModalPrimitive
       className="pb-40 pt-0"
       btnProps={{
         variant: "ghost",
-        children: (
-          <Icon
-            icon={isOpen ? "system-uicons:cross" : "line-md:menu"}
-            width={"20"}
-            height={"20"}
-          />
-        ),
+        children: <Icon icon={"line-md:menu"} width={"20"} height={"20"} />,
         className: "w-fit h-fit px-1 py-1",
       }}
     >
@@ -169,7 +163,7 @@ const Sidebar = () => {
           ) : null}
         </div>
       </div>
-    </Modal>
+    </ModalPrimitive>
   );
 };
 
@@ -221,6 +215,7 @@ const Button = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+
   return (
     <div
       onClick={() => {
@@ -249,6 +244,7 @@ const Button = ({
               className="uppercase font-medium"
               onClick={() => {
                 onClick?.();
+
                 setIsOpen(!isOpen);
               }}
               href={item.url}

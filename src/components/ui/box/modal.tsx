@@ -5,6 +5,7 @@ import { Btn, BtnProps } from "../btn";
 import { cn } from "@/utils/cn";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Logo } from "@/components/app/logo";
+
 type Ctx = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
@@ -59,7 +60,8 @@ const Element = ({
       {props.btnProps.variant === "primitive" ? (
         <div
           className={cn(props.btnProps.className || "")}
-          onClick={(e) => {
+          onClick={async (e) => {
+            props.btnProps.onClick?.(e);
             setIsOpen(true);
           }}
         >
@@ -85,9 +87,9 @@ const Element = ({
             transition={{
               duration: 0.3,
             }}
-            animate={{ x: 0, zIndex: 1000 }}
+            animate={{ x: 0, zIndex: 999 }}
             className={cn(
-              "bg-background text-black z-50 fixed  top-0 right-0 w-screen h-screen max-h-screen"
+              "bg-background text-black  fixed  top-0 right-0 w-screen h-screen max-h-screen"
             )}
             onClick={(e) => setIsOpen(false)}
           >

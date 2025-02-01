@@ -8,8 +8,6 @@ import { useFormContext } from "react-hook-form";
 import { Btn } from "../ui/btn";
 import { Textarea } from "../form/textarea";
 import { Icon } from "@iconify/react/dist/iconify.js";
-
-import { useQueryClient } from "@tanstack/react-query";
 import { MultipleInput } from "../form/multiple-input";
 import { SelectBtn } from "../form/select-btn";
 
@@ -23,10 +21,87 @@ import { ItemTraceabilityMultipleInput } from "./admin/item-traceability-multipl
 import { useAsyncApi } from "@/hooks/useAsyncApi";
 import { useGetItem } from "@/hooks/items/use-get-item";
 import { InputFile } from "../form/input-file";
+import { FormProvider } from "@/context/form";
+import { useModal } from "../ui/box/modal";
+import { useToast } from "@/hooks/use-toast";
 
 export const AdminItem = ({ isActive }: { isActive: string }) => {
-  const { watch, setValue } = useFormContext();
-  const client = useQueryClient();
+  const { mutateAsync } = useAsyncApi({
+    invalidateQueries: [["api", `/items/${isActive}`]],
+  });
+
+  const { toast } = useToast();
+
+  const { setIsOpen } = useModal();
+
+  return (
+    <>
+      <FormProvider
+        onSubmit={async (e) => {
+          console.log({ cououc: e });
+          if (!e["main_image"]) {
+            return toast({
+              title: "Erreur",
+              description: "Veuillez ajouter une image",
+              variant: "destructive",
+            });
+          }
+          const params = {
+            name: e[`name`],
+            type: e[`type`],
+            stock: e[`stock`],
+            description: e[`description`],
+            abstract_description: e[`abstract_description`],
+            main_image: e[`main_image`],
+            price: e[`price`],
+            discount: e[`discount`],
+            care: e[`care`],
+            compo: e[`compo`],
+            details: e[`details`],
+            details_title: e[`details_title`],
+            traceability: e[`traceability`],
+            engagements: e[`engagements`],
+            model_name: e[`model_name`],
+            regular: e[`regular`],
+            size: e[`size`],
+            tall: e[`tall`],
+            dimension: e[`dimension`],
+            centimeters_by_size: e[`centimeters_by_size`],
+          };
+          console.log({ params });
+
+          const data = await mutateAsync({
+            params,
+            invalidateQueries: [["item", `${isActive}`], ["items"]],
+            ...(isActive === "new"
+              ? {
+                  method: "POST",
+                  path: "/items",
+                  toast: {
+                    description: "Produit créé",
+                  },
+                }
+              : {
+                  method: "PUT",
+                  path: `/items/${isActive}`,
+                  toast: {
+                    description: "Produit modifié",
+                  },
+                }),
+          });
+          console.log({ data });
+          setIsOpen(false);
+        }}
+        className="flex flex-col divide-y divide-dashed pb-40 divide-muted-foreground"
+      >
+        <Element isActive={isActive} />
+      </FormProvider>
+    </>
+  );
+};
+const Element = ({ isActive }: { isActive: string }) => {
+  const { watch } = useFormContext();
+  const router = useRouter();
 
   const { data: item, isFetched } = useGetItem({
     params: { id: isActive === "new" ? undefined : Number(isActive) },
@@ -37,18 +112,13 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
     invalidateQueries: [["api", `/items/${isActive}`]],
   });
 
-  const router = useRouter();
-
   if (isActive !== "new" && !item && !isFetched) {
     return <Loader />;
   }
 
   return (
     <>
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="flex flex-col divide-y divide-dashed"
-      >
+      <>
         <Box
           title="Fiche du produit"
           description="Informations mise en avant pour la fiche produit"
@@ -63,7 +133,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                 { label: "Les miniatures", value: "miniature" },
                 { label: "Les peintures", value: "painting" },
               ]}
-              id={`type-${isActive}`}
+              id={`type`}
               defaultValue={item?.type || "dress"}
             />
           ) : (
@@ -81,16 +151,16 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
             title="Nom du produit"
             placeholder={"Robe Mila"}
             key={`input-name-${isActive}`}
-            id={`name-${isActive}`}
+            id={`name`}
             required
             type="text"
             defaultValue={item?.name}
           />
           <Input
             placeholder={"Robe longue côtelée cache coeur"}
-            key={`input-abstract_description-${isActive}`}
+            key={`input-abstract_description`}
             title="Description courte"
-            id={`abstract_description-${isActive}`}
+            id={`abstract_description`}
             required
             defaultValue={item?.abstract_description}
           />
@@ -102,7 +172,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
             }
             required
             key={`textarea-description-${isActive}`}
-            id={`description-${isActive}`}
+            id={`description`}
             defaultValue={item?.description}
           />
         </Box>
@@ -110,7 +180,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
         <Box className="grid grid-cols-2" title="Prix" description="Prix en €">
           <Input
             key={`input-price-${isActive}`}
-            id={`price-${isActive}`}
+            id={`price`}
             placeholder={"100 €"}
             type="number"
             title="Prix"
@@ -120,7 +190,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
           />
           <Input
             key={`input-discount-${isActive}`}
-            id={`discount-${isActive}`}
+            id={`discount`}
             type="number"
             title="Solde en %"
             placeholder="10%"
@@ -130,7 +200,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
           />
           <Input
             title="Stock"
-            id={`stock-${isActive}`}
+            id={`stock`}
             type="number"
             placeholder={"10 pièces"}
             key={`input-stock-${isActive}`}
@@ -142,7 +212,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
         <Box title="Détails" description="Décrivez les détails du produit">
           <Input
             title="Type du produit"
-            id={`details_title-${isActive}`}
+            id={`details_title`}
             defaultValue={item?.metadata?.details?.title || ""}
             placeholder={"Robe longue"}
             required
@@ -151,7 +221,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
             title={"Liste de détails"}
             defaultValue={item?.metadata?.details?.content}
             placeholder={"Cuir côtelée"}
-            id={`details-${isActive}`}
+            id={`details`}
           />
         </Box>
 
@@ -176,9 +246,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                 >
                   <Image
                     src={el.image}
-                    alt={`image ${i} ${
-                      item?.name || watch(`name-${isActive}`)
-                    }`}
+                    alt={`image ${i} ${item?.name || watch(`name`)}`}
                     width={800}
                     height={800}
                     className="w-full h-full object-cover"
@@ -237,8 +305,10 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
               ))}
 
             <InputFile
-              id={`main_image-${isActive}`}
+              required
+              id={`main_image`}
               keys={["api", `/items/${isActive}`]}
+              defaultValue={item?.main_image}
               fn={(formData) => {
                 if (isActive !== "new") {
                   formData.append("itemId", isActive);
@@ -250,7 +320,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
 
           <Input
             placeholder={"Le manequin mesure 170cm et porte une taille 36"}
-            id={`tall-${isActive}`}
+            id={`tall`}
             defaultValue={item?.metadata?.model?.size}
             title="Taille du mannequin"
             type="number"
@@ -259,7 +329,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
           />
           <Input
             placeholder={"Henriette"}
-            id={`model_name-${isActive}`}
+            id={`model_name`}
             defaultValue={item?.metadata?.model?.name}
             title="Nom du mannequin"
             required
@@ -268,14 +338,14 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
             title="Dimension de la pièce"
             placeholder={"La pièce fait 113cm pour une taille 36"}
             type="number"
-            id={`dimension-${isActive}`}
+            id={`dimension`}
             defaultValue={item?.metadata?.model?.dimension}
             required
             min={1}
           />
           <Input
             placeholder={"1cm par taille supplémentaire"}
-            id={`centimeters_by_size-${isActive}`}
+            id={`centimeters_by_size`}
             defaultValue={item?.metadata?.model?.centimeters_by_size || "1"}
             type="number"
             title="Centimètre par taille"
@@ -286,7 +356,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
           <Input
             title="Taille de la pièce"
             placeholder="Taille 36"
-            id={`size-${isActive}`}
+            id={`size`}
             defaultValue={item?.metadata?.model?.size}
             type="number"
             required
@@ -304,7 +374,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                 value: false,
               },
             ]}
-            id={`regular-${isActive}`}
+            id={`regular`}
             defaultValue={item?.metadata?.model?.regular || true}
           />
         </Box>
@@ -317,7 +387,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
             title="Composition"
             defaultValue={item?.metadata?.compo?.content}
             placeholder={"52% viscose"}
-            id={`compo-${isActive}`}
+            id={`compo`}
           />
           <ItemCareMultipleInput data={item?.metadata} isActive={isActive} />
         </Box>
@@ -368,7 +438,7 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
         ) : (
           <></>
         )}
-      </div>
+      </>
     </>
   );
 };

@@ -13,7 +13,7 @@ export const InputNewsletter = () => {
     <FormProvider
       onSubmit={async (e) => {
         await mutateAsync({
-          params: { email: e.email },
+          params: { email: e["email-newsletter"] },
           toast: {
             title: "Inscription réussie",
             description: "Merci pour votre inscription à la newsletter !",
@@ -30,7 +30,7 @@ export const InputNewsletter = () => {
           submit
           defaultValue={""}
           placeholder="Addresse email"
-          id="email"
+          id="email-newsletter"
         />
       )}
     </FormProvider>

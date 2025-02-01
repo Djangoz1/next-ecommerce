@@ -10,14 +10,12 @@ export type GetOrdersHook = BaseHookResult<typeof useGetOrders>;
 
 export const useGetOrders = ({
   enabled = true,
-  params: { user_id, status, email, zipcode },
+  params: { user_id, status },
 }: {
   enabled?: boolean;
   params: {
     user_id?: string;
     status?: Buying["status"];
-    email?: string;
-    zipcode?: string;
   };
 }) => {
   return useQuery({
@@ -28,33 +26,21 @@ export const useGetOrders = ({
         ? ["status", status]
         : user_id
         ? ["user_id", user_id]
-        : email && zipcode
-        ? ["email", email, "zipcode", zipcode]
         : null;
 
-      let res =
-        email && zipcode
-          ? await clientDb
-              .from("buying")
-              .select("*, items(*)")
-              .eq("email", email)
-              .eq("zipcode", zipcode)
-          : payload
-          ? await clientDb
-              .from("buying")
-              .select("*, items(*)")
-              .eq(payload[0], payload[1])
-          : await clientDb.from("buying").select("*, items(*)");
+      let res = payload
+        ? await clientDb
+            .from("buying")
+            .select("*, items(*)")
+            .eq(payload[0], payload[1])
+        : await clientDb.from("buying").select("*, items(*)");
 
-      console.log({ res });
       if (res.error) throw new Error(res.error.message);
       const { data: address, ...rest } = await clientDb
         .from("addresses")
         .select(`*`)
         .eq("id", res.data[0].address_id)
         .maybeSingle();
-
-      console.log({ restsrqjrskjqsrj: rest });
 
       return formatBuying({
         data: res.data as (Buying & {

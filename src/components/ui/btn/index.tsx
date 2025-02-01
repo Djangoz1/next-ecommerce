@@ -27,7 +27,7 @@ export type BtnProps = {
   size?: keyof typeof sizes;
   href?: string;
   onClick?: (
-    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
+    e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement | HTMLDivElement>
   ) => void;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 export const Btn = ({

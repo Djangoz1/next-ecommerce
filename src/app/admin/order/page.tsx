@@ -19,7 +19,7 @@ const Page = () => {
 
   console.log({ data });
   return (
-    <div className="flex flex-col gap-5 ">
+    <div className="flex flex-col gap-5 py-5">
       <FormProvider className=" flex justify-center" onSubmit={() => {}}>
         <SelectBtn
           onUrl

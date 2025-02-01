@@ -1,13 +1,9 @@
 "use client";
-
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-
 import React, { useEffect, useState } from "react";
 import { Title } from "../ui/typography/title";
-
 import { Btn } from "../ui/btn";
-
 import { handleCheckout } from "@/services/stripe-js";
 import { useRouter } from "next/navigation";
 import { useGetItem } from "@/hooks/items/use-get-item";
@@ -20,7 +16,6 @@ export const BtnBagAction = () => {
     queryKey: ["pending-items"],
     queryFn: () => JSON.parse(localStorage.getItem("pending-items") || "[]"),
   });
-  console.log({ pendingItems });
 
   return (
     <>

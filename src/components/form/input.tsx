@@ -43,7 +43,7 @@ export const Input = ({
           setValue(props.id as string, e.target.value);
           props.onChange?.(e.target.value);
         }}
-        value={watch(props.id as string)}
+        value={watch(props.id as string) || ""}
       />
       {title ? (
         <label

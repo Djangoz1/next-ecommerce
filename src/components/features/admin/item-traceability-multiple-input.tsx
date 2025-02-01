@@ -25,7 +25,7 @@ export const ItemTraceabilityMultipleInput = ({
       placeholder={"100% Made in France"}
       title="Traçabilité"
       defaultValue={data?.traceability?.content || moock?.[0]?.content}
-      id={`traceability-${isActive}`}
+      id={`traceability`}
     />
   );
 };

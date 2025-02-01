@@ -2,7 +2,7 @@ import { BtnMenu } from "@/components/ui/btn/btn-menu";
 import React from "react";
 const LayoutAdmin = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex flex-col gap-10 py-20">
+    <div className="flex flex-col py-20">
       <BtnMenu
         arr={[
           {

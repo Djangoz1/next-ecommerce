@@ -20,6 +20,9 @@ import { DetailsEngagement } from "@/components/features/details-engagement";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 import { GetItemHook, useGetItem } from "@/hooks/items/use-get-item";
+import { ItemDiscount } from "@/components/features/items/item-discount";
+import { CarouselImg } from "@/components/ui/box/carousel-img";
+import { BtnItemSizeGuide } from "@/components/features/items/btn-item-size-guide";
 
 type BaseMetadata = {
   title: string;
@@ -41,14 +44,6 @@ export type ItemMetadata = {
     name: string;
   };
 };
-
-const images = [
-  "/model/1.jpg",
-  "/model/2.jpg",
-  "/model/3.jpg",
-  "/model/4.jpg",
-  "/model/5.jpg",
-];
 
 const Page = () => {
   const params = useParams();
@@ -139,9 +134,9 @@ const Device = ({ item }: { item: GetItemHook }) => {
                   title: "Détails",
                   component: (
                     <>
-                      {item.metadata.details.title}
+                      {item.metadata.details?.title}
                       <ul className="list-disc list-inside">
-                        {item.metadata.details.content.map((item, i) => (
+                        {item.metadata.details?.content.map((item, i) => (
                           <li key={`detail-metadata--${i}`}>{item}</li>
                         ))}
                       </ul>
@@ -176,50 +171,26 @@ const Device = ({ item }: { item: GetItemHook }) => {
 const Mobile = ({ item }: { item: GetItemHook }) => {
   return (
     <div className=" flex xl:hidden  flex-col w-full relative">
-      <div className="flex w-screen overflow-x-scroll">
-        {images.map((image, i) => (
-          <Image
-            className="w-screen"
-            key={`image-item-${i}`}
-            src={image}
-            width={1800}
-            height={1800}
-            alt={item.name + " image " + i}
-          />
-        ))}
-      </div>
+      <CarouselImg
+        images={[{ image: item.main_image }, ...item.gallery].map(
+          (image) => image.image
+        )}
+      />
+
       <div className="flex flex-col w-full  py-3 gap-5">
         <div className="flex w-full justify-between items-center gap-2 px-5 ">
           <div className="flex flex-col ">
             <Title className="text-xl">{item.name}</Title>
-            <p className="text-sm font-light">{item.abstract_description}</p>
+            <p className="text-sm font-extralight text-muted-foreground">
+              {item.abstract_description}
+            </p>
           </div>
 
-          <div className="flex whitespace-nowrap items-center gap-2 font-black text-xs">
-            {item.discount ? (
-              <>
-                <span className="font-medium line-through opacity-50">
-                  {item.price} €
-                </span>
-                <span className="font-black">
-                  {(
-                    Number(item.price) -
-                    Number(item.price) / item.discount
-                  ).toFixed(2)}{" "}
-                  €
-                </span>
-              </>
-            ) : (
-              <span className="">{item.price} €</span>
-            )}
-          </div>
+          <ItemDiscount item={item} />
         </div>
         <div className="px-5 flex flex-col items-center gap-5">
-          <BtnBuyingAction item={item} />
-          <button className="opacity-75 font-light">Guide des tailles</button>
-
           {item.stock === 0 ? (
-            <div className="bg-white shadow p-2 py-5 rounded-md border text-red-500 flex  items-center gap-2">
+            <div className="bg-destructive shadow p-2 py-5 rounded-md border text-destructive-foreground flex  items-center gap-2">
               <Icon icon="mdi:alert-circle" width="30" height="30" />
               <p className="text-xs font-light">
                 Cet article est en rupture de stock et n'est disponible qu'en
@@ -227,18 +198,24 @@ const Mobile = ({ item }: { item: GetItemHook }) => {
               </p>
             </div>
           ) : null}
+          <BtnBuyingAction item={item} />
+          <BtnItemSizeGuide />
         </div>
 
         <div className="flex flex-col w-full border-t divide-y divide-dashed">
           <BoxCascade title="Détails">
-            <>
-              {item.metadata.details.title}
-              <ul className="list-disc list-inside">
-                {item.metadata.details.content.map((item, i) => (
-                  <li key={`detail-metadata--${i}`}>{item}</li>
-                ))}
-              </ul>
-            </>
+            {item.metadata.details ? (
+              <>
+                {item.metadata.details?.title}
+                <ul className="list-disc list-inside">
+                  {item.metadata.details?.content.map((item, i) => (
+                    <li key={`detail-metadata--${i}`}>{item}</li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <span>Aucun détail </span>
+            )}
           </BoxCascade>
 
           <BoxCascade title="Coupe">
@@ -246,7 +223,7 @@ const Mobile = ({ item }: { item: GetItemHook }) => {
           </BoxCascade>
 
           <BoxCascade title="Compo & Care">
-            <DetailsCompoAndCare item={item} />,
+            <DetailsCompoAndCare item={item} />
           </BoxCascade>
           <BoxCascade title="Engagements">
             <DetailsEngagement item={item} />
