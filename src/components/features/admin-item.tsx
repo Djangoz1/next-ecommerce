@@ -15,7 +15,6 @@ import { SelectBtn } from "../form/select-btn";
 
 import { Loader } from "../ui/box/loader";
 
-import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Badge } from "../ui/btn/badge";
 import { ItemCareMultipleInput } from "./admin/item-care-multiple-input";
@@ -23,6 +22,7 @@ import { ItemEngagementMultipleInput } from "./admin/item-engagement-multiple-in
 import { ItemTraceabilityMultipleInput } from "./admin/item-traceability-multiple-input";
 import { useAsyncApi } from "@/hooks/useAsyncApi";
 import { useGetItem } from "@/hooks/items/use-get-item";
+import { InputFile } from "../form/input-file";
 
 export const AdminItem = ({ isActive }: { isActive: string }) => {
   const { watch, setValue } = useFormContext();
@@ -44,29 +44,16 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
   }
 
   return (
-    <div
-      className="fixed w-screen flex  h-screen top-0 left-0 bg-black/50 backdrop-blur z-[100] "
-      onClick={() => router.push("/admin")}
-    >
-      <motion.div
+    <>
+      <div
         onClick={(e) => e.stopPropagation()}
-        initial={{ x: -100 }}
-        animate={{ x: 0 }}
-        transition={{ duration: 0.3 }}
-        exit={{ x: -100 }}
-        className="flex pb-40  flex-col divide-y divide-dashed  w-screen xl:w-2/3   bg-background  xl:ml-auto overflow-y-scroll relative"
+        className="flex flex-col divide-y divide-dashed"
       >
-        <Btn
-          size="sm"
-          href={`/admin`}
-          className="m-5 xl:relative fixed top-5 right-5 xl:top-0 xl:right-0 !ml-auto z-10"
-        >
-          <Icon icon={"mdi:close"} className="text-2xl" /> Fermer
-        </Btn>
         <Box
           title="Fiche du produit"
           description="Informations mise en avant pour la fiche produit"
           className="grid grid-cols-2"
+          classNameBox="pt-0"
         >
           {isActive === "new" ? (
             <SelectBtn
@@ -249,58 +236,16 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
                 </div>
               ))}
 
-            <div className="w-[150px] relative border bg-background border-black/50  h-[150px] rounded-md shadow flex items-center justify-center cursor-pointer">
-              <div className="flex flex-col gap-3 items-center text-center">
-                <Icon icon={"line-md:image"} className="text-4xl" />
-                <span className="font-light text-xs">
-                  <span className="italic">
-                    Ajouter une image <br />
-                  </span>
-                  (800x1500)
-                </span>
-              </div>
-
-              <input
-                type="file"
-                className="absolute w-full h-full opacity-0"
-                multiple
-                onChange={async (e) => {
-                  try {
-                    console.log({ e: e.target?.files });
-                    if (!e.target?.files?.[0]) {
-                      return null;
-                    }
-                    for (const file of e.target?.files || []) {
-                      const formData = new FormData();
-                      formData.append("file", file);
-                      if (isActive !== "new") {
-                        formData.append("itemId", isActive);
-                      }
-
-                      let data = await mutateAsync({
-                        path: `/upload`,
-                        method: "POST",
-                        params: formData,
-                        headers: false,
-                        toast: {
-                          description: "Image ajoutée",
-                        },
-                      });
-
-                      if (!watch(`main_image-${isActive}`)) {
-                        setValue(`main_image-${isActive}`, data.result.url);
-                      }
-                    }
-
-                    await client.invalidateQueries({
-                      queryKey: ["api", `/items/${isActive}`],
-                    });
-                  } catch (error) {
-                    console.log("error", error);
-                  }
-                }}
-              />
-            </div>
+            <InputFile
+              id={`main_image-${isActive}`}
+              keys={["api", `/items/${isActive}`]}
+              fn={(formData) => {
+                if (isActive !== "new") {
+                  formData.append("itemId", isActive);
+                }
+                return formData;
+              }}
+            />
           </div>
 
           <Input
@@ -423,8 +368,8 @@ export const AdminItem = ({ isActive }: { isActive: string }) => {
         ) : (
           <></>
         )}
-      </motion.div>
-    </div>
+      </div>
+    </>
   );
 };
 
@@ -433,14 +378,21 @@ const Box = ({
   children,
   description,
   className = "",
+  classNameBox = "",
 }: {
   title: string;
   children: ReactNode;
   description: ReactNode;
   className?: string;
+  classNameBox?: string;
 }) => {
   return (
-    <div className="flex justify-between  xl:flex-row flex-col p-5 py-20  gap-10  w-full xl:p-10">
+    <div
+      className={cn(
+        "flex justify-between  xl:flex-row flex-col p-5 py-20 pt-10  gap-10  w-full xl:p-10",
+        classNameBox
+      )}
+    >
       <div className="flex flex-col xl:w-1/4">
         <Title className=" text-xl">{title}</Title>
 

@@ -18,6 +18,7 @@ import { Loader } from "@/components/ui/box/loader";
 import { useAsyncApi } from "@/hooks/useAsyncApi";
 import { Item } from "@/types/items";
 import { useGetItems } from "@/hooks/items/use-get-items";
+import { Modal } from "@/components/ui/box/modal";
 
 const PageAdmin = () => {
   const itemId = Number(useSearchParams().get("item_id"));
@@ -98,50 +99,63 @@ const Page = () => {
       <div key={`form-${isActive}`} className="flex flex-col divide-y border-y">
         <div className="w-full items-center flex gap-5  p-5 bg-black/5 justify-between border-y border-black">
           <Title className="text-lg"> Sélectionner un produit</Title>
-          <Btn size="xs" variant="primary" href={`/admin?create=true`}>
-            Créer un produit
-          </Btn>
+          <Modal
+            btnProps={{
+              variant: "primary",
+              children: "Créer un produit",
+              size: "xs",
+            }}
+          >
+            <AdminItem isActive={"new"} />
+          </Modal>
         </div>
         {data?.map((item, i) => (
-          <Link
-            href={isActive === item.id ? `/admin` : `/admin?item_id=${item.id}`}
+          <Modal
             key={`item-${i}`}
-            className="w-full flex gap-5  p-5 hover:bg-black/5"
-          >
-            <Image
-              src={item.main_image}
-              alt={`image ${item.name}`}
-              width={800}
-              height={800}
-              className={cn(
-                "w-[70px] object-cover shadow-2xl rounded",
-                isActive === item.id
-                  ? "opacity-100"
-                  : "opacity-50 hover:opacity-80"
-              )}
-            />
+            btnProps={{
+              variant: "primitive",
+              children: (
+                <>
+                  <div className="w-full flex gap-5  p-5 hover:bg-black/5">
+                    <Image
+                      src={item.main_image}
+                      alt={`image ${item.name}`}
+                      width={800}
+                      height={800}
+                      className={cn(
+                        "w-[70px] object-cover shadow-2xl rounded",
+                        isActive === item.id
+                          ? "opacity-100"
+                          : "opacity-50 hover:opacity-80"
+                      )}
+                    />
 
-            <div className="flex flex-col gap-px mr-auto">
-              <Title className="text-base">{item.name}</Title>
-              <Title className="text-base">{item.price}€</Title>
-              <p>
-                <b>Stock:</b>
-                {item.stock}
-              </p>
-            </div>
-            <Badge>{item.type}</Badge>
-          </Link>
+                    <div className="flex flex-col gap-px mr-auto">
+                      <Title className="text-base">{item.name}</Title>
+                      <Title className="text-base">{item.price}€</Title>
+                      <p>
+                        <b>Stock:</b>
+                        {item.stock}
+                      </p>
+                    </div>
+                    <Badge>{item.type}</Badge>
+                  </div>
+                </>
+              ),
+            }}
+          >
+            <AdminItem isActive={item.id.toString()} />
+          </Modal>
         ))}
       </div>
-      <div className="flex flex-col gap-10">
+      {/* <div className="flex flex-col gap-10">
         <AnimatePresence>
           {isActive ? (
             <AdminItem isActive={isActive.toString()} />
           ) : isCreate ? (
-            <AdminItem isActive={"new"} />
           ) : null}
         </AnimatePresence>
-      </div>
+      </div> */}
     </>
   ) : isFetched ? (
     <BoxError />

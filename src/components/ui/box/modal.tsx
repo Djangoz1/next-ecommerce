@@ -1,6 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "framer-motion";
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, ReactNode, useContext, useState } from "react";
 import { Btn, BtnProps } from "../btn";
 import { cn } from "@/utils/cn";
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -11,7 +11,15 @@ type Ctx = {
 };
 const ModalContext = createContext<Ctx | undefined>(undefined);
 
-export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
+type Props = {
+  children: React.ReactNode;
+  btnProps: Omit<BtnProps, "variant"> & {
+    variant?: BtnProps["variant"] | "primitive";
+  };
+  className?: string;
+};
+
+export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <ModalContext.Provider value={{ isOpen, setIsOpen }}>
@@ -26,25 +34,11 @@ export const useModal = () => {
   return ctx;
 };
 
-export const ModalPrimitive = ({
-  ...props
-}: {
-  children: React.ReactNode;
-  btnProps: BtnProps;
-  className?: string;
-}) => {
+export const ModalPrimitive = ({ ...props }: Props) => {
   return <Element {...props} />;
 };
 
-export const Modal = ({
-  ...props
-}: {
-  children: React.ReactNode;
-
-  btnProps: BtnProps;
-
-  className?: string;
-}) => {
+export const Modal = ({ ...props }: Props) => {
   return (
     <ModalProvider>
       <Element {...props} />
@@ -57,24 +51,31 @@ const Element = ({
   className = "",
 
   ...props
-}: {
-  btnProps: BtnProps;
-  children: React.ReactNode;
-
-  className?: string;
-}) => {
+}: Props) => {
   const { isOpen, setIsOpen } = useModal();
 
   return (
     <>
-      <Btn
-        size="sm"
-        onClick={(e) => {
-          setIsOpen(true);
-          props?.btnProps?.onClick?.(e);
-        }}
-        {...props.btnProps}
-      />
+      {props.btnProps.variant === "primitive" ? (
+        <div
+          className={cn(props.btnProps.className || "")}
+          onClick={(e) => {
+            setIsOpen(true);
+          }}
+        >
+          {props.btnProps.children}
+        </div>
+      ) : (
+        <Btn
+          size="sm"
+          onClick={(e) => {
+            setIsOpen(true);
+            props?.btnProps?.onClick?.(e);
+          }}
+          {...props.btnProps}
+          variant={props.btnProps.variant as BtnProps["variant"]}
+        />
+      )}
 
       <AnimatePresence>
         {isOpen ? (

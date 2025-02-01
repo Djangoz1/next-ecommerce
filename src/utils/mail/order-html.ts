@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import dotenv from "dotenv";
 import { buttonHtml, layoutMailHtml, titleHtml } from "@/utils/mail/html";
 import { Item } from "@/types/items";

@@ -104,12 +104,12 @@ const Sidebar = () => {
             <Button
               onClick={() => setIsOpen(false)}
               arr={[
-                { url: "/shop/women?t=dress", children: "Les vêtements" },
+                { url: "/shop/dress", children: "Les vêtements" },
                 {
-                  url: "/shop/women?t=miniature",
+                  url: "/shop/miniature",
                   children: "Les minitatures",
                 },
-                { url: "/shop/women?t=painting", children: "La peinture" },
+                { url: "/shop/painting", children: "La peinture" },
               ]}
             >
               Boutique

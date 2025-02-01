@@ -12,8 +12,8 @@ export const useGetItem = ({
   params: { id },
 }: BaseHookParams & { params: { id?: Item["id"] } }) => {
   return useQuery({
-    enabled,
-    queryKey: ["item"],
+    enabled: enabled && !!id,
+    queryKey: ["item", id],
     queryFn: async () => {
       if (!id) throw new Error("Item id is required");
       const [item, gallery, metadata] = await Promise.all([
