@@ -35,6 +35,10 @@
   display: none;
 }
 
+.scrollbar-hide {
+  scrollbar-width: none;
+}
+
 @layer base {
   :root {
     --background: RGB(251, 247, 242);

@@ -39,11 +39,11 @@ const StorePage = () => {
               key={`item-${index}`}
               className={cn(
                 "w-full relative flex flex-col gap-2 transition-all hover:scale-105",
-                index === 0 || index % 5 === 0 ? "col-span-2" : ""
+                index === 0 || index % 5 === 0 ? "col-span-2 xl:row-span-2" : ""
               )}
             >
               {item.discount ? (
-                <div className="absolute top-2 right-0 w-fit h-fit px-4 py-px text-xs border border-black bg-black/50 rounded-full rounded-r-none">
+                <div className="absolute top-2 right-0 w-fit h-fit px-4 py-px text-xs border border-black bg-black/50 border-r-0 rounded-full rounded-r-none">
                   <span className="uppercase text-white">
                     - {item.discount} %
                   </span>
@@ -61,22 +61,6 @@ const StorePage = () => {
                   {item.name}
                 </span>
                 <ItemDiscount item={item} />
-                {/* <span className="text-sm text-muted-foreground">
-                  {item.discount ? (
-                    <>
-                      <span className="line-through text-xs mr-2">
-                        {Number(item.price)}€
-                      </span>
-                      <span>
-                        {Number(item.price) -
-                          (Number(item.price) * item.discount) / 100}
-                      </span>
-                    </>
-                  ) : (
-                    item.price
-                  )}{" "}
-                  €
-                </span> */}
               </div>
             </Link>
           ))}

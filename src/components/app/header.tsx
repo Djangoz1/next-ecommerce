@@ -9,7 +9,12 @@ import { Title } from "../ui/typography/title";
 
 import { BtnBagAction } from "../features/btn-bag-action";
 import { Btn } from "../ui/btn";
-import { ModalPrimitive, ModalProvider, useModal } from "../ui/box/modal";
+import {
+  Modal,
+  ModalPrimitive,
+  ModalProvider,
+  useModal,
+} from "../ui/box/modal";
 import { useSession } from "@/context/app";
 export const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -48,8 +53,8 @@ export const Header = () => {
           "hidden  xl:flex items-center justify-between xl:px-10 px-5 py-5  w-full   left-0 fixed top-0  z-50 font-info"
         )}
       >
-        <div className=" text-sm flex items-center uppercase font-light tracking-wider gap-20 xl:opacity-100 opacity-0 ">
-          <Link href={"/shop/women"} className="hover:underline">
+        <div className=" text-sm flex items-center uppercase font-light tracking-wider gap-10 xl:opacity-100 opacity-0 ">
+          <Link href={"/shop/dress"} className="hover:underline">
             Boutique
           </Link>
           <Link href={"/journal"} className="hover:underline">
@@ -62,20 +67,38 @@ export const Header = () => {
         <motion.h1 className="title  text-4xl uppercase tracking-[0.2em]  absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <Link href={"/"}>Ormés</Link>
         </motion.h1>
-        <div className="flex gap-5">
-          <Link href={"/store"}>
-            <Icon
-              icon="material-symbols-light:shopping-bag-outline"
-              width="30"
-              height="30"
-            />
-          </Link>
+        <div className="flex items-center gap-1 relative">
+          <AdminBtn />
+          <BtnBagAction />
         </div>
       </motion.header>
       <>
         <MobileHeader scroll={scrolled} url={url} />
       </>
     </>
+  );
+};
+
+const AdminBtn = () => {
+  const { user } = useSession();
+  if (user?.app_metadata?.role !== "admin") return null;
+  return (
+    <Modal
+      btnProps={{
+        variant: "ghost",
+        className:
+          "absolute top-1/2 -left-2 px-0 py-0  -translate-y-1/2 -translate-x-full",
+        children: <Icon icon={"eos-icons:admin"} width={20} height={20} />,
+      }}
+    >
+      <div className="flex flex-col divide-y">
+        <Button url={"/admin"}>Articles</Button>
+        <Button url={"/admin/order"}>Commandes</Button>
+        <Button url={"/admin/stripe"}>Coupons</Button>
+        <Button url={"/admin/email"}>Email</Button>
+        <Button url={"/admin/newsletter"}>Newsletter</Button>
+      </div>
+    </Modal>
   );
 };
 
@@ -88,7 +111,9 @@ const Sidebar = () => {
       className="pb-40 pt-0"
       btnProps={{
         variant: "ghost",
-        children: <Icon icon={"line-md:menu"} width={"20"} height={"20"} />,
+        children: (
+          <Icon icon={"hugeicons:menu-09"} width={"20"} height={"20"} />
+        ),
         className: "w-fit h-fit px-1 py-1",
       }}
     >
@@ -194,7 +219,9 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
           <Link href={"/"}>Ormés</Link>
         </motion.h1>
 
-        <div className="flex">
+        <div className="flex relative">
+          <AdminBtn />
+
           <BtnBagAction />
         </div>
       </motion.header>

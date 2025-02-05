@@ -13,12 +13,14 @@ import { Loader } from "@/components/ui/box/loader";
 
 import { useGetItems } from "@/hooks/items/use-get-items";
 import { Modal } from "@/components/ui/box/modal";
+import { useSession } from "@/context/app";
 
 const PageAdmin = () => {
   const { data, isFetched } = useGetItems({
     params: {},
   });
-
+  const user = useSession();
+  console.log({ useerauth: user });
   return data ? (
     <div className="w-full">
       <div key={`form`} className="flex flex-col divide-y border-y">

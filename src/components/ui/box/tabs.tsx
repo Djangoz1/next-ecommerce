@@ -12,14 +12,16 @@ export const Tabs = ({
   const [active, setActive] = useState(0);
   return (
     <div className={cn("flex flex-col gap-5", className)}>
-      <div className="flex gap-5 justify-center">
+      <div className="flex gap-1 justify-center">
         {arr.map((item, index) => (
           <button
             key={index}
             onClick={() => setActive(index)}
             className={cn(
-              "px-3  py-2 cursor-pointer hover:opacity-100",
-              active === index ? "border-b-2 border-black" : "opacity-50"
+              "px-4  py-2 cursor-pointer border-b-2 hover:opacity-100",
+              active === index
+                ? " border-black"
+                : "opacity-50 hover:border-black/90 border-black/10"
             )}
           >
             {item.title}

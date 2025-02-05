@@ -71,7 +71,7 @@ const Element = ({ children }: { children: React.ReactNode }) => {
         }}
       >
         <div className="w-full max-w-full   flex flex-col  ">
-          <main className="w-full  flex flex-col overflow overflow-x-hidden ">
+          <main className="w-full  flex flex-col scrollbar-hide overflow-x-hidden ">
             {children}
           </main>
         </div>

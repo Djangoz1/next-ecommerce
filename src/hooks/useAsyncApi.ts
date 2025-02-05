@@ -45,7 +45,9 @@ export const useAsyncApi = ({
                   "Content-Type": "application/json",
                 },
           body:
-            headers !== undefined
+            method === "GET"
+              ? undefined
+              : headers !== undefined
               ? (params as FormData)
               : JSON.stringify(params),
         });

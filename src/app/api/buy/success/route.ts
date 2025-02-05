@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const stripeId = request.nextUrl.searchParams.get("session_id") as string;
     const session = await stripe.checkout.sessions.retrieve(stripeId);
     if (!session.metadata) throw new Error("Metadata not found");
-
+    console.log({ session });
     const items = await getBuyingByStripeIdQuery(stripeId);
 
     items.forEach(async ({ items, ...item }) => {
@@ -47,11 +47,20 @@ export async function GET(request: NextRequest) {
         city: user.user_metadata.city as string,
       },
     });
+    let url = "/success?id=" + session.id;
+    url +=
+      "&total_amount=" +
+      session.amount_total +
+      "&total_shipping=" +
+      (session.total_details?.amount_shipping || 0) +
+      "&total_discount=" +
+      (session.total_details?.amount_discount || 0) +
+      "&total_tax=" +
+      (session.total_details?.amount_tax || 0);
 
+    // return NextResponse.json({ url, session });
     // redirection to /success page
-    return NextResponse.redirect(
-      new URL("/success?id=" + session.id, request.url)
-    );
+    return NextResponse.redirect(new URL(url, request.url));
   } catch (error) {
     return NextResponse.json({ message: "Error", error }, { status: 500 });
   }

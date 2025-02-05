@@ -3,6 +3,8 @@ import { Title } from "../ui/typography/title";
 import { ButtonHeader } from "./header";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { InputNewsletter } from "../features/input-newsletter";
+import { CONTACT } from "@/constants/inc";
+import { BtnItemSizeGuide } from "../features/items/btn-item-size-guide";
 
 export const Footer = () => {
   return (
@@ -40,17 +42,14 @@ export const Footer = () => {
         <ButtonHeader
           arr={[
             {
-              url: "#",
+              url: `mailto:${CONTACT.email_customer_service}`,
               children: <>Contactez-nous</>,
             },
             {
               url: "/faq",
               children: <>FAQ</>,
             },
-            {
-              url: "#",
-              children: <>Guide des tailles</>,
-            },
+
             {
               url: "#",
               children: <>Guide d'entretien</>,
@@ -62,17 +61,14 @@ export const Footer = () => {
         <ButtonHeader
           arr={[
             {
-              url: "#",
+              url: "/maison-ormes",
               children: <>La Maison Ormés</>,
             },
             {
-              url: "#",
+              url: "/journal",
               children: <>Le journal</>,
             },
-            {
-              url: "#",
-              children: <>Nos addresses</>,
-            },
+
             {
               url: "#",
               children: <>Nos emballages</>,

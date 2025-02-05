@@ -19,6 +19,28 @@ export const layoutMailHtml = (children: string) => {
           font-size: 10px;
           text-align: center !important;
         }
+
+
+        .button {
+          background-color: #333; 
+          color: #fff; 
+          width: 100%; 
+          text-align: center; 
+          text-transform: uppercase;
+          padding: 10px 20px; 
+          text-decoration: none;
+          
+          border-radius: 5px;
+          border: 1px solid #333; 
+        }
+
+        .button-container {
+          display: flex;
+          flex-direction: row;
+          gap: 10px;
+          width: 100%;
+          margin:10px;
+        }
         @media screen and (max-width: 600px) {
           .button-container {
             flex-direction: column !important;
@@ -85,6 +107,7 @@ export const layoutMailHtml = (children: string) => {
           style="            
             gap: 10px;
             width:100%;
+            margin:10px;
           ">
             <a
             target="_blank"
@@ -107,7 +130,13 @@ export const layoutMailHtml = (children: string) => {
             }/faq/return-refund">Modification de l'adresse</a>
             </div>
             </div>
-            ${buttonHtml("Contactez-nous")}
+            <a
+            target="_blank"
+            class="button"
+            style="width:100%;"
+            href="${
+              process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+            }/contact">Contactez-nous</a>
         <footer/>
       </div>
     
@@ -129,15 +158,6 @@ export const titleHtml = (children: string) => {
 
 export const buttonHtml = (children: string) => {
   return `
-    <button style="
-      background-color: #333; 
-      color: #fff; 
-      width: 100%; 
-      text-align: center; 
-      text-transform: uppercase;
-      padding: 10px 20px; 
-      border-radius: 5px;
-      border: 1px solid #333;
-    ">${children}</button>
+    <button class="button" >${children}</button>
   `;
 };

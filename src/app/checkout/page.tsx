@@ -2,6 +2,7 @@
 
 import { FormAddress } from "@/components/features/account/form-address";
 import { ViewAddress } from "@/components/features/account/view-address";
+import { ItemTx } from "@/components/features/items/item-tx";
 import { ViewOrderItem } from "@/components/features/items/view-order-item";
 import { Input } from "@/components/form/input";
 
@@ -16,6 +17,8 @@ import { FormProvider } from "@/context/form";
 import { useAddresses } from "@/hooks/accounts/use-addresses";
 import { useNeedAuth } from "@/hooks/accounts/use-need-auth-redirect";
 import { useNewsletter } from "@/hooks/accounts/use-newsletter";
+import { useGetTx } from "@/hooks/items/use-get-tx";
+import { usePendingItems } from "@/hooks/items/use-pending-items";
 import { useApi } from "@/hooks/useApi";
 import { useAsyncApi } from "@/hooks/useAsyncApi";
 import { stripePromise } from "@/services/stripe-js";
@@ -23,29 +26,21 @@ import { Address } from "@/types/customer";
 import { Item } from "@/types/items";
 import { cn } from "@/utils/cn";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
+
 import React, { Suspense, useState } from "react";
 // import { useFormContext } from "react-hook-form";
 
 const Page = () => {
-  const searchParams = useSearchParams();
-  const { data, isFetched } = useApi<{
-    items: (Item & { size: string; quantity: number })[];
-    total: number;
-  }>({
-    path: "/buy/checkout",
-    method: "GET",
-    params: {
-      id: searchParams.get("id") as string,
-    },
-  });
+  const { data, isFetched } = usePendingItems();
   const { user } = useSession();
+
+  const tx = useGetTx({ items: data });
   // const { watch, setValue } = useFormContext();
-  console.log({ data, searchParams });
   useNeedAuth();
 
-  const { mutateAsync } = useAsyncApi({});
+  const { mutateAsync, isPending } = useAsyncApi({});
+  const { data: coupon, mutateAsync: mutateCoupon } = useAsyncApi({});
 
   const { data: newsletter } = useNewsletter({
     params: {},
@@ -64,7 +59,10 @@ const Page = () => {
     address_id: null,
     newsletter: !!newsletter,
   });
-  const total = (data?.total || 0) / 100;
+
+  if (!isFetched) return <Loader />;
+
+  if (!data?.length) redirect("/shop/dress");
 
   return data ? (
     <div className=" flex flex-col py-20 ">
@@ -90,7 +88,7 @@ const Page = () => {
         <span className="font-medium uppercase text-foreground text-sm">
           Total de la commande
         </span>
-        <span className="text-2xl font-bold">{total} €</span>
+        <span className="text-2xl font-bold">{tx?.net} €</span>
       </div>
       <div className="flex flex-col border-t py-10 gap-10">
         <div className="flex flex-col px-3">
@@ -182,34 +180,69 @@ const Page = () => {
           <Title className="text-2xl">Résumé de la commande</Title>
         </div>
         <div className="flex flex-col divide-y divide-dashed">
-          {data.items.map((item, i) => (
+          {data.map((item, i) => (
             <ViewOrderItem key={`order-item-${i}`} item={item} />
           ))}
         </div>
 
         <div className="py-5 w-full flex flex-col gap-2 text-sm mt-5">
-          <FormProvider className="mb-2" onSubmit={() => {}}>
-            <Input
-              required
-              submit
-              id="promo"
-              defaultValue={""}
-              placeholder="Code promo"
-            />
-          </FormProvider>
-          <div className="flex justify-between  items-center">
-            <h6 className="text-xs font-medium">Expédition</h6>
-            <p className="opacity-80 font-semibold uppercase text-xs">
-              {total > 250 ? "Gratuit" : "25 €"}
-            </p>
-          </div>
-          <div className="flex justify-between  items-center">
-            <h6 className=" font-bold text-xl">Total</h6>
-            <p className="opacity-80 font-semibold uppercase  text-lg ">
-              <span className="text-sm text-muted-foreground">EUR</span> {"  "}
-              {total > 250 ? total : total + 25} €
-            </p>
-          </div>
+          {coupon ? (
+            <div
+              className={cn(
+                "flex relative w-full flex-col border-y rounded py-5",
+                !coupon.valid ? "opacity-50" : "opacity-100"
+              )}
+            >
+              <p>
+                <b>{coupon.name}</b>
+              </p>
+              <p className="text-muted-foreground font-medium">
+                {coupon.percent_off
+                  ? `${coupon.percent_off}%`
+                  : `${coupon.amount_off}€`}
+              </p>
+              <p className="absolute right-5 top-1/2">
+                {coupon.valid ? (
+                  <Icon icon="mdi:check" />
+                ) : (
+                  <Icon icon="mdi:close" />
+                )}
+              </p>
+            </div>
+          ) : (
+            <FormProvider
+              className="mb-2"
+              onSubmit={async (e) => {
+                mutateCoupon({
+                  path: `/stripe/${e.promo}`,
+                  method: "GET",
+                  params: {},
+                });
+              }}
+            >
+              <Input
+                isLoading={isPending}
+                required
+                submit
+                onChange={(e) => {
+                  console.log({ e });
+                  const id = e as string;
+                  if (id.length === 8) {
+                    mutateCoupon({
+                      path: `/stripe/${id}`,
+                      method: "GET",
+                      params: {},
+                    });
+                  }
+                }}
+                id="promo"
+                defaultValue={""}
+                placeholder="Code promo"
+              />
+            </FormProvider>
+          )}
+
+          <ItemTx tx={tx} coupon={coupon} />
         </div>
 
         <Btn
@@ -230,14 +263,20 @@ const Page = () => {
               address_id:
                 isData.address_id || addresses?.find((el) => el.default)?.id,
               // message: "",
-              stripe_id: searchParams.get("id") as string,
+              items: data.map((el) => ({
+                id: el.id,
+                size: el.size,
+                quantity: el.quantity,
+              })),
+
               user_id: user.id,
+              coupon_id: coupon?.id,
             };
 
             console.log({ form });
 
             const result = await mutateAsync({
-              path: "/buy",
+              path: "/buy/checkout",
               method: "POST",
               params: form,
             });
@@ -246,7 +285,7 @@ const Page = () => {
             const stripe = await stripePromise;
             if (!stripe) return;
             await stripe.redirectToCheckout({
-              sessionId: searchParams.get("id") as string,
+              sessionId: result.id,
             });
           }}
         >

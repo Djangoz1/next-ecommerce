@@ -9,7 +9,7 @@ export const ViewAddress = ({
   data: GetAddressesHook[0];
 }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col whitespace-nowrap">
       {[
         `${el.first_name} ${el.last_name}`,
         ...(el.company ? [el.company] : []),

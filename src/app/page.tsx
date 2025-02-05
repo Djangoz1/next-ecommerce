@@ -18,7 +18,7 @@ export default function Home() {
           <Btn
             variant="link"
             className="text-white hover:text-white font-light hover:scale-105"
-            href={"/shop/women"}
+            href={"/shop/dress"}
           >
             Découvrir nos offres
           </Btn>
@@ -36,8 +36,12 @@ export default function Home() {
           />
           <div className="flex absolute flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 gap-5 items-center ">
             <p className="uppercase text-xs font-light">Nouveauté</p>
-            <h6 className=" title xl:text-8xl text-4xl uppercase">Vêtements</h6>
-            <Btn className="text-xs  whitespace-nowrap" variant="link">
+            <h6 className=" title xl:text-6xl text-4xl uppercase">Vêtements</h6>
+            <Btn
+              className="text-xs  whitespace-nowrap text-foreground"
+              variant="link"
+              href={"/shop/dress"}
+            >
               Découvrir
             </Btn>
           </div>
@@ -53,15 +57,19 @@ export default function Home() {
           <div className="flex absolute flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 gap-5  items-center ">
             <p className="uppercase text-xs font-light">Nouveauté</p>
 
-            <h6 className=" title xl:text-8xl text-4xl uppercase">
+            <h6 className=" title xl:text-6xl text-4xl uppercase">
               Miniatures
             </h6>
-            <Btn className="text-xs  whitespace-nowrap" variant="link">
+            <Btn
+              className="text-xs  whitespace-nowrap text-foreground"
+              variant="link"
+              href={"/shop/miniature"}
+            >
               Découvrir
             </Btn>
           </div>
         </div>
-        <div className="flex relative w-full flex-col gap-10 xl:px-0 px-5">
+        <div className="flex relative w-full flex-col gap-10 xl:px-0 px-5 col-span-2">
           <Image
             width={1000}
             height={1000}
@@ -71,8 +79,12 @@ export default function Home() {
           />
           <div className="flex absolute flex-col top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 gap-5 items-center ">
             <p className="uppercase text-xs font-light">Nouveauté</p>
-            <h6 className=" title xl:text-8xl text-4xl uppercase">Peintures</h6>
-            <Btn className="text-xs  whitespace-nowrap" variant="link">
+            <h6 className=" title xl:text-6xl text-4xl uppercase">Peintures</h6>
+            <Btn
+              className="text-xs  whitespace-nowrap text-foreground"
+              variant="link"
+              href={"/shop/painting"}
+            >
               Découvrir
             </Btn>
           </div>

@@ -68,67 +68,28 @@ const Page = () => {
 const Device = ({ item }: { item: GetItemHook }) => {
   return (
     <div className="hidden xl:flex   w-full relative">
-      <div className="relative flex w-full ">
+      <div className="relative flex w-full divide-x">
         <div className="flex w-1/2 flex-col">
-          {[{ image: item.main_image }, ...item.gallery].map((image, i) => (
-            <Image
-              className="w-full"
-              key={`image-item-${i}`}
-              src={image.image}
-              width={1800}
-              height={1800}
-              alt={item.name + " image " + i}
-            />
-          ))}
+          <CarouselImg
+            images={[item.main_image, ...item.gallery.map((el) => el.image)]}
+          />
         </div>
-        <div className="fixed right-0 top-0 w-1/2">
-          <div className="flex flex-col gap-5 py-40  mx-auto items-center w-[500px]">
-            <Title className="text-4xl">{item.name}</Title>
+        <div className="w-1/2">
+          <div className="flex flex-col gap-5 py-20   mx-auto items-center w-[500px]">
+            <div className="flex flex-col gap-2 items-center w-full px-10">
+              <Title className="text-2xl">{item.name}</Title>
 
-            <p className="uppercase font-light">{item.abstract_description}</p>
-            <div className="flex items-center gap-2">
-              {item.discount ? (
-                <span className="font-black">
-                  €{" "}
-                  {(
-                    Number(item.price) -
-                    Number(item.price) / item.discount
-                  ).toFixed(2)}
-                </span>
-              ) : null}
-              <span
-                className={cn(
-                  "font-black",
-                  item.discount ? "line-through opacity-50" : ""
-                )}
-              >
-                € {item.price}
-              </span>
-            </div>
-            <div className="flex w-full items-center gap-10 whitespace-nowrap mb-5">
-              <Dropdown
-                className="w-full"
-                arr={[
-                  { title: "Taille" },
-                  { title: "M", value: "M" },
-                  { title: "L", value: "L" },
-                  { title: "XL", value: "XL" },
-                  { title: "XXL", value: "XXL" },
-                ]}
-              />
+              <p className="uppercase font-light">
+                {item.abstract_description}
+              </p>
+              <ItemDiscount item={item} />
 
-              <button className="opacity-75 font-light">
-                Guide des tailles
-              </button>
+              <BtnBuyingAction item={item} />
+              <BtnItemSizeGuide className="w-fit" />
             </div>
-            <Btn
-              variant="primary"
-              className="w-full text-center justify-center"
-            >
-              Ajouter à votre panier
-            </Btn>
+
             <Tabs
-              className="w-full mt-10 "
+              className="w-full mt-10 border-t border-dashed border-muted-foreground py-5"
               arr={[
                 {
                   title: "Détails",

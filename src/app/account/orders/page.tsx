@@ -33,7 +33,7 @@ const PageAccountOrders = () => {
             </div>
           ) : (
             <BoxEmpty text="Aucune commande trouvée">
-              <Btn variant="primary" className="" size="xs" href="/shop/women">
+              <Btn variant="primary" className="" size="xs" href="/shop/dress">
                 Retour à la boutique
               </Btn>
             </BoxEmpty>

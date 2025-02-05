@@ -5,13 +5,17 @@ import { cn } from "@/utils/cn";
 import Image from "next/image";
 import React from "react";
 
-export const BtnItemSizeGuide = () => {
+export const BtnItemSizeGuide = ({
+  className = "",
+}: {
+  className?: string;
+}) => {
   return (
     <Modal
       btnProps={{
         variant: "link",
         size: "xs",
-        className: "w-full",
+        className: cn("w-full", className),
         children: "Guide des tailles",
       }}
     >
@@ -93,6 +97,7 @@ export const BtnItemSizeGuide = () => {
                         },
                       ].map((el, index) => (
                         <tr
+                          key={`table-size-guide-${index}`}
                           className={cn(
                             `flex w-full  px-5`,
                             index % 2 === 0 ? "bg-secondary" : "bg-background"
@@ -111,7 +116,7 @@ export const BtnItemSizeGuide = () => {
 
                           {el.values.map((value, j) => (
                             <td
-                              key={`table-${index}-${j}`}
+                              key={`table-size-guide-${index}-${j}`}
                               className="font-extralight  py-2 w-[90px] text-center text-xs"
                             >
                               {value}
@@ -168,6 +173,7 @@ export const BtnItemSizeGuide = () => {
                         },
                       ].map((el, index) => (
                         <tr
+                          key={`table-size-guide-${index}`}
                           className={cn(
                             `flex w-full  px-5 relative`,
                             index % 2 === 0 ? "bg-secondary" : "bg-background"
@@ -183,8 +189,11 @@ export const BtnItemSizeGuide = () => {
                           >
                             {el.title}
                           </td>
-                          {el.values.map((value) => (
-                            <td className="font-extralight  py-2 w-[90px] text-center text-xs">
+                          {el.values.map((value, j) => (
+                            <td
+                              key={`table-size-guide-${index}-${j}`}
+                              className="font-extralight  py-2 w-[90px] text-center text-xs"
+                            >
                               {value}
                             </td>
                           ))}

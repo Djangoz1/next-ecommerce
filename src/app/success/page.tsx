@@ -1,59 +1,31 @@
 "use client";
 import { ViewAddress } from "@/components/features/account/view-address";
-import { clearPendingItems } from "@/components/features/btn-buying-action";
+
+import { ItemTx } from "@/components/features/items/item-tx";
 import { ViewOrderItem } from "@/components/features/items/view-order-item";
-import { OrderDetails } from "@/components/features/order-details";
+
 import { BoxError } from "@/components/ui/box/box-error";
 import { Loader } from "@/components/ui/box/loader";
+import { Btn } from "@/components/ui/btn";
 import { Title } from "@/components/ui/typography/title";
+import { usePendingItems } from "@/hooks/items/use-pending-items";
 import { useGetOrder } from "@/hooks/orders/use-get-order";
 
-import { cn } from "@/utils/cn";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { useQueryClient } from "@tanstack/react-query";
-import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import React, { ReactNode, Suspense, useMemo } from "react";
 
-const BoxIcon = ({
-  icon,
-  title,
-  children,
-  isActive,
-}: {
-  title: ReactNode;
-  icon: string;
-  children?: ReactNode;
-  isActive?: boolean;
-}) => {
-  return (
-    <div
-      className={cn(
-        "flex flex-col gap-2 py-4 items-center w-1/4",
-        isActive ? "opacity-100" : "opacity-50"
-      )}
-    >
-      <Title className="text-sm">{title}</Title>
-      <div className="flex items-center justify-center w-16 h-16 bg-white rounded-full shadow border">
-        <Icon className="text-2xl" icon={icon} />
-      </div>
-      <div
-        className={cn(
-          "flex flex-col gap-2",
-          isActive ? "opacity-100" : "opacity-0"
-        )}
-      >
-        <p className="font-light text-xs text-center text-foreground">
-          {children}
-        </p>
-      </div>
-    </div>
-  );
-};
+import Image from "next/image";
+
+import { useSearchParams } from "next/navigation";
+import React, { Suspense, useMemo } from "react";
 
 const Page = () => {
   const stripe_id = useSearchParams().get("id");
-
+  const total_amount = Number(useSearchParams().get("total_amount") || 0) / 100;
+  const total_shipping =
+    Number(useSearchParams().get("total_shipping") || 0) / 100;
+  const total_tax = Number(useSearchParams().get("total_tax") || 0) / 100;
+  const total_discount =
+    Number(useSearchParams().get("total_discount") || 0) / 100;
   const { data, isFetched, isLoading } = useGetOrder({
     params: {
       stripe_id: stripe_id || "",
@@ -61,66 +33,78 @@ const Page = () => {
   });
 
   console.log({ data });
+  const { clear } = usePendingItems();
 
-  const queryClient = useQueryClient();
   useMemo(() => {
-    clearPendingItems(queryClient);
+    clear();
   }, []);
   if (!data) return null;
 
   console.log({ data });
 
   return data ? (
-    <div className="py-20">
-      <div className="flex flex-col text-center px-10 items-center justify-center pb-10 w-full">
-        <Title className="text-2xl">Commande réussie</Title>
-        <Icon icon="mingcute:check-fill" className="text-4xl text-green-500" />
-        <p className="text-sm font-light">
-          Votre commande a été passée avec succès. Vous recevrez un email de
-          confirmation dans les prochaines minutes.
-        </p>
-      </div>
-      {/* <div className="flex border-y w-full justify-evenly bg-white">
-        <BoxIcon
-          isActive={status === "paid"}
-          title={"Production"}
-          icon={"mingcute:paint-brush-ai-fill"}
-        >
-          En cours de production
-        </BoxIcon>
-        <BoxIcon
-          isActive={status === "shipped"}
-          title="Livraison"
-          icon={"carbon:delivery"}
-        >
-          En cours de livraison
-        </BoxIcon>
-        <BoxIcon
-          isActive={status === "delivered"}
-          title="Réception"
-          icon={"akar-icons:shipping-box-v2"}
-        >
-          Commande reçue
-        </BoxIcon>
-      </div> */}
-      <div className="flex flex-col divide-y border-y divide-dashed">
-        {data?.items?.map((item, i) => (
-          <ViewOrderItem
-            key={`order-details-${i}`}
-            className="px-5"
-            item={{
-              ...item.items,
-              size: item.size,
-              quantity: Number(item.quantity),
+    <>
+      <div className="flex divide-x divide-dashed w-full xl:flex-row flex-col-reverse">
+        <div className="flex flex-col divide-y border-y py-20  min-h-fit divide-dashed w-full h-full">
+          {data?.items?.map((item, i) => (
+            <ViewOrderItem
+              key={`order-details-${i}`}
+              className="px-5"
+              item={{
+                ...item.items,
+                size: item.size,
+                quantity: Number(item.quantity),
+              }}
+            />
+          ))}
+        </div>
+        <div className="flex  flex-col pb-20 divide-y divide-dashed border-b  ">
+          <div className="flex flex-col  items-center relative ">
+            <Image
+              src="/model/8.avif"
+              alt="success"
+              width={1000}
+              height={1000}
+              className="absolute top-0 left-0 w-full h-full object-cover  xl:opacity-0 opacity-100"
+            />
+            <div className="flex flex-col px-10  pb-5  w-full items-center relative xl:text-black text-white text-center py-20 xl:!bg-secondary xl:from-transparent xl:to-transparent bg-gradient-to-t  from-black/40 via-transparent to-black/40">
+              <Icon
+                icon="mingcute:check-fill"
+                className="text-4xl text-green-500"
+              />
+              <Title className="text-lg">Commande réussie</Title>
+              <p className="text-xs font-extralight">
+                Votre commande a été passée avec succès. Vous recevrez un email
+                de confirmation dans les prochaines minutes.
+              </p>
+              <Btn
+                href={"/shop/dress"}
+                size="xs"
+                variant="primary"
+                className="w-fit mt-4"
+              >
+                Retour à la boutique
+              </Btn>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 p-5">
+            <Title className="text-lg">Livraison</Title>
+            <ViewAddress id="main" data={data.address} />
+          </div>
+          <ItemTx
+            className="p-5"
+            tx={{
+              shipping: total_shipping,
+              net: total_amount + total_shipping + total_tax,
+              brut: total_amount + total_discount,
+              total: total_amount,
+              taxes: total_tax,
             }}
+            coupon={undefined}
           />
-        ))}
+        </div>
       </div>
-      <div className="flex flex-col gap-5 px-3">
-        <Title className="text-lg">Livraison</Title>
-        <ViewAddress id="main" data={data.address} />
-      </div>
-    </div>
+    </>
   ) : !isFetched || isLoading ? (
     <Loader />
   ) : (

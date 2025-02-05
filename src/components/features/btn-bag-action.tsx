@@ -5,17 +5,15 @@ import React, { useEffect, useState } from "react";
 import { Title } from "../ui/typography/title";
 import { Btn } from "../ui/btn";
 import { handleCheckout } from "@/services/stripe-js";
-import { useRouter } from "next/navigation";
-import { useGetItem } from "@/hooks/items/use-get-item";
+
 import { Modal, useModal } from "../ui/box/modal";
 import { useSession } from "@/context/app";
 import { ViewOrderItem } from "./items/view-order-item";
+import { PendingItem, usePendingItems } from "@/hooks/items/use-pending-items";
+import { Item } from "@/types/items";
 
 export const BtnBagAction = () => {
-  const { data: pendingItems } = useQuery({
-    queryKey: ["pending-items"],
-    queryFn: () => JSON.parse(localStorage.getItem("pending-items") || "[]"),
-  });
+  const { data: pendingItems } = usePendingItems();
 
   return (
     <>
@@ -45,38 +43,13 @@ export const BtnBagAction = () => {
   );
 };
 
-const Div = ({
-  pendingItems,
-}: {
-  pendingItems: { id: string; size: string }[];
-}) => {
+const Div = ({ pendingItems }: { pendingItems: PendingItem | undefined }) => {
   const { setIsOpen } = useModal();
-  const [filteredArr, setFilteredArr] = useState<
-    { id: string; size: string }[][]
-  >([]);
-  const [total, setTotal] = useState(0);
-  useEffect(() => {
-    setFilteredArr(
-      Object.values(
-        ((pendingItems as { id: string; size: string }[]) || []).reduce(
-          (acc, item) => {
-            const key = `${item.id}-${item.size}`;
-            if (!acc[key]) {
-              acc[key] = [];
-            }
-            acc[key].push(item);
 
-            return acc;
-          },
-          {} as Record<string, { id: string; size: string }[]>
-        )
-      )
-    );
-  }, [pendingItems]);
+  const [total, setTotal] = useState(0);
 
   const { user } = useSession();
 
-  const router = useRouter();
   return (
     <div
       onClick={(e) => e.stopPropagation()}
@@ -94,8 +67,8 @@ const Div = ({
               </p>
             </div>
             <div className="  w-full z-[100] text-center flex flex-col divide-y relative overflow-y-scroll ">
-              {filteredArr?.map((arr, i) => (
-                <Element setTotal={setTotal} arr={arr} key={`item-${i}`} />
+              {pendingItems?.map((el, i) => (
+                <Element setTotal={setTotal} item={el} key={`item-${i}`} />
               ))}
             </div>
 
@@ -114,10 +87,11 @@ const Div = ({
                   </div>
                   <Btn
                     variant={"primary"}
+                    href="/checkout"
                     onClick={async () => {
-                      const stripe_id = await handleCheckout(pendingItems);
+                      // const stripe_id = await handleCheckout(pendingItems);
 
-                      router.push(`/checkout?id=${stripe_id}`);
+                      // router.push(`/checkout`);
                       setIsOpen(false);
                       return;
                     }}
@@ -155,7 +129,7 @@ const Div = ({
             </Title>
             <Btn
               onClick={() => setIsOpen(false)}
-              href={"/shop/women"}
+              href={"/shop/dress"}
               variant="primary"
               className="w-full text-center justify-center text-xs"
             >
@@ -169,15 +143,13 @@ const Div = ({
 };
 
 const Element = ({
-  arr,
+  item,
   setTotal,
 }: {
-  arr: { id: string; size: string }[];
+  item: Item & { size: string; quantity: number };
   setTotal: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const index = 0;
-
-  const { data: item } = useGetItem({ params: { id: Number(arr[index].id) } });
 
   const queryClient = useQueryClient();
 
@@ -187,7 +159,8 @@ const Element = ({
       Number(
         (
           prev +
-          (Number(item.price) - Number(item.price) / item.discount) * arr.length
+          (Number(item.price) - Number(item.price) / item.discount) *
+            item.quantity
         ).toFixed(2)
       )
     );
@@ -195,9 +168,7 @@ const Element = ({
   if (!item) return null;
   return (
     <div className="flex flex-col pb-5 px-5 text-left ">
-      <ViewOrderItem
-        item={{ ...item, quantity: arr.length, size: arr[index].size }}
-      />
+      <ViewOrderItem item={{ ...item }} />
       <div className="flex mt-auto items-center  justify-end w-full">
         <div className="flex border rounded-md  h-8 items-center">
           <Btn
@@ -207,8 +178,8 @@ const Element = ({
               );
 
               const indexToRemove = currentItem.findIndex(
-                (item: { id: string; size: string }) =>
-                  item.id === arr[index].id && item.size === arr[index].size
+                (el: { id: number; size: string }) =>
+                  item.id === el.id && item.size === el.size
               );
 
               if (indexToRemove !== -1) {
@@ -230,7 +201,7 @@ const Element = ({
             -
           </Btn>
           <div className=" flex items-center w-12 justify-center border-x text-xs">
-            <span>{arr.length}</span>
+            <span>{item.quantity}</span>
           </div>
           <Btn
             size="xs"
@@ -238,7 +209,7 @@ const Element = ({
               const currentItem = JSON.parse(
                 localStorage.getItem("pending-items") || "[]"
               );
-              currentItem.push({ id: item.id, size: arr[index].size });
+              currentItem.push({ id: item.id, size: item.size });
               localStorage.setItem(
                 "pending-items",
                 JSON.stringify(currentItem)
@@ -259,8 +230,8 @@ const Element = ({
               localStorage.getItem("pending-items") || "[]"
             );
             currentItem.filter(
-              (item: { id: string; size: string }) =>
-                item.id !== arr[index].id && item.size !== arr[index].size
+              (el: { id: number; size: string }) =>
+                item.id !== el.id && item.size !== el.size
             );
             localStorage.setItem("pending-items", JSON.stringify(currentItem));
             queryClient.invalidateQueries({

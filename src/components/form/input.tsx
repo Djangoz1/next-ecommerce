@@ -11,10 +11,12 @@ export const Input = ({
   classNameBox = "",
   variant = "primary",
   submit = false,
+  isLoading = false,
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & {
   classNameBox?: string;
   submit?: boolean;
+  isLoading?: boolean;
   onChange?: (value: string) => void;
   variant?: "primary" | "secondary";
 }) => {
@@ -30,6 +32,7 @@ export const Input = ({
       <input
         key={`input-${props.id}`}
         {...props}
+        disabled={isLoading}
         className={cn(
           "w-full px-3 py-2 border rounded xl:text-sm text-xs shadow bg-background  h-fit",
           props?.className || "",
@@ -63,9 +66,10 @@ export const Input = ({
       {submit ? (
         <button
           type="submit"
+          disabled={isLoading}
           className="absolute right-2 top-1/2 -translate-y-1/2"
         >
-          <Icon icon="mdi:arrow-right" />
+          <Icon icon={isLoading ? "mdi:loading" : "mdi:arrow-right"} />
         </button>
       ) : null}
     </div>

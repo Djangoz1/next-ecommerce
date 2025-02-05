@@ -3,6 +3,7 @@ import { Item } from "@/types/items";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
 import React, { useMemo } from "react";
+import { ItemDiscount } from "./item-discount";
 
 export const ViewOrderItem = ({
   item,
@@ -53,7 +54,6 @@ export const ViewOrderItem = ({
         </p>
 
         <p className="opacity-80 font-light text-xs">
-          {" "}
           {
             {
               painting: "Peinture",
@@ -65,16 +65,7 @@ export const ViewOrderItem = ({
         <p className="opacity-80 font-light text-xs">Taille : {item.size}</p>
         <div className="flex justify-between mt-auto w-full  font-medium gap-5 items-center">
           <p className=" font-bold text-xl">x{item.quantity}</p>
-          {price.brut_price ? (
-            <div className="flex items-center gap-5">
-              <p className="font-light line-through text-xs">
-                {price.brut_price} €
-              </p>
-              <p className="uppercase ">{price.price} €</p>
-            </div>
-          ) : (
-            <>{price.price} €</>
-          )}
+          <ItemDiscount item={item} quantity={item.quantity} />
         </div>
       </div>
     </div>

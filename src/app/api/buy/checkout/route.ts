@@ -2,49 +2,156 @@ import { getItemByIdQuery } from "@/api/items";
 
 import { stripe } from "@/services/stripe-node";
 import { NextRequest, NextResponse } from "next/server";
-
+import dotenv from "dotenv";
+import { pool } from "@/utils/db";
+import { createBuyingQuery } from "@/api/buy";
+dotenv.config();
 // Crée et retourne l'id de la session stripe
 export async function POST(request: NextRequest) {
   const body = await request.json();
+  const { coupon_id, address_id, user_id, message, items: _arr } = body;
   try {
-    const arr: { id: string; size: string }[] = body;
+    const arr = _arr as { id: string; size: string; quantity: number }[];
+    const user = (await pool.auth.admin.getUserById(user_id)).data.user;
+
+    if (!user) throw new Error("User not found");
+    const address = (
+      await pool.from("addresses").select("*").eq("id", address_id).single()
+    ).data;
+    if (!address) throw new Error("Address not found");
+
+    let coupon = null;
+    if (coupon_id) {
+      coupon = await stripe.coupons.retrieve(coupon_id);
+    }
 
     if (body.length === 0) throw new Error("No items");
     let total = 0;
 
+    const items: {
+      id: number;
+      name: string;
+      main_image: string;
+      price: string;
+      discount: number;
+      quantity: number;
+      size: string;
+    }[] = [];
+    let isAvailable = true;
     for (let index = 0; index < arr.length; index++) {
       const element = arr[index];
       const item = await getItemByIdQuery(Number(element.id));
+      items.push({
+        ...element,
+        ...item,
+      });
 
-      //  TODO: add discount
-      total += Number(item.price) * 100;
+      if (!item.stock) {
+        isAvailable = false;
+      }
+
+      total += Number(item.price) - Number(item.price) / item.discount;
     }
+
+    total -= (total * (coupon?.percent_off || 0)) / 100;
 
     const sourceUrl = process.env.APP_URL || "http://localhost:3000";
 
     if (total === 0) throw new Error("Total is 0");
 
+    const discounts = [
+      ...(coupon
+        ? [
+            {
+              coupon: coupon?.id,
+            },
+          ]
+        : []),
+    ];
+
+    const line_items = [
+      ...items.map((el) => ({
+        price_data: {
+          currency: "eur",
+          product_data: {
+            name: el.name,
+            description: `Taille: ${el.size}`,
+            images: [
+              el.main_image[0] === "/"
+                ? `${process.env.APP_URL || "http://localhost:3000"}${
+                    el.main_image
+                  }`
+                : el.main_image,
+            ],
+          },
+
+          unit_amount: Math.round(
+            (el.discount
+              ? Number(el.price) -
+                (Number(el.price) * Number(el.discount)) / 100
+              : Number(el.price)) * 100
+          ),
+        },
+
+        quantity: el.quantity,
+      })),
+    ];
     const result = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: [
+
+      customer_email: user.email,
+      tax_id_collection: {
+        enabled: true,
+      },
+      shipping_options: [
         {
-          price_data: {
-            currency: "eur",
-            product_data: {
-              name: `${arr.length} articles`,
+          shipping_rate_data: {
+            type: "fixed_amount",
+            display_name: "Livraison standard",
+            fixed_amount: {
+              amount: total > 250 ? 2500 : 0,
+              currency: "eur",
             },
-            unit_amount: total,
+
+            delivery_estimate: {
+              minimum: {
+                unit: "business_day",
+                value: isAvailable ? 7 : 50,
+              },
+              maximum: {
+                unit: "business_day",
+                value: isAvailable ? 7 : 60,
+              },
+            },
           },
-          quantity: 1,
         },
       ],
+      client_reference_id: user.id,
+
+      line_items: [...line_items],
+      ...(discounts.length > 0
+        ? {
+            discounts,
+          }
+        : {}),
       mode: "payment",
       success_url: `${sourceUrl}/api/buy/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${sourceUrl}/shop/women`,
+      cancel_url: `${sourceUrl}/shop/dress`,
       metadata: {
         items: JSON.stringify(arr),
       },
     });
+
+    for (const item of items) {
+      await createBuyingQuery(item, {
+        size: item.size,
+        user_id: user.id,
+        stripe_id: result.id,
+        address_id: address.id,
+        message: message || "",
+        status: "pending",
+      });
+    }
 
     return NextResponse.json(
       { message: "OK", result: { id: `${result.id}` } },

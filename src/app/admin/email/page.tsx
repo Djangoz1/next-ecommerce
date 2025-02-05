@@ -7,7 +7,7 @@ const PageAdminEmail = () => {
   const { data } = useQuery({
     queryKey: ["email-preview"],
     queryFn: () => {
-      return fetch("/api/mail").then((res) => res.text());
+      return fetch("/api/mail?type=newsletter").then((res) => res.text());
     },
   });
 

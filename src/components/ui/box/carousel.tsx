@@ -53,7 +53,7 @@ export function Carousel({ slides }: CarouselProps) {
             alt={_slides[current].title}
             width={1000}
             height={1000}
-            className="absolute inset-0 w-4/5 h-full object-cover left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            className="absolute inset-0 w-4/5 xl:w-3/5 h-full object-cover left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 shadow-xl border border-black/50 rounded-md"
           />
         </AnimatePresence>
         <div
@@ -84,7 +84,7 @@ export function Carousel({ slides }: CarouselProps) {
         className="mt-10 mx-auto"
         size="sm"
         variant="link"
-        href={"/shop/women"}
+        href={"/shop/dress"}
       >
         Découvrir
       </Btn>
