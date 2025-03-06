@@ -1,43 +1,41 @@
 "use client";
 import { Logo } from "@/components/app/logo";
 import { Input } from "@/components/form/input";
+import { InputPassword } from "@/components/form/input-password";
 import { BoxCascade } from "@/components/ui/box/box-cascade";
 import { Btn } from "@/components/ui/btn";
 import { Switch } from "@/components/ui/btn/switch";
 import { Title } from "@/components/ui/typography/title";
 import { FormProvider } from "@/context/form";
 import { useNeedNotAuth } from "@/hooks/accounts/use-need-not-auth";
+import { useToast } from "@/hooks/use-toast";
 
 import { useAsyncApi } from "@/hooks/useAsyncApi";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 const PageAccountLogin = () => {
   const { data, mutateAsync, ...rest } = useAsyncApi({
     path: "/auth/sign-in",
   });
   useNeedNotAuth();
-  const router = useRouter();
+  const { toast } = useToast();
 
   return (
     <div className="w-full relative min-h-screen flex xl:flex-row flex-col xl:justify-between">
-      <Image
-        src={"/model/1.jpg"}
-        alt="model"
-        width={1000}
-        height={1000}
-        className="xl:absolute top-0 left-0 h-[300px] w-screen xl:h-full object-cover"
-      />
-
-      <div className="flex  absolute top-0 left-0 h-[300px] text-white  xl:h-full xl:w-1/2 w-full flex-col justify-center items-center">
-        <Logo className="" />
-        <Title className="">Se connecter</Title>
-      </div>
-
       <div className="flex   flex-col xl:w-1/3 w-full p-5 bg-background shadow pt-20 h-full">
         <FormProvider
           onSubmit={async (e) => {
+            if (e.password !== e.repassword) {
+              toast({
+                title: "Mot de passe incorrect",
+                description: "Les mots de passe ne correspondent pas",
+                variant: "destructive",
+              });
+              return;
+            }
             const { data, ...rest } = await mutateAsync({
               path: "/auth/sign-in",
               params: {
@@ -52,12 +50,11 @@ const PageAccountLogin = () => {
               },
             });
 
-            if (data.refresh_token) {
+            console.log({ data, rest });
+            if (data?.refresh_token) {
               localStorage.setItem("token", data.refresh_token);
             }
             // router.push("/account");
-
-            console.log({ data, rest });
           }}
           className="flex flex-col gap-5 w-full py-5 "
         >
@@ -76,13 +73,9 @@ const PageAccountLogin = () => {
             id="email"
             placeholder="john.doe@gmail.com"
           />
-          <Input
-            required
-            id="password"
-            type="password"
-            title="Mot de passe"
-            placeholder="********"
-          />
+
+          <InputPassword id="password" />
+          <InputPassword id="repassword" />
 
           <BoxCascade
             classNameBox="px-0  border-y"

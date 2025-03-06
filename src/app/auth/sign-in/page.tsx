@@ -1,6 +1,7 @@
 "use client";
 
 import { Input } from "@/components/form/input";
+import { InputPassword } from "@/components/form/input-password";
 import { Btn } from "@/components/ui/btn";
 
 import { useSession } from "@/context/app";
@@ -42,12 +43,7 @@ const PageAuthSignIn = () => {
           </h6>
 
           <Input required id="email" placeholder="Addresse email" />
-          <Input
-            required
-            id="password"
-            type="password"
-            placeholder="Mot de passe"
-          />
+          <InputPassword />
           <Btn type="submit" variant="primary" size="sm" className="w-full">
             Se connecter
           </Btn>

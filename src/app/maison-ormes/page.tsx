@@ -170,7 +170,7 @@ const PageOrmes = () => {
         </div>
       </Section>
 
-      <Btn className="" variant="link">
+      <Btn className="text-center" href={"/faq/on-demand"} variant="link">
         En savoir plus sur la fabrication à la demande
       </Btn>
     </div>

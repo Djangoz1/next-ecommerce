@@ -1,4 +1,5 @@
 "use server";
+import { IndustryIc } from "@/components/icons";
 import { Title } from "@/components/ui/typography/title";
 
 import { Icon } from "@iconify/react/dist/iconify.js";
@@ -33,6 +34,12 @@ const FaqPage = () => {
             Commande & Paiement
           </Button>
           <Button
+            href={"/faq/on-demand"}
+            icon={"streamline:industry-innovation-and-infrastructure"}
+          >
+            Fabrication sur commande
+          </Button>
+          <Button
             href={"/faq/delivery"}
             icon="arcticons:samsung-gift-indonesia"
           >
@@ -56,7 +63,7 @@ const Button = ({
   href,
 }: {
   children: React.ReactNode;
-  icon: string;
+  icon: string | React.ReactNode;
   href: string;
 }) => {
   return (
@@ -65,7 +72,11 @@ const Button = ({
       className="flex flex-col gap-2 bg-secondary rounded shadow text-4xl items-center p-10 w-full h-[200px] text-center"
     >
       <div className="w-fit h-fit">
-        <Icon icon={icon} className="text-5xl" />
+        {typeof icon === "string" ? (
+          <Icon strokeWidth={"0.5"} icon={icon} className="text-5xl" />
+        ) : (
+          icon
+        )}
       </div>
       <Title className="text-base">{children}</Title>
     </Link>
