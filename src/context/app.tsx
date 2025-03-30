@@ -16,6 +16,7 @@ import {
 } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { createContext, useContext } from "react";
+import { Modal, ModalProvider } from "./modal";
 
 const queryClient = new QueryClient();
 export const AppContext = createContext<
@@ -84,8 +85,11 @@ const Element = ({ children }: { children: React.ReactNode }) => {
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <Element>{children}</Element>
-      <Toaster />
+      <ModalProvider>
+        <Element>{children}</Element>
+        <Toaster />
+        <Modal />
+      </ModalProvider>
     </QueryClientProvider>
   );
 };

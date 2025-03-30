@@ -5,8 +5,12 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { InputNewsletter } from "../features/input-newsletter";
 import { CONTACT } from "@/constants/inc";
 import { BtnItemSizeGuide } from "../features/items/btn-item-size-guide";
+import { Btn } from "../ui/btn";
+import { ReturnOrder } from "../features/return-order";
+import { useModal } from "@/context/modal";
 
 export const Footer = () => {
+  const { showModal } = useModal();
   return (
     <footer className="  xl:py-20 py-10  bg-secondary border-t border-black/50  gap-20 flex flex-col">
       <div className="flex flex-col divide-y divide-dashed divide-black/30">
@@ -28,8 +32,16 @@ export const Footer = () => {
               children: <>Suivre ma commande</>,
             },
             {
-              url: "#",
-              children: <>Gérer mon retour</>,
+              component: (
+                <>
+                  <button
+                    onClick={() => showModal(<ReturnOrder />, "slideY")}
+                    className="uppercase text-[#ADADAD] font-medium text-xs w-fit"
+                  >
+                    Gérer mon retour
+                  </button>
+                </>
+              ),
             },
             {
               url: "/account",
@@ -46,6 +58,10 @@ export const Footer = () => {
               children: <>Contactez-nous</>,
             },
             {
+              url: `#`,
+              children: <>Envoyez une demande</>,
+            },
+            {
               url: "/faq",
               children: <>FAQ</>,
             },
@@ -53,6 +69,11 @@ export const Footer = () => {
             {
               url: "#",
               children: <>Guide d'entretien</>,
+            },
+
+            {
+              url: "#",
+              children: <>Guide des tailles</>,
             },
           ]}
         >
@@ -104,9 +125,19 @@ export const Footer = () => {
           Légal
         </ButtonHeader>
         <div className="flex py-5 justify-center gap-5 w-full border-y">
-          <Icon icon={"circum:instagram"} width={20} height={20} />
-          <Icon icon={"circum:facebook"} width={20} height={20} />
-          <Icon icon={"ph:whatsapp-logo-thin"} width={20} height={20} />
+          <Btn
+            variant="ghost"
+            href="
+https://www.instagram.com/maison.ormes?igsh=MXFsc3Jhbjk5bHN4cg%3D%3D&utm_source=qr"
+          >
+            <Icon icon={"circum:instagram"} width={20} height={20} />
+          </Btn>
+          <Btn variant="ghost" href="https://www.facebook.com/maisonormes">
+            <Icon icon={"circum:facebook"} width={20} height={20} />
+          </Btn>
+          <Btn variant="ghost" href="https://wa.me/33669384336">
+            <Icon icon={"ph:whatsapp-logo-thin"} width={20} height={20} />
+          </Btn>
         </div>
         <Title className="text-8xl uppercase py-5 text-center w-full">
           Ormés

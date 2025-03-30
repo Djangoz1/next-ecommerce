@@ -10,7 +10,7 @@ export default function Home() {
         <Image
           width={1800}
           height={1800}
-          src="/page/H-HEADER.webp"
+          src="/assets/1.JPG"
           alt="model photo"
           className=" w-full max-w-screen xl:h-fit h-screen brightness-75 object-cover object-left-center "
         />

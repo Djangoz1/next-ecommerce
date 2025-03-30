@@ -31,7 +31,7 @@ const Journal = () => {
 
       <div className="max-w-4xl gap-2 flex flex-col items-center mx-auto mt-5 xl:px-10 px-2 relative">
         <img
-          src="/model/8.avif"
+          src="/assets/2.JPG"
           alt="Journal Hero"
           className="w-full rounded-xl h-[300px] object-cover absolute top-0 left-0"
         />
@@ -72,20 +72,26 @@ const Journal = () => {
               pièces qui subliment les instants précieux et traversent le temps
               avec grâce. Car au-delà des tendances, la mode est avant tout une
               manière de raconter une histoire, et la mienne est celle d’ un
-              romantisme intemporel. San
+              romantisme intemporel.
+              <br />
+              <br />
+              <i>Sandra Djangoné</i>
             </p>
 
             <div className="flex xl:flex-col flex-row gap-2 xl:min-w-[200px] xl:w-[200px] xl:overflow-hidden overflow-auto">
-              {["/model/1.jpg", "/model/2.jpg", "/model/3.jpg"].map(
-                (item, i) => (
-                  <img
-                    src={item}
-                    key={"capsule-item-" + i}
-                    alt="capsule item"
-                    className="w-full rounded-xl object-cover"
-                  />
-                )
-              )}
+              {[
+                "/assets/1.JPG",
+                "/model/1.jpg",
+                "/model/2.jpg",
+                "/model/3.jpg",
+              ].map((item, i) => (
+                <img
+                  src={item}
+                  key={"capsule-item-" + i}
+                  alt="capsule item"
+                  className="w-full rounded-xl object-cover"
+                />
+              ))}
             </div>
           </div>
         </div>

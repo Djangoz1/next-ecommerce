@@ -27,15 +27,7 @@ export function Carousel({ slides }: CarouselProps) {
   const id = useId();
   const _slides = [slides[slides.length - 1], ...slides, slides[0]];
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref);
-  useEffect(() => {
-    if (isInView) {
-      const interval = setInterval(() => {
-        setCurrent((prev) => (prev + 1 === _slides.length ? 0 : prev + 1));
-      }, 10000);
-      return () => clearInterval(interval);
-    }
-  }, [current, isInView]);
+
   return (
     <div ref={ref} className="w-screen overflow-x-hidden bg-secondary py-20">
       <div

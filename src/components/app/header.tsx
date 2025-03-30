@@ -16,6 +16,8 @@ import {
   useModal,
 } from "../ui/box/modal";
 import { useSession } from "@/context/app";
+import { useModal as useModalContext } from "@/context/modal";
+import { ReturnOrder } from "../features/return-order";
 export const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -105,7 +107,7 @@ const AdminBtn = () => {
 const Sidebar = () => {
   const { setIsOpen } = useModal();
   const { user, logout } = useSession();
-
+  const { showModal } = useModalContext();
   return (
     <ModalPrimitive
       className="pb-40 pt-0"
@@ -145,22 +147,39 @@ const Sidebar = () => {
             Maison Ormès
           </Button>
         </motion.div>
-        <div className="flex px-3 flex-col gap-5 uppercase opacity-50 font-bold text-sm py-5 my-10">
+        <div className="flex px-3 flex-col gap-5  py-5 my-10">
           {[
             { url: "/tracking/", children: "Suivre ma commande" },
-            { url: "/shop/women/", children: "Faire un retour" },
+            {
+              component: (
+                <>
+                  <button
+                    onClick={() => showModal(<ReturnOrder />, "slideY")}
+                    className="uppercase opacity-50 font-bold text-sm w-fit"
+                  >
+                    Faire un retour
+                  </button>
+                </>
+              ),
+            },
             { url: "/shop/women/", children: "Contactez nous" },
             { url: "/faq/", children: "FAQ" },
-          ].map((item, i) => (
-            <Link
-              onClick={() => setIsOpen(false)}
-              className=""
-              key={`button-sidebar-link-${i}`}
-              href={item.url}
-            >
-              {item.children}
-            </Link>
-          ))}
+          ].map((item, i) =>
+            item.component ? (
+              <React.Fragment key={`button-sidebar-${i}`}>
+                {item.component}
+              </React.Fragment>
+            ) : (
+              <Link
+                onClick={() => setIsOpen(false)}
+                className="uppercase opacity-50 font-bold text-sm"
+                key={`button-sidebar-link-${i}`}
+                href={item.url || "#"}
+              >
+                {item.children}
+              </Link>
+            )
+          )}
         </div>
 
         <div className="flex py-5 justify-center gap-5 w-full border-y">
@@ -235,7 +254,7 @@ const Button = ({
   arr,
   onClick,
 }: {
-  arr?: { url: string; children: ReactNode }[];
+  arr?: ({ url: string; children: ReactNode } | { component: ReactNode })[];
   children: ReactNode;
   url?: string;
   onClick?: () => void;
@@ -265,20 +284,26 @@ const Button = ({
 
       {isOpen && arr?.length ? (
         <div className="flex flex-col gap-5 text-[#ADADAD] pt-5 text-xs">
-          {arr.map((item, i) => (
-            <Link
-              key={`button-sidebar-${i}`}
-              className="uppercase font-medium"
-              onClick={() => {
-                onClick?.();
+          {arr.map((item: any, i) =>
+            item.component ? (
+              <React.Fragment key={`button-sidebar-${i}`}>
+                {item.component}
+              </React.Fragment>
+            ) : (
+              <Link
+                key={`button-sidebar-${i}`}
+                className="uppercase font-medium"
+                onClick={() => {
+                  onClick?.();
 
-                setIsOpen(!isOpen);
-              }}
-              href={item.url}
-            >
-              {item.children}
-            </Link>
-          ))}
+                  setIsOpen(!isOpen);
+                }}
+                href={item.url}
+              >
+                {item.children}
+              </Link>
+            )
+          )}
         </div>
       ) : null}
     </div>

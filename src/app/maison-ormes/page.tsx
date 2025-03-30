@@ -25,7 +25,7 @@ const PageOrmes = () => {
           portant en elle une âme qui dépasse les saisons et les tendances.
         </Text>
       </Section>
-      <div className="flex flex-col w-full divide-dashed border-y">
+      <div className="flex flex-col w-full divide-dashed divide-y border-y">
         <BoxCascade title={"Qui est à l'origine d'Ormés ?"}>
           <Text>
             Le fondateur de la Maison, Guccio Gucci, est né à Florence le 26
@@ -54,20 +54,30 @@ const PageOrmes = () => {
             <b>articles de décoration</b>, parmi tant d’autres.
           </Text>
         </BoxCascade>
+        <BoxCascade className="[&_b]:underline" title="Héritage et tradition">
+          <Text>
+            ORMÉS valorise son riche héritage et ses racines dans la tradition
+            de la mode française. L'héritage de Sandra Djangoné reste une source
+            d'inspiration constante pour la maison.
+            <br />
+            <br />
+            ORMÉS est particulièrement reconnue pour sa couture haute gamme. La
+            maison crée des pièces uniques et limitées, caractérisées par un
+            savoir-faire exceptionnel, des détails exquis et des matériaux
+            luxueux. Ces pièces haute gamme incarnent l'élégance, la
+            sophistication et l' artisanat d' exception.
+          </Text>
+        </BoxCascade>
       </div>
 
       <figure className="flex flex-col items-center gap-3 w-full px-5">
         <Image
-          width={1800}
-          height={1800}
-          src="/page/1-ormes.webp"
+          width={1000}
+          height={1000}
+          src="/assets/logo.png"
           alt="model photo"
-          className="w-full h-[60vh] object-cover object-center "
+          className="w-[95%] mx-auto h-[60vh] object-cover object-center "
         />
-        <figcaption className="uppercase font-bold text-sm">
-          Artisans au sein de l’atelier Gucci, Florence, 1953 | © Archivio Foto
-          Locchi Firenze
-        </figcaption>
       </figure>
       <Section title="La créatrice">
         <Text>
@@ -106,14 +116,10 @@ const PageOrmes = () => {
           <Image
             width={1800}
             height={1800}
-            src="/page/2-ormes.avif"
+            src="/assets/2.jpg"
             alt="model photo"
             className="w-full h-[60vh] object-cover object-center "
           />
-          <figcaption className="uppercase font-bold text-sm">
-            Artisans au sein de l’atelier Gucci, Florence, 1953 | © Archivio
-            Foto Locchi Firenze
-          </figcaption>
         </figure>
       </Section>
 
@@ -193,3 +199,7 @@ const Section = ({
 };
 
 export default PageOrmes;
+
+const TitleCustom = ({ children }: { children: React.ReactNode }) => {
+  return <h2 className="text-4xl font-bold uppercase">{children}</h2>;
+};

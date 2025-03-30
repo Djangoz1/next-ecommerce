@@ -14,7 +14,7 @@ const LayoutFaq = ({ children }: { children: React.ReactNode }) => {
       <div className="flex flex-col w-full items-center justify-center py-10 bg-muted">
         <p className=" font-medium">Vous avez d'autres questions ?</p>
         <Link
-          className="text-blue-500 underline"
+          className="font-bold underline"
           href={`mailto:${CONTACT.email_customer_service}`}
         >
           {CONTACT.email_customer_service}
