@@ -2,6 +2,7 @@ import { BoxCascade } from "@/components/ui/box/box-cascade";
 import { Btn } from "@/components/ui/btn";
 import { Text } from "@/components/ui/typography/text";
 import { Title } from "@/components/ui/typography/title";
+import { cn } from "@/utils/cn";
 import Image from "next/image";
 import React from "react";
 
@@ -24,37 +25,59 @@ const PageOrmes = () => {
           pièce, bien plus qu ’ un vêtement, est un concentré de savoir-faire,
           portant en elle une âme qui dépasse les saisons et les tendances.
         </Text>
+        <figcaption className="p-2">
+          <Image
+            width={1000}
+            height={1000}
+            src="/assets/logo.png"
+            alt="model photo"
+            className=" w-[95%] mx-auto  "
+          />
+        </figcaption>
       </Section>
       <div className="flex flex-col w-full divide-dashed divide-y border-y">
         <BoxCascade title={"Qui est à l'origine d'Ormés ?"}>
           <Text>
-            Le fondateur de la Maison, Guccio Gucci, est né à Florence le 26
-            mars 1881. Il s’installe à Londres au cours de sa jeunesse. En 1897,
-            il commence à travailler en tant que bagagiste à l’hôtel Savoy.
-            Découvrant au plus près l’environnement particulièrement fermé de la
-            haute société internationale, et notamment les valises avec
-            lesquelles ses membres voyageaient, il rentre en Italie en 1902 avec
-            le rêve qu’un jour, des bagages porteraient son nom. En 1921, il
-            ouvre sa première boutique sur la via della Vigna Nuova à Florence,
-            spécialisée dans les bagages de style anglais.
+            La Maison ORMÉS a été fondée par Sandra Djangoné, issue d' une
+            famille d' artisans, de passionnés d' art et de vintage.
+            <br />
+            Cet univers familial a développé chez elle un goût prononcé pour l'
+            artisanat, l'élégance et le savoir-faire d' exception qui permettent
+            de créer des pièces intemporelles élégantes et durables avec minutie
+            , ce qui donne l'Aura de la Maison ORMÉS .
+            <br />
+            <br />
+            L'histoire commence lorsqu ' elle débute sa formation dans la mode
+            chez Chanel où elle a pu s 'imprégner des codes du monde merveilleux
+            du luxe, celui de l'intransigeance, de la minutie et du
+            savoir-faire. Baignant dans cet univers, la fondatrice rêvait de
+            créer sa maison, une mode durable avec une âme composées de pièces
+            fortes aux lignes épurées, élégantes et modernes.
+            <br />
+            <br />
+            La fondatrice crée des pièces intemporelles avec un mélange de style
+            vintage, moderne et épuré qui peuvent être chéries toute une vie,
+            transmises de génération en génération, réinterprétées pour exprimer
+            l'individualité de celui qui les porte.
           </Text>
+          <p className="text-center mt-10 ">
+            <cite>
+              « Les femmes qui m ’ entourent m ’inspirent par leur caractère,
+              leur style et la façon dont elles pourraient porter ces vêtements.
+              »
+            </cite>
+            <br />
+            <i>Sandra Djangoné</i>
+          </p>
         </BoxCascade>
+
         <BoxCascade
           className="[&_b]:underline"
           title="Qu'est-ce qui fait la réputation d'Ormés ?"
         >
-          <Text>
-            Gucci incarne le summum de l’excellence de l’artisanat italien et
-            ses créations sont sans égal en matière de qualité et de soin
-            apporté aux détails. Maison aujourd’hui centenaire, Gucci continue
-            de redéfinir le luxe tout en mettant à l’honneur la créativité et
-            l’innovation à travers ses collections de prêt-à-porter, de
-            maroquinerie, de chaussures, de <b>sacs</b>, de <b>joaillerie</b>,
-            de <b>montres</b> et d’
-            <b>articles de décoration</b>, parmi tant d’autres.
-          </Text>
-        </BoxCascade>
-        <BoxCascade className="[&_b]:underline" title="Héritage et tradition">
+          <TitleCustom className="text-xl mb-2">
+            Héritage et tradition
+          </TitleCustom>
           <Text>
             ORMÉS valorise son riche héritage et ses racines dans la tradition
             de la mode française. L'héritage de Sandra Djangoné reste une source
@@ -70,69 +93,25 @@ const PageOrmes = () => {
         </BoxCascade>
       </div>
 
-      <figure className="flex flex-col items-center gap-3 w-full px-5">
-        <Image
-          width={1000}
-          height={1000}
-          src="/assets/logo.png"
-          alt="model photo"
-          className="w-[95%] mx-auto h-[60vh] object-cover object-center "
-        />
-      </figure>
-      <Section title="La créatrice">
-        <Text>
-          La Maison ORMÉS a été fondée par Sandra Djangoné, issue d' une famille
-          d' artisans, de passionnés d' art et de vintage.
-          <br />
-          Cet univers familial a développé chez elle un goût prononcé pour l'
-          artisanat, l'élégance et le savoir-faire d' exception qui permettent
-          de créer des pièces intemporelles élégantes et durables avec minutie ,
-          ce qui donne l'Aura de la Maison ORMÉS .
-          <br />
-          <br />
-          L'histoire commence lorsqu ' elle débute sa formation dans la mode
-          chez Chanel où elle a pu s 'imprégner des codes du monde merveilleux
-          du luxe, celui de l'intransigeance, de la minutie et du savoir-faire.
-          Baignant dans cet univers, la fondatrice rêvait de créer sa maison,
-          une mode durable avec une âme composées de pièces fortes aux lignes
-          épurées, élégantes et modernes.
-          <br />
-          <br />
-          La fondatrice crée des pièces intemporelles avec un mélange de style
-          vintage, moderne et épuré qui peuvent être chéries toute une vie,
-          transmises de génération en génération, réinterprétées pour exprimer
-          l'individualité de celui qui les porte.
-        </Text>
-        <p className="text-center">
-          <cite>
-            « Les femmes qui m ’ entourent m ’inspirent par leur caractère, leur
-            style et la façon dont elles pourraient porter ces vêtements. »
-          </cite>
-          <br />
-          Sandra Djangoné
-        </p>
-
+      <Section title="Manifeste">
         <figure className="flex flex-col items-center gap-3 w-full ">
           <Image
             width={1800}
             height={1800}
-            src="/assets/2.jpg"
+            src="/assets/2.JPG"
             alt="model photo"
             className="w-full h-[60vh] object-cover object-center "
           />
         </figure>
-      </Section>
-
-      <Section title="Manifeste">
         <Text>
-          Je pense qu 'il y a trop de vêtements et de matières synthétiques qui
-          polluent notre planète.
+          Nous pensons qu 'il y a trop de vêtements et de matières synthétiques
+          qui polluent notre planète.
           <br />
           <br />
           Le modèle de la mode, qui rend chaque saison obsolète, est défaillant.
           <br />
           <br />
-          Je pense qu 'il n ' est pas nécessaire d' avoir toujours plus de
+          Nous pensons qu 'il n ' est pas nécessaire d' avoir toujours plus de
           vêtements, mais plutôt quelques pièces d' une qualité exceptionnelle,
           intemporelles, qui offrent chaque jour le plaisir de les porter et d’
           embellir notre quotidien.
@@ -200,6 +179,16 @@ const Section = ({
 
 export default PageOrmes;
 
-const TitleCustom = ({ children }: { children: React.ReactNode }) => {
-  return <h2 className="text-4xl font-bold uppercase">{children}</h2>;
+const TitleCustom = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => {
+  return (
+    <h2 className={cn("text-4xl font-bold uppercase", className)}>
+      {children}
+    </h2>
+  );
 };

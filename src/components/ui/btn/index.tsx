@@ -26,6 +26,7 @@ export type BtnProps = {
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
   href?: string;
+  target?: React.HTMLAttributeAnchorTarget;
   onClick?: (
     e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement | HTMLDivElement>
   ) => void;
@@ -34,6 +35,7 @@ export const Btn = ({
   children,
   className = "",
   variant = "default",
+  target,
   size = "md",
   type = "button",
   ...props
@@ -42,6 +44,7 @@ export const Btn = ({
 
   return props.href ? (
     <Link
+      target={target}
       href={props.href}
       onClick={(e) => {
         if (isLoading) return;

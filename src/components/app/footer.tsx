@@ -12,8 +12,8 @@ import { useModal } from "@/context/modal";
 export const Footer = () => {
   const { showModal } = useModal();
   return (
-    <footer className="  xl:py-20 py-10  bg-secondary border-t border-black/50  gap-20 flex flex-col">
-      <div className="flex flex-col divide-y divide-dashed divide-black/30">
+    <footer className="  xl:py-20 py-10  bg-secondary border-t border-black/5  gap-20 flex flex-col">
+      <div className="flex flex-col divide-y divide-dashed divide-black/10">
         <div className="flex flex-col gap-5 px-3 pb-10">
           <Title className="uppercase text-2xl">Plus d'Ormés ici</Title>
           <p className="opacity-50 font-light text-sm">
@@ -67,7 +67,7 @@ export const Footer = () => {
             },
 
             {
-              url: "#",
+              url: "/guide/care",
               children: <>Guide d'entretien</>,
             },
 
@@ -101,11 +101,11 @@ export const Footer = () => {
         <ButtonHeader
           arr={[
             {
-              url: "#",
+              url: "/terms-of-sale",
               children: <>CGV</>,
             },
             {
-              url: "#",
+              url: "/confidentiality-policy",
               children: <>Politique de confidentialité</>,
             },
             {
@@ -113,12 +113,8 @@ export const Footer = () => {
               children: <>Mentions légales</>,
             },
             {
-              url: "#",
+              url: "/website-accessibility",
               children: <>Accessibilité</>,
-            },
-            {
-              url: "#",
-              children: <>Cookies</>,
             },
           ]}
         >
@@ -126,16 +122,20 @@ export const Footer = () => {
         </ButtonHeader>
         <div className="flex py-5 justify-center gap-5 w-full border-y">
           <Btn
+            target="_blank"
             variant="ghost"
-            href="
-https://www.instagram.com/maison.ormes?igsh=MXFsc3Jhbjk5bHN4cg%3D%3D&utm_source=qr"
+            href="https://www.instagram.com/maison.ormes?igsh=MXFsc3Jhbjk5bHN4cg%3D%3D&utm_source=qr"
           >
             <Icon icon={"circum:instagram"} width={20} height={20} />
           </Btn>
-          <Btn variant="ghost" href="https://www.facebook.com/maisonormes">
+          <Btn
+            target="_blank"
+            variant="ghost"
+            href="https://www.facebook.com/maisonormes"
+          >
             <Icon icon={"circum:facebook"} width={20} height={20} />
           </Btn>
-          <Btn variant="ghost" href="https://wa.me/33669384336">
+          <Btn target="_blank" variant="ghost" href="https://wa.me/33669384336">
             <Icon icon={"ph:whatsapp-logo-thin"} width={20} height={20} />
           </Btn>
         </div>

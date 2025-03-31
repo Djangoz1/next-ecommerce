@@ -276,7 +276,7 @@ const Button = ({
       className="cursor-pointer flex flex-col p-5 px-3 w-full uppercase"
     >
       <div className="flex justify-between w-full items-center">
-        <Title className="text-lg">{children}</Title>
+        <b className=" font-medium uppercase text-sm">{children}</b>
         {arr?.length ? (
           <Icon icon={!isOpen ? "mdi-light:plus" : "mdi-light:minus"} />
         ) : null}
@@ -292,7 +292,7 @@ const Button = ({
             ) : (
               <Link
                 key={`button-sidebar-${i}`}
-                className="uppercase font-medium"
+                className="uppercase font-medium hover:text-black"
                 onClick={() => {
                   onClick?.();
 
