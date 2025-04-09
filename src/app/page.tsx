@@ -10,7 +10,7 @@ export default function Home() {
         <Image
           width={1800}
           height={1800}
-          src="/assets/1.JPG"
+          src="/assets/1.jpeg"
           alt="model photo"
           className=" w-full max-w-screen xl:h-fit h-screen brightness-75 object-cover object-left-center "
         />
@@ -30,7 +30,7 @@ export default function Home() {
           <Image
             width={1000}
             height={1000}
-            src="/model/1.jpg"
+            src="/caps/2-model.jpeg"
             alt="model photo"
             className=" xl:h-screen brightness-75 object-cover object-center  rounded-md shadow w-full"
           />
@@ -50,7 +50,7 @@ export default function Home() {
           <Image
             width={1000}
             height={1000}
-            src="/model/7.jpg"
+            src="/caps/5-model.jpeg"
             alt="model photo"
             className=" xl:h-screen brightness-75 object-cover object-center xl:rounded-md w-full"
           />
@@ -73,7 +73,7 @@ export default function Home() {
           <Image
             width={1000}
             height={1000}
-            src="/model/6.jpg"
+            src="/caps/4-paint.jpeg"
             alt="model photo"
             className=" xl:h-screen brightness-75 object-cover object-center  rounded-md shadow w-full"
           />
@@ -92,10 +92,11 @@ export default function Home() {
       </section>
       <section>
         <Carousel
+          size="lg"
           slides={[
-            { src: "/model/1.jpg", title: "Robe" },
-            { src: "/model/2.jpg", title: "Miniature" },
-            { src: "/model/3.jpg", title: "Peinture" },
+            { src: "/caps/1-model.jpeg", title: "Robe" },
+            { src: "/caps/3-model.jpeg", title: "Miniature" },
+            { src: "/caps/2-paint.jpeg", title: "Peinture" },
           ]}
         />
       </section>

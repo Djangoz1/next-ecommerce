@@ -6,6 +6,8 @@ import { cn } from "@/utils/cn";
 
 import { Btn } from "../btn";
 import { AnimatePresence, motion, useInView } from "framer-motion";
+import { cva } from "class-variance-authority";
+import Link from "next/link";
 
 interface SlideData {
   title: string;
@@ -15,11 +17,28 @@ interface SlideData {
 
 interface CarouselProps {
   slides: SlideData[];
+  size?: "sm" | "md" | "lg";
 }
 
-export function Carousel({ slides }: CarouselProps) {
-  const [current, setCurrent] = useState(1);
+const variants = cva(
+  "absolute inset-0 h-full object-cover left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 shadow-xl border border-black/50 rounded-md",
+  {
+    variants: {
+      size: {
+        sm: "w-4/5 xl:w-3/5",
+        md: "w-4/5 xl:w-3/5",
+        lg: "w-4/5 xl:w-3/5 h-full",
+      },
+    },
+    defaultVariants: {
+      size: "md",
+    },
+  }
+);
 
+export function Carousel({ slides, size = "md" }: CarouselProps) {
+  const [current, setCurrent] = useState(1);
+  const [currentX, setCurrentX] = useState(0);
   const handleSlideClick = (index: number) => {
     setCurrent(index >= 0 ? index : 0);
   };
@@ -28,25 +47,80 @@ export function Carousel({ slides }: CarouselProps) {
   const _slides = [slides[slides.length - 1], ...slides, slides[0]];
   const ref = useRef<HTMLDivElement>(null);
 
+  const handleScrollX = (e: React.WheelEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentX(e.currentTarget.scrollLeft);
+    let newPos = 0;
+    if (currentX > e.currentTarget.scrollLeft) {
+      newPos = current + 1;
+    } else {
+      newPos = current - 1;
+    }
+
+    if (newPos >= _slides.length) {
+      newPos = 0;
+    } else if (newPos < 0) {
+      newPos = _slides.length - 1;
+    }
+    setCurrent(newPos);
+  };
+
+  const handleMobileScroll = (e: React.TouchEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setCurrentX(e.touches[0].clientX);
+    let newPos = 0;
+    if (currentX > e.touches[0].clientX) {
+      newPos = current + 1;
+    } else {
+      newPos = current - 1;
+    }
+  };
+
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.addEventListener("wheel", (e) => handleScrollX(e as any));
+      ref.current.addEventListener("touchmove", (e) =>
+        handleMobileScroll(e as any)
+      );
+    }
+    return () => {
+      if (ref.current) {
+        ref.current.removeEventListener("wheel", (e) =>
+          handleScrollX(e as any)
+        );
+        ref.current.removeEventListener("touchmove", (e) =>
+          handleMobileScroll(e as any)
+        );
+      }
+    };
+  }, [currentX, current]);
+
   return (
     <div ref={ref} className="w-screen overflow-x-hidden bg-secondary py-20">
       <div
-        className="relative  w-full h-[70vmin] overflow-x-hidden"
+        className={cn(
+          "relative  w-full  overflow-x-hidden",
+          size === "lg" ? "h-[70vh]" : "h-[70vmin]"
+        )}
         aria-labelledby={`carousel-heading-${id}`}
       >
         <AnimatePresence>
-          <motion.img
-            key={`image-${current}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-            src={_slides[current].src}
-            alt={_slides[current].title}
-            width={1000}
-            height={1000}
-            className="absolute inset-0 w-4/5 xl:w-3/5 h-full object-cover left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 shadow-xl border border-black/50 rounded-md"
-          />
+          <Link href={_slides[current].src} target="_blank">
+            <motion.img
+              key={`image-${current}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1 }}
+              src={_slides[current].src}
+              alt={_slides[current].title}
+              width={1000}
+              height={1000}
+              className={cn(variants({ size }))}
+            />
+          </Link>
         </AnimatePresence>
         <div
           className="absolute flex transition-transform duration-1000 ease-in-out justify-between w-full h-full"

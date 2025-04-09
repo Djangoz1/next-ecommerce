@@ -1,3 +1,4 @@
+import { Carousel } from "@/components/ui/box/carousel";
 import { Btn } from "@/components/ui/btn";
 import { Title } from "@/components/ui/typography/title";
 import Image from "next/image";
@@ -77,24 +78,18 @@ const Journal = () => {
               <br />
               <i>Sandra Djangoné</i>
             </p>
-
-            <div className="flex xl:flex-col flex-row gap-2 xl:min-w-[200px] xl:w-[200px] xl:overflow-hidden overflow-auto">
-              {[
-                "/assets/1.JPG",
-                "/model/1.jpg",
-                "/model/2.jpg",
-                "/model/3.jpg",
-              ].map((item, i) => (
-                <img
-                  src={item}
-                  key={"capsule-item-" + i}
-                  alt="capsule item"
-                  className="w-full rounded-xl object-cover"
-                />
-              ))}
-            </div>
           </div>
         </div>
+        <Carousel
+          size="lg"
+          slides={[
+            { src: "/caps/1-model.jpeg", title: "Robe d'été" },
+            { src: "/caps/2-model.jpeg", title: "Robe blanche" },
+            { src: "/caps/3-model.jpeg", title: "Costume" },
+            { src: "/caps/4-model.jpeg", title: "Robe écrue" },
+            { src: "/caps/5-model.jpeg", title: "Robe de soirée" },
+          ]}
+        />
       </div>
     </div>
   );

@@ -35,6 +35,7 @@ const FaqPage = () => {
           </Button>
           <Button
             href={"/faq/on-demand"}
+            strokeWidth="0.1"
             icon={"streamline:industry-innovation-and-infrastructure"}
           >
             Fabrication sur commande
@@ -61,10 +62,12 @@ const Button = ({
   children,
   icon,
   href,
+  strokeWidth = "0.5",
 }: {
   children: React.ReactNode;
   icon: string | React.ReactNode;
   href: string;
+  strokeWidth?: string;
 }) => {
   return (
     <Link
@@ -73,7 +76,7 @@ const Button = ({
     >
       <div className="w-fit h-fit">
         {typeof icon === "string" ? (
-          <Icon strokeWidth={"0.5"} icon={icon} className="text-5xl" />
+          <Icon strokeWidth={strokeWidth} icon={icon} className="text-5xl" />
         ) : (
           icon
         )}

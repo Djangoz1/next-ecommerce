@@ -1,12 +1,13 @@
 "use server";
 import { BoxCascade } from "@/components/ui/box/box-cascade";
+import { Btn } from "@/components/ui/btn";
 import { Title } from "@/components/ui/typography/title";
 import { CONTACT } from "@/constants/inc";
 import React from "react";
 
 const PageDelivery = () => {
   return (
-    <div className="">
+    <div className="[&_ul]:list-disc [&_ul]:list-inside">
       <Title className="text-center px-5">Livraison</Title>
       <div className="flex flex-col divide-y divide-dashed w-full">
         <BoxCascade title="Quels sont les délais, les options et frais de livraison ?">
@@ -100,14 +101,7 @@ const PageDelivery = () => {
             suivre votre colis, depuis ce transporteur local.
           </p>
         </BoxCascade>
-        <BoxCascade title="J'ai reçu une pièce non conforme, que faire ?">
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita
-            dicta illum ipsa accusamus eveniet minima facilis. Dignissimos
-            maiores, sit tempore nostrum dolorem alias vitae sint, aliquam
-            corporis molestiae, beatae nam.
-          </p>
-        </BoxCascade>
+
         <BoxCascade title="Votre colis est retardé ou indiqué comme livré mais non reçu ?">
           <p>
             Nous vous invitons à patienter 7 jours pour voir si le suivi de
@@ -219,6 +213,9 @@ const PageDelivery = () => {
             transporteur, rendez-vous sur votre espace Compte - Mes commandes -
             Suivre ma commande.
           </p>
+          <Btn variant={"link"} className="" href={"/faq/return-refund"}>
+            Voir plus
+          </Btn>
         </BoxCascade>
       </div>
     </div>

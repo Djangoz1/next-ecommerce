@@ -120,7 +120,7 @@ const Sidebar = () => {
       }}
     >
       <div>
-        <motion.div className="flex flex-col divide-y">
+        <motion.div className="flex flex-col divide-y divide-dashed divide-black/10">
           <div onClick={(e) => e.stopPropagation()} className="w-full">
             <Button
               onClick={() => setIsOpen(false)}

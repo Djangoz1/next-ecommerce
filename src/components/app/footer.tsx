@@ -57,10 +57,7 @@ export const Footer = () => {
               url: `mailto:${CONTACT.email_customer_service}`,
               children: <>Contactez-nous</>,
             },
-            {
-              url: `#`,
-              children: <>Envoyez une demande</>,
-            },
+
             {
               url: "/faq",
               children: <>FAQ</>,

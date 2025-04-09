@@ -3,6 +3,7 @@ import { Btn } from "@/components/ui/btn";
 import { Title } from "@/components/ui/typography/title";
 import { cn } from "@/utils/cn";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 const arr = [
   {
@@ -29,34 +30,44 @@ const arr = [
 const page = () => {
   return (
     <div className="pb-10">
-      <div className="grid grid-cols-5  relative">
+      <div className="flex w-full h-fit relative">
         <Image
-          src={"/textile/cotton.webp"}
+          src={"/caps/4-model.jpeg"}
+          alt={"care"}
+          width={1000}
+          height={1000}
+          className="w-full h-full object-cover "
+        />
+
+        <Title className="absolute top-1/2 left-1/2 text-white -translate-x-1/2 -translate-y-1/2 text-center uppercase">
+          Le guide d'entretien
+        </Title>
+      </div>
+
+      <div className="w-full text-center gap-5 flex items-center flex-col justify-center p-5">
+        <Title className="text-lg">
+          Quelles sont les matières utilisées chez Ormés ? Comment prendre soin
+          de vos pièces au quotidien ?
+        </Title>
+        <div className="text-muted-foreground text-[10px] uppercase font-light">
+          Suivez le guide et les conseils du studio pour entretenir vos
+          vêtements et accessoires et les faire durer dans le temps, et pour
+          connaître nos engagements durables, c'est{" "}
+          <Link href={"/faq"} className="font-bold underline">
+            par ici
+          </Link>
+        </div>
+      </div>
+      <div className=" relative h-[600px] flex w-full">
+        <Image
+          src={"/caps/2-model.jpeg"}
           alt={"care"}
           fill
           className="w-full h-full object-cover absolute top-0 left-0"
         />
-        {Array.from({ length: 6 }).map((_, index) => (
-          <div
-            key={"care-textile-" + index}
-            className={cn(
-              "w-full h-[500px] items-center border-4 border-background gap-3 relative",
-              index >= 1 ? "order-3" : ""
-            )}
-          >
-            {/* <Image
-              src={item.image}
-              alt={item.title}
-              fill
-              className="w-full h-full object-cover"
-            /> */}
-            {/* <Title className="text-white absolute bottom-5 left-1/2 -translate-x-1/2">
-              {item.title}
-            </Title> */}
-          </div>
-        ))}
-        <div className="w-full h-full order-2 flex items-center justify-center relative bg-background col-span-3">
-          <Title className="text-center uppercase">Coton</Title>
+
+        <div className="w-full mt-auto mb-10  flex items-center justify-center relative ">
+          <Title className="text-center uppercase text-white">Le Coton</Title>
         </div>
       </div>
 
