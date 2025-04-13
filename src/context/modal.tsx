@@ -82,10 +82,13 @@ const variantsAutority = cva(
   {
     variants: {
       transitionType: {
-        slideY: "rounded-t-xl bottom-0 w-full h-[70vh] max-h-[90vh] ",
+        slideY: "rounded-t-xl bottom-0   w-full h-[70vh] max-h-[90vh] ",
         slideX: "rounded-l-xl",
         popup: "rounded-xl",
       },
+    },
+    defaultVariants: {
+      transitionType: "slideY",
     },
   }
 );
@@ -105,10 +108,7 @@ export const Modal = () => {
             onClick={closeModal}
           />
           <motion.div
-            className={cn(
-              "fixed  flex px-5 pt-10 pb-20 items-center justify-center  overflow-y-auto z-50 bg-background",
-              variantsAutority({ transitionType })
-            )}
+            className={cn(variantsAutority({ transitionType }))}
             onClick={(e) => e.stopPropagation()}
             {...transitions[transitionType]}
             transition={{ duration: 0.3 }}

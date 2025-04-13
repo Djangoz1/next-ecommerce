@@ -88,8 +88,33 @@ export const Footer = () => {
             },
 
             {
-              url: "#",
-              children: <>Nos emballages</>,
+              component: (
+                <>
+                  <button
+                    onClick={() =>
+                      showModal(
+                        <>
+                          <p>
+                            Nos emballages sont fait en lin métis. Une toile
+                            tissée dans un coton biologique certifié GOTS.
+                            <br />
+                            Notre papier de soie est entièrement recyclé.
+                            <br />
+                            <br />
+                            Nous veillons à maitriser leur impact, à ce qu'ils
+                            protègent vos pièces avec soin, et souvent à ce
+                            qu'il puissent être gardés ou réutilisés.
+                          </p>
+                        </>,
+                        "slideY"
+                      )
+                    }
+                    className="uppercase text-[#ADADAD] font-medium text-xs w-fit"
+                  >
+                    Nos emballages
+                  </button>
+                </>
+              ),
             },
           ]}
         >

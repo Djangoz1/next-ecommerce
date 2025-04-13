@@ -14,6 +14,17 @@ export default function Home() {
           alt="model photo"
           className=" w-full max-w-screen xl:h-fit h-screen brightness-75 object-cover object-left-center "
         />
+
+        {/* <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full max-w-screen xl:h-fit  brightness-75 object-cover object-left-center"
+        >
+          <source src="/pres.mp4" type="video/mp4" />
+          Votre navigateur ne prend pas en charge la lecture de vidéos.
+        </video> */}
         <div className="font-info text-center flex absolute bottom-20 flex-col gap-6 -translate-x-1/2 left-1/2">
           <Btn
             variant="link"

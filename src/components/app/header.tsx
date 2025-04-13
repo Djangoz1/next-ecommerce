@@ -19,24 +19,24 @@ import { useSession } from "@/context/app";
 import { useModal as useModalContext } from "@/context/modal";
 import { ReturnOrder } from "../features/return-order";
 export const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const viewportHeight = window.innerHeight;
-      const percent = scrollPosition / viewportHeight;
+  // useEffect(() => {
+  //   if (typeof window === "undefined") return;
+  //   const handleScroll = () => {
+  //     const scrollPosition = window.scrollY;
+  //     const viewportHeight = window.innerHeight;
+  //     const percent = scrollPosition / viewportHeight;
 
-      if (percent > 0.6) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
-    };
+  //     if (percent > 0.6) {
+  //       setScrolled(true);
+  //     } else {
+  //       setScrolled(false);
+  //     }
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
+  //   window.addEventListener("scroll", handleScroll);
 
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
 
   const url = usePathname();
 
@@ -45,7 +45,7 @@ export const Header = () => {
       <motion.header
         initial={{}}
         animate={{
-          color: !scrolled && url == "/" ? "white" : "black",
+          color: "black",
         }}
         transition={{
           duration: 1,
@@ -75,7 +75,7 @@ export const Header = () => {
         </div>
       </motion.header>
       <>
-        <MobileHeader scroll={scrolled} url={url} />
+        <MobileHeader />
       </>
     </>
   );
@@ -211,7 +211,7 @@ const Sidebar = () => {
   );
 };
 
-const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
+const MobileHeader = () => {
   return (
     <>
       <motion.header
@@ -224,7 +224,7 @@ const MobileHeader = ({ scroll, url }: { scroll: boolean; url: string }) => {
           position: "fixed",
           top: "0",
           left: 0,
-          color: !scroll && url == "/" ? "white" : "black",
+          color: "black",
         }}
         className={cn(
           "xl:hidden z-50  p-2  flex items-center w-screen  justify-between"

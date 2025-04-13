@@ -8,6 +8,7 @@ import { Btn } from "../btn";
 import { AnimatePresence, motion, useInView } from "framer-motion";
 import { cva } from "class-variance-authority";
 import Link from "next/link";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface SlideData {
   title: string;
@@ -21,7 +22,7 @@ interface CarouselProps {
 }
 
 const variants = cva(
-  "absolute inset-0 h-full object-cover left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 shadow-xl border border-black/50 rounded-md",
+  "absolute inset-0 h-full object-cover   left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 shadow-xl  ",
   {
     variants: {
       size: {
@@ -39,6 +40,10 @@ const variants = cva(
 export function Carousel({ slides, size = "md" }: CarouselProps) {
   const [current, setCurrent] = useState(1);
   const [currentX, setCurrentX] = useState(0);
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+  const isMobile = useIsMobile();
+
   const handleSlideClick = (index: number) => {
     setCurrent(index >= 0 ? index : 0);
   };
@@ -66,39 +71,55 @@ export function Carousel({ slides, size = "md" }: CarouselProps) {
     setCurrent(newPos);
   };
 
-  const handleMobileScroll = (e: React.TouchEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCurrentX(e.touches[0].clientX);
-    let newPos = 0;
-    if (currentX > e.touches[0].clientX) {
-      newPos = current + 1;
-    } else {
-      newPos = current - 1;
+  // Gestion simplifiée du défilement tactile
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    setTouchEndX(e.changedTouches[0].clientX);
+    handleSwipe();
+  };
+
+  const handleSwipe = () => {
+    const swipeDistance = touchEndX - touchStartX;
+    const swipeThreshold = 50; // Seuil de défilement en pixels
+
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+      let newPos = swipeDistance > 0 ? current - 1 : current + 1;
+
+      // Gestion des limites
+      if (newPos >= _slides.length) {
+        newPos = 0;
+      } else if (newPos < 0) {
+        newPos = _slides.length - 1;
+      }
+
+      setCurrent(newPos);
     }
   };
 
   useEffect(() => {
-    if (ref.current) {
+    if (ref.current && !isMobile) {
       ref.current.addEventListener("wheel", (e) => handleScrollX(e as any));
-      ref.current.addEventListener("touchmove", (e) =>
-        handleMobileScroll(e as any)
-      );
     }
+
     return () => {
-      if (ref.current) {
+      if (ref.current && !isMobile) {
         ref.current.removeEventListener("wheel", (e) =>
           handleScrollX(e as any)
         );
-        ref.current.removeEventListener("touchmove", (e) =>
-          handleMobileScroll(e as any)
-        );
       }
     };
-  }, [currentX, current]);
+  }, [currentX, current, isMobile]);
 
   return (
-    <div ref={ref} className="w-screen overflow-x-hidden bg-secondary py-20">
+    <div
+      ref={ref}
+      className="w-screen overflow-x-hidden bg-secondary py-20"
+      onTouchStart={isMobile ? handleTouchStart : undefined}
+      onTouchEnd={isMobile ? handleTouchEnd : undefined}
+    >
       <div
         className={cn(
           "relative  w-full  overflow-x-hidden",
@@ -132,7 +153,7 @@ export function Carousel({ slides, size = "md" }: CarouselProps) {
         >
           {_slides.map((slide, index) => (
             <button
-              onClick={() => handleSlideClick(index)}
+              onClick={() => (!isMobile ? handleSlideClick(index) : null)}
               key={`carousel-title-${index}`}
               className={cn(
                 "font-extralight title text-2xl text-center h-full min-w-[33.33%] uppercase transition-all duration-1000 ease-in-out",
